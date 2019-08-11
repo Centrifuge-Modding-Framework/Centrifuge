@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>eef50c70-3582-4557-a6b2-2a5ec541b3d3</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Centrifuge.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\GTTOD\Assembly-CSharp.dev.dll" />
+    <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\GTTOD\Assembly-CSharp.dll" />
+    <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\GTTOD\Newtonsoft.Json.dll" />
+    <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\Unity\UnityEngine.AssetBundleModule.dll" />
+    <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\Unity\UnityEngine.CoreModule.dll" />
+    <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\Unity\UnityEngine.dll" />
+  </ItemGroup>
+</Project>
