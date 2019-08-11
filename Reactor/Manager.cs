@@ -67,7 +67,6 @@ namespace Reactor
         {
             Global.Settings = new Settings("centrifuge");
 
-            Global.Settings.GetOrCreate(Global.ForwardToInGameShellSettingsKey, true);
             Global.Settings.GetOrCreate(Global.InterceptUnityLogsSettingsKey, true);
 
             if (Global.Settings.Dirty)
