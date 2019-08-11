@@ -1,19 +1,25 @@
-﻿namespace Reactor.API.DataModel
+﻿using System.Collections.Generic;
+
+namespace Reactor.API.DataModel
 {
     public class ModInfo
     {
+        public string ModID { get; }
+
         public string Name { get; }
         public string Author { get; }
-        public string AuthorContact { get; }
-        public string IPCIdentifier { get; }
+        public string Contact { get; }
         public int Priority { get; }
 
-        public ModInfo(string name, string author, string authorContact, string ipcIdentifier, int priority)
+        public List<string> Dependencies { get; }
+
+        public ModInfo(string modId, string name, string author, string contact, int priority)
         {
+            ModID = modId;
+
             Name = name;
             Author = author;
-            AuthorContact = authorContact;
-            IPCIdentifier = ipcIdentifier;
+            Contact = contact;
             Priority = priority;
         }
     }

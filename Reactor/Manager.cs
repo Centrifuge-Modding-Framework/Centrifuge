@@ -3,53 +3,65 @@ using Reactor.API.DataModel;
 using Reactor.API.Events;
 using Reactor.API.Interfaces.Systems;
 using Reactor.API.Logging;
+using Reactor.Communication;
+using Reactor.Extensibility;
+using Reactor.Input;
 using System;
 using System.Collections.Generic;
 
 namespace Reactor
 {
-    public class Manager : IManager
+    public class Manager : UnityEngine.MonoBehaviour, IManager
     {
         private Logger Log { get; set; }
+        private ModRegistry ModRegistry { get; set; }
+        private ModLoader ModLoader { get; set; }
 
-        public IHotkeyManager Hotkeys => throw new NotImplementedException();
+        public IHotkeyManager Hotkeys { get; private set; }
+        public IMessenger Messenger { get; private set; }
 
         public event EventHandler<ModInitializationEventArgs> ModInitialized;
+        public event EventHandler InitFinished;
 
-        public Manager()
+        public void Awake()
         {
+            DontDestroyOnLoad(gameObject);
 
-        }
-
-        public void Boot()
-        {
             Log = new Logger(Defaults.ManagerLogFileName);
             Log.Info("Definitely not up to no good...");
+
+            Hotkeys = new HotkeyManager();
+            Messenger = new Messenger();
+
+            ModRegistry = new ModRegistry();
+            ModLoader = new ModLoader(this, Defaults.ManagerModDirectory, ModRegistry);
+
+            InitializeMods();
         }
 
-        public void FrameUpdate()
+        public void Update()
         {
-            Log.Info("Nyooom.");
+            ((HotkeyManager)Hotkeys).Update();
         }
 
         public List<ModInfo> GetLoadedMods()
         {
-            throw new NotImplementedException();
+            return ModRegistry.GetLoadedMods();
         }
 
-        public void SendIPC(string ipcIdentifier, IpcData data)
+        internal void OnModInitialized(ModInfo modInfo)
         {
-            throw new NotImplementedException();
+            ModInitialized?.Invoke(this, new ModInitializationEventArgs(modInfo));
         }
 
-        public T GetConfig<T>(string key)
+        internal void OnInitFinished()
         {
-            throw new NotImplementedException();
+            InitFinished?.Invoke(this, EventArgs.Empty);
         }
 
-        public bool SetConfig<T>(string key, T value)
+        private void InitializeMods()
         {
-            throw new NotImplementedException();
+            ModLoader.Init();
         }
     }
 }
