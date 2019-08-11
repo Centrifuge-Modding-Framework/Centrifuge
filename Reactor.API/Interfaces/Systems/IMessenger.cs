@@ -4,6 +4,6 @@ namespace Reactor.API.Interfaces.Systems
 {
     public interface IMessenger
     {
-        void Send(Message message);
+        void Send(ModMessage message);
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Reactor.API.DataModel
 {
-    public class Message
+    public class ModMessage
     {
         private readonly Dictionary<string, object> _data;
 
@@ -30,7 +30,7 @@ namespace Reactor.API.DataModel
         public string TargetModID { get; }
         public string Name { get; }
 
-        public Message(string sourceModId, string targetModId, string name)
+        public ModMessage(string sourceModId, string targetModId, string name)
         {
             _data = new Dictionary<string, object>();
 

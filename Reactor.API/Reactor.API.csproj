@@ -34,6 +34,9 @@
     <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Lib.Harmony.1.2.0.1\lib\net35\0Harmony.dll</HintPath>
     </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\Centrifuge.Shared\BinaryBlobs\GTTOD\Assembly-CSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Centrifuge.Shared\BinaryBlobs\GTTOD\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -68,7 +71,7 @@
     <Compile Include="Input\Keyboard.cs" />
     <Compile Include="Interfaces\Systems\IHotkeyManager.cs" />
     <Compile Include="Interfaces\Systems\IManager.cs" />
-    <Compile Include="DataModel\Message.cs" />
+    <Compile Include="DataModel\ModMessage.cs" />
     <Compile Include="DataModel\ModInfo.cs" />
     <Compile Include="Interfaces\Systems\IMessenger.cs" />
     <Compile Include="Logging\Logger.cs" />
