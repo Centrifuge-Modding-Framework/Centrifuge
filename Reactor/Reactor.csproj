@@ -58,6 +58,7 @@
     <Compile Include="Extensibility\ModLoader.cs" />
     <Compile Include="Extensibility\ModRegistry.cs" />
     <Compile Include="Extensibility\ModHost.cs" />
+    <Compile Include="Global.cs" />
     <Compile Include="Input\HotkeyManager.cs" />
     <Compile Include="Manager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

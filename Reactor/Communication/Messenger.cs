@@ -5,7 +5,7 @@ namespace Reactor.Communication
 {
     public class Messenger : IMessenger
     {
-        public void Send(Message message)
+        public void Send(ModMessage message)
         {
         }
     }
