@@ -22,6 +22,7 @@ namespace Reactor.API
         public const string SettingsSystemLogFileName = "SettingsSystem";
         public const string HotkeyManagerLogFileName = "HotkeyManager";
         public const string FileSystemLogFileName = "FileSystem";
+        public const string MessengerLogFileName = "Messenger";
         public const string ModLoaderLogFileName = "Loader";
         public const string ManagerLogFileName = "Manager";
 
