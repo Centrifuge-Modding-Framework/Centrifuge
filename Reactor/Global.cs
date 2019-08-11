@@ -6,7 +6,6 @@ namespace Reactor
     {
         internal static Settings Settings { get; set; }
 
-        internal const string ForwardToInGameShellSettingsKey = "ForwardToInGameShell";
         internal const string InterceptUnityLogsSettingsKey = "InterceptUnityLogs";
     }
 }
