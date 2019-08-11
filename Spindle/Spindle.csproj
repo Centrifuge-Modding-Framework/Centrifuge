@@ -60,7 +60,6 @@
     <Compile Include="IO\ColoredOutput.cs" />
     <Compile Include="IO\ModuleLoader.cs" />
     <Compile Include="IO\ModuleWriter.cs" />
-    <Compile Include="Patches\CentrifugeUpdatePatch.cs" />
     <Compile Include="Patches\DecapsulationPatch.cs" />
     <Compile Include="Patches\CentrifugeInitPatch.cs" />
     <Compile Include="Program.cs" />

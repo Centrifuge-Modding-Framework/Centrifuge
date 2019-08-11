@@ -1,13 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using UnityEngine;
 
 namespace Centrifuge
 {
     public static class Bootstrap
     {
-        private static object ReactorManager;
-        private static MethodInfo FrameUpdateMethodInfo;
+        private static GameObject ReactorManagerObject;
 
         public static void Initialize()
         {
@@ -54,8 +54,8 @@ namespace Centrifuge
 
             try
             {
-                EarlyLog.Info("Activating Reactor Manager instance...");
-                ReactorManager = Activator.CreateInstance(managerType);
+                EarlyLog.Info("Creating Reactor Manager GameObject...");
+                ReactorManagerObject = new GameObject("com.github.ciastex.ReactorModLoader");
             }
             catch (Exception e)
             {
@@ -63,32 +63,9 @@ namespace Centrifuge
                 return;
             }
 
-            EarlyLog.Info("Trying to locate the FrameUpdate method...");
-            FrameUpdateMethodInfo = ReactorManager.GetType().GetMethod("FrameUpdate");
-
-            if (FrameUpdateMethodInfo == null)
-            {
-                EarlyLog.Warning("Could not locate the FrameUpdate method, mods will still be loaded, but those relying on frame updates won't work properly.");
-            }
-
-            EarlyLog.Info("Passing control to Reactor Manager...");
-            var methodInfo = ReactorManager.GetType().GetMethod("Boot");
-            if (methodInfo == null)
-            {
-                EarlyLog.Error("Failed to pass control to Reactor Manager - method 'Boot' was not found. Mods will not be loaded.");
-                return;
-            }
-
+            EarlyLog.Info("About to add component to Reactor Manager GameObject...");
             Console.WriteLine("--------------------------------------------");
-            methodInfo.Invoke(ReactorManager, new object[0]);
-        }
-
-        public static void FrameUpdate()
-        {
-            if (FrameUpdateMethodInfo != null)
-            {
-                FrameUpdateMethodInfo.Invoke(ReactorManager, new object[0]);
-            }
+            ReactorManagerObject.AddComponent(managerType);
         }
 
         private static string GetCrossPlatformCompatibleReactorPath()

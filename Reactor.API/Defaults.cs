@@ -5,7 +5,7 @@ namespace Reactor.API
 {
     public class Defaults
     {
-        private static string BasePath => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        private static string CentrifugeRoot => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
         public static string PrivateDependencyDirectory => "Dependencies";
         public static string PrivateSettingsDirectory => "Settings";
@@ -13,9 +13,9 @@ namespace Reactor.API
         public static string PrivateDataDirectory => "Data";
         public static string PrivateLogDirectory => "Logs";
 
-        public static string ManagerSettingsDirectory => Path.Combine(BasePath, "Settings");
-        public static string ManagerPluginDirectory => Path.Combine(BasePath, "Mods");
-        public static string ManagerLogDirectory => Path.Combine(BasePath, "Logs");
+        public static string ManagerSettingsDirectory => Path.Combine(CentrifugeRoot, "Settings");
+        public static string ManagerModDirectory => Path.Combine(CentrifugeRoot, "Mods");
+        public static string ManagerLogDirectory => Path.Combine(CentrifugeRoot, "Logs");
 
         public const string DependencyResolverLogFileName = "DependencyResolver";
         public const string RuntimeAssetLoaderLogFileName = "RuntimeAssetLoader";
@@ -24,5 +24,7 @@ namespace Reactor.API
         public const string FileSystemLogFileName = "FileSystem";
         public const string ModLoaderLogFileName = "Loader";
         public const string ManagerLogFileName = "Manager";
+
+        public const string ManifestFileName = "mod.json";
     }
 }

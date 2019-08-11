@@ -140,9 +140,7 @@ namespace Spindle
                 _bootstrapAssemblyDefinition = ModuleLoader.LoadBootstrapModule(_bootstrapAssemblyFilename);
             }
             _patcher = new Patcher(_bootstrapAssemblyDefinition, _gttodAssemblyDefinition);
-
             _patcher.AddPatch(new CentrifugeInitPatch());
-            _patcher.AddPatch(new CentrifugeUpdatePatch());
         }
 
         private static void RunPatches()

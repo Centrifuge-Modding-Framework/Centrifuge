@@ -5,12 +5,10 @@ namespace Reactor.API.Events
     public class ModInitializationEventArgs : System.EventArgs
     {
         public ModInfo Mod { get; }
-        public bool IsLast { get; }
 
-        public ModInitializationEventArgs(ModInfo mod, bool isLast)
+        public ModInitializationEventArgs(ModInfo mod)
         {
             Mod = mod;
-            IsLast = isLast;
         }
     }
 }
