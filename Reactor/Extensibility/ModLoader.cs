@@ -1,8 +1,10 @@
 ﻿using Reactor.API;
 using Reactor.API.Attributes;
+using Reactor.API.DataModel;
 using Reactor.API.Exceptions;
 using Reactor.API.Interfaces.Systems;
 using Reactor.API.Logging;
+using Reactor.Communication;
 using Reactor.DataModel;
 using Reactor.Exceptions;
 using System;
@@ -17,6 +19,7 @@ namespace Reactor.Extensibility
     internal class ModLoader
     {
         private Manager Manager { get; }
+        private Messenger Messenger { get; }
 
         private ModRegistry Registry { get; }
         private string SourceDirectory { get; }
@@ -26,6 +29,7 @@ namespace Reactor.Extensibility
         public ModLoader(Manager manager, string sourceDirectory, ModRegistry registry)
         {
             Manager = manager;
+            Messenger = manager.Messenger as Messenger;
 
             SourceDirectory = sourceDirectory;
             Registry = registry;
@@ -206,11 +210,18 @@ namespace Reactor.Extensibility
                 return;
             }
 
-            var initMethodInfo = entryPointType.GetMethod(entryPointInfo.InitializerName);
+            var initMethodInfo = entryPointType.GetMethod(entryPointInfo.InitializerName, new Type[] { typeof(IManager) });
             if (initMethodInfo == null)
             {
-                Log.Error($" Initializer method '{entryPointInfo.InitializerName}' not found.");
+                Log.Error($" Initializer method '{entryPointInfo.InitializerName}' accepting parameter of type 'IManager' not found.");
                 return;
+            }
+
+            var messageHandlers = FindMessageHandlers(types);
+            foreach (var messageHandler in messageHandlers)
+            {
+                Messenger.RegisterHandlerFor(messageHandler.ModID, messageHandler.MessageName, messageHandler.Method);
+                Log.Success($" Registered message handler '{messageHandler.ModID}:{messageHandler.MessageName}' <{messageHandler.Method.Name}>");
             }
 
             var modHost = new ModHost
@@ -233,8 +244,6 @@ namespace Reactor.Extensibility
                 var instance = Activator.CreateInstance(entryPointType);
                 modHost.Instance = instance;
             }
-
-            // TODO: Scan the assembly for any message handlers. Finish the messenger class.
 
             entryPointType.GetMethod(
                 entryPointInfo.InitializerName,
@@ -288,6 +297,49 @@ namespace Reactor.Extensibility
         private ModEntryPointAttribute GetEntryPointAttribute(Type type)
         {
             return type.GetCustomAttributes(typeof(ModEntryPointAttribute), true)[0] as ModEntryPointAttribute;
+        }
+
+        private List<MessageHandlerInvocationParameters> FindMessageHandlers(Type[] types)
+        {
+            var messageHandlerParameters = new List<MessageHandlerInvocationParameters>();
+
+            foreach (var type in types)
+            {
+                foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public))
+                {
+                    var attribs = method.GetCustomAttributes(typeof(MessageHandlerAttribute), true);
+
+                    if (attribs.Length == 0)
+                        continue;
+
+                    var parameters = method.GetParameters();
+                    if (parameters.Length == 1)
+                    {
+                        if (parameters[0].ParameterType != typeof(ModMessage))
+                        {
+                            Log.Warning($"Message handler '{method.Name}' has an invalid signature. Ignoring the method.");
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        Log.Warning($"Message handler '{method.Name}' has an invalid signature. Ignoring the method.");
+                        continue;
+                    }
+
+                    var attrib = attribs[0] as MessageHandlerAttribute;
+                    var messageHandlerParameter = new MessageHandlerInvocationParameters
+                    {
+                        Method = method,
+                        ModID = attrib.SourceModID,
+                        MessageName = attrib.MessageName
+                    };
+
+                    messageHandlerParameters.Add(messageHandlerParameter);
+                }
+            }
+
+            return messageHandlerParameters;
         }
 
         private void EnsureSingleEntryPoint(Assembly assembly)

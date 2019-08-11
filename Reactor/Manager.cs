@@ -30,9 +30,7 @@ namespace Reactor
             DontDestroyOnLoad(gameObject);
 
             InitializeSettings();
-
             InitializeLogger();
-            Log.Info("Definitely not up to no good...");
 
             Hotkeys = new HotkeyManager();
             Messenger = new Messenger();
@@ -40,6 +38,7 @@ namespace Reactor
             ModRegistry = new ModRegistry();
             ModLoader = new ModLoader(this, Defaults.ManagerModDirectory, ModRegistry);
 
+            Log.Info("Definitely not up to no good...");
             InitializeMods();
         }
 

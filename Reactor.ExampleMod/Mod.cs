@@ -1,5 +1,6 @@
 ﻿using Reactor.API.Attributes;
 using Reactor.API.Configuration;
+using Reactor.API.DataModel;
 using Reactor.API.Input;
 using Reactor.API.Interfaces.Systems;
 using System;
@@ -8,9 +9,11 @@ using Logger = Reactor.API.Logging.Logger;
 
 namespace Reactor.ExampleMod
 {
-    [ModEntryPoint("com.github.ciastex.ExampleMod")]
+    [ModEntryPoint(ModID)]
     public class Mod : MonoBehaviour
     {
+        public const string ModID = "com.github.ciastex.ExampleMod";
+
         private Logger _logger;
         private Settings _settings;
 
@@ -28,8 +31,6 @@ namespace Reactor.ExampleMod
 
             Console.WriteLine("ExampleMod: Awake called.");
             _logger.Success("ExampleMod: logger seems to work.");
-
-            throw new Exception("dicks");
         }
 
         public void Start()
@@ -42,6 +43,18 @@ namespace Reactor.ExampleMod
         {
             manager.Hotkeys.Bind(new Hotkey(_settings.GetItem<string>("TestKeyBind")), () => { Console.WriteLine("REEEEEEEEEE"); });
             Console.WriteLine("ExampleMod: Initialize called.");
+
+            var msg = new ModMessage(ModID, ModID, "YO FAT FUCK RESPOND");
+            msg["test"] = "THIS BE A RESPONS";
+
+            manager.Messenger.Send(msg);
+        }
+
+        [MessageHandler(ModID, "YO FAT FUCK RESPOND")]
+        public static void HandleEchoMessage(ModMessage message)
+        {
+            if (message.Has("test"))
+                Console.WriteLine(message["test"]);
         }
     }
 }
