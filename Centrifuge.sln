@@ -13,6 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reactor.API", "Reactor.API\
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Centrifuge.Shared", "Centrifuge.Shared\Centrifuge.Shared.shproj", "{EEF50C70-3582-4557-A6B2-2A5EC541B3D3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1E603779-8DAA-4753-A992-00AAC1EA8217}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE.md = LICENSE.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Centrifuge.Shared\Centrifuge.Shared.projitems*{eef50c70-3582-4557-a6b2-2a5ec541b3d3}*SharedItemsImports = 13
