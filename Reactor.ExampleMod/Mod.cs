@@ -1,6 +1,8 @@
-﻿using Reactor.API.Attributes;
+﻿using CommandTerminal;
+using Reactor.API.Attributes;
 using Reactor.API.Configuration;
 using Reactor.API.DataModel;
+using Reactor.API.GTTOD;
 using Reactor.API.Input;
 using Reactor.API.Interfaces.Systems;
 using System;
@@ -29,8 +31,18 @@ namespace Reactor.ExampleMod
                 _settings.Save();
             }
 
+            GameAPI.TerminalInitialized += GameAPI_TerminalInitialized;
+
             Console.WriteLine("ExampleMod: Awake called.");
             _logger.Success("ExampleMod: logger seems to work.");
+        }
+
+        private void GameAPI_TerminalInitialized(object sender, EventArgs e)
+        {
+            Terminal.Shell.AddCommand("examplemod_test", (args) =>
+            {
+                Terminal.Log("Looks like it works.");
+            });
         }
 
         public void Start()

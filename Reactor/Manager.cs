@@ -2,6 +2,7 @@
 using Reactor.API.Configuration;
 using Reactor.API.DataModel;
 using Reactor.API.Events;
+using Reactor.API.GTTOD;
 using Reactor.API.Interfaces.Systems;
 using Reactor.API.Logging;
 using Reactor.Communication;
@@ -32,13 +33,17 @@ namespace Reactor
             InitializeSettings();
             InitializeLogger();
 
+            Log.Info("Definitely not up to no good...");
+
             Hotkeys = new HotkeyManager();
             Messenger = new Messenger();
 
             ModRegistry = new ModRegistry();
             ModLoader = new ModLoader(this, Defaults.ManagerModDirectory, ModRegistry);
 
-            Log.Info("Definitely not up to no good...");
+            Global.GameApiObject = new UnityEngine.GameObject(Global.CentrifugeGameApiObjectName);
+            Global.GameApiObject.AddComponent<GameAPI>();
+
             InitializeMods();
         }
 
