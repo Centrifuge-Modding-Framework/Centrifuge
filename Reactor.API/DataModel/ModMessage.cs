@@ -30,14 +30,21 @@ namespace Reactor.API.DataModel
         public string TargetModID { get; }
         public string Name { get; }
 
-        public ModMessage(string sourceModId, string targetModId, string name)
+        public ModMessage(string name)
         {
             _data = new Dictionary<string, object>();
 
+            Name = name;
+
+            SourceModID = "*";
+            TargetModID = "*";
+        }
+
+        public ModMessage(string sourceModId, string targetModId, string name)
+            : this(name)
+        {
             SourceModID = sourceModId;
             TargetModID = targetModId;
-
-            Name = name;
         }
 
         public bool Has(string key)
