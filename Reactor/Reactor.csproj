@@ -54,6 +54,7 @@
     <Compile Include="DataModel\MessageHandlerInvocationParameters.cs" />
     <Compile Include="DataModel\ModManifest.cs" />
     <Compile Include="Exceptions\DuplicateModIdException.cs" />
+    <Compile Include="Exceptions\InvalidModIdException.cs" />
     <Compile Include="Exceptions\MissingEntryPointException.cs" />
     <Compile Include="Exceptions\TooManyEntryPointsException.cs" />
     <Compile Include="Extensibility\ModLoader.cs" />

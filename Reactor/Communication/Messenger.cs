@@ -28,6 +28,31 @@ namespace Reactor.Communication
             }
         }
 
+        public void Broadcast(ModMessage message)
+        {
+            if (HasHandlerFor("*", message.Name))
+            {
+                IssueBroadcast(message);
+            }
+        }
+
+        public List<string> GetRegisteredModIDs()
+        {
+            return new List<string>(MessageHandlers.Keys);
+        }
+
+        public List<string> GetRegisteredMessageNamesFor(string modId)
+        {
+            var ret = new List<string>();
+
+            if (MessageHandlers.ContainsKey(modId))
+            {
+                ret.AddRange(MessageHandlers[modId].Keys);
+            }
+
+            return ret;
+        }
+
         public bool HasHandlerFor(string modId, string messageName)
         {
             if (!MessageHandlers.ContainsKey(modId))
@@ -61,6 +86,21 @@ namespace Reactor.Communication
         private void IssueTargetedBroadcast(ModMessage message)
         {
             foreach (var handler in MessageHandlers[message.TargetModID][message.Name])
+            {
+                try
+                {
+                    handler.Invoke(null, new object[] { message });
+                }
+                catch (Exception e)
+                {
+                    Log.Exception(e);
+                }
+            }
+        }
+
+        private void IssueBroadcast(ModMessage message)
+        {
+            foreach (var handler in MessageHandlers["*"][message.Name])
             {
                 try
                 {

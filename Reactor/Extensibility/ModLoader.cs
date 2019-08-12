@@ -199,7 +199,7 @@ namespace Reactor.Extensibility
             {
                 EnsureModIdValid(entryPointInfo.ModID);
             }
-            catch (ArgumentException e)
+            catch (InvalidModIdException e)
             {
                 Log.Error($" Mod ID invalid: {e.Message}");
                 return;
@@ -361,7 +361,10 @@ namespace Reactor.Extensibility
         private void EnsureModIdValid(string modId)
         {
             if (string.IsNullOrEmpty(modId))
-                throw new ArgumentException("Mod ID cannot be empty nor null.");
+                throw new InvalidModIdException("Mod ID cannot be empty or null.");
+
+            if (modId == "*")
+                throw new InvalidModIdException("The Mod ID '*' is a reserved broadcast name - you have the whole UTF-8 ffs, use it.");
         }
     }
 }
