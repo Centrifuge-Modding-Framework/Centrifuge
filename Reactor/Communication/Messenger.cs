@@ -11,7 +11,6 @@ namespace Reactor.Communication
     internal class Messenger : IMessenger
     {
         private Logger Log { get; }
-
         private Dictionary<string, Dictionary<string, List<MethodInfo>>> MessageHandlers { get; }
 
         public Messenger()
