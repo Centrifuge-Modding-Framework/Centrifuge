@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Reactor.DataModel
+namespace Reactor.DataModel.Communication
 {
     internal class MessageHandlerInvocationParameters
     {

@@ -8,6 +8,8 @@ namespace Reactor.API.Attributes
         public string ModID { get; }
         public string InitializerName { get; set; } = "Initialize";
 
+        public bool AwakeAfterInitialize = false;
+
         public ModEntryPointAttribute(string modId)
         {
             ModID = modId;

@@ -14,14 +14,13 @@ namespace Reactor.ExampleMod
     [ModEntryPoint(ModID)]
     public class Mod : MonoBehaviour
     {
-        public const string ModID = "com.github.ciastex.ExampleMod";
+        public const string ModID = "com.github.ciastex/ExampleMod";
 
-        private Logger _logger;
+        private Logger _logger = new Logger("diagnostics");
         private Settings _settings;
 
-        public void Awake()
+        public void Initialize(IManager manager)
         {
-            _logger = new Logger("diagnostics");
             _settings = new Settings("config");
 
             _settings.GetOrCreate("TestKeyBind", "LeftControl+F1");
@@ -33,6 +32,17 @@ namespace Reactor.ExampleMod
 
             GameAPI.TerminalInitialized += GameAPI_TerminalInitialized;
 
+            manager.Hotkeys.Bind(new Hotkey(_settings.GetItem<string>("TestKeyBind")), () => { Console.WriteLine("REEEEEEEEEE"); });
+            Console.WriteLine("ExampleMod: Initialize called.");
+
+            var msg = new ModMessage(ModID, ModID, "YO FAT FUCK RESPOND");
+            msg["test"] = "THIS BE A RESPONS";
+
+            manager.Messenger.Send(msg);
+        }
+
+        public void Awake()
+        {
             Console.WriteLine("ExampleMod: Awake called.");
             _logger.Success("ExampleMod: logger seems to work.");
         }
@@ -49,17 +59,6 @@ namespace Reactor.ExampleMod
         {
             Console.WriteLine("ExampleMod: Start called.");
             _logger.Success("ExampleMod logger: Start called.");
-        }
-
-        public void Initialize(IManager manager)
-        {
-            manager.Hotkeys.Bind(new Hotkey(_settings.GetItem<string>("TestKeyBind")), () => { Console.WriteLine("REEEEEEEEEE"); });
-            Console.WriteLine("ExampleMod: Initialize called.");
-
-            var msg = new ModMessage(ModID, ModID, "YO FAT FUCK RESPOND");
-            msg["test"] = "THIS BE A RESPONS";
-
-            manager.Messenger.Send(msg);
         }
 
         [MessageHandler(ModID, "YO FAT FUCK RESPOND")]

@@ -1,5 +1,5 @@
 ﻿using Reactor.API.DataModel;
-using Reactor.DataModel;
+using Reactor.DataModel.ModLoader;
 using UnityEngine;
 
 namespace Reactor.Extensibility

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Reactor.DataModel
+namespace Reactor.DataModel.Metadata
 {
     [Flags]
     internal enum ManifestValidationFlags
