@@ -5,7 +5,9 @@ using Reactor.API.Exceptions;
 using Reactor.API.Interfaces.Systems;
 using Reactor.API.Logging;
 using Reactor.Communication;
-using Reactor.DataModel;
+using Reactor.DataModel.Communication;
+using Reactor.DataModel.Metadata;
+using Reactor.DataModel.ModLoader;
 using Reactor.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -39,8 +41,13 @@ namespace Reactor.Extensibility
 
         public void Init()
         {
-            var data = PrepareLoadData();
-            LoadAllMods(data);
+            var loadData = PrepareLoadData();
+            LoadAllMods(loadData);
+
+            // this warms up registry query cache as well
+            var loadedMods = Registry.GetLoadedMods();
+
+            Log.Info($"-- MOD LOADER INIT COMPLETE --\n  >> {loadData.Count} manifest(s) parsed, {loadedMods.Count} mod(s) loaded.");
         }
 
         private List<LoadData> PrepareLoadData()
@@ -50,12 +57,14 @@ namespace Reactor.Extensibility
 
             foreach (var rootPath in modDirectories)
             {
-                Log.Info($"Now processing manifest: {rootPath}");
+                var directoryName = Path.GetFileName(rootPath);
+
+                Log.Info($"Found directory '{directoryName}'");
                 var manifestPath = Path.Combine(rootPath, Defaults.ManifestFileName);
 
                 if (!File.Exists(manifestPath))
                 {
-                    Log.Warning($" Skipping directory without manifest.");
+                    Log.Warning($"Skipping directory without manifest.");
                     continue;
                 }
 
@@ -63,35 +72,29 @@ namespace Reactor.Extensibility
                 try
                 {
                     manifest = ModManifest.FromFile(manifestPath);
-                    if (manifest == null)
-                    {
-                        Log.Error(" ModManifest.FromFile(string) has failed to return a non-null value.");
-                        continue;
-                    }
 
                     var validationErrors = manifest.Validate();
-
                     if (validationErrors != 0)
                     {
                         var sb = new StringBuilder();
 
                         if (validationErrors.HasFlag(ManifestValidationFlags.MissingFriendlyName))
                         {
-                            sb.AppendLine("  - Missing 'FriendlyName' property.");
+                            sb.AppendLine(" * Missing 'FriendlyName' property.");
                         }
 
                         if (validationErrors.HasFlag(ManifestValidationFlags.MissingModuleFileName))
                         {
-                            sb.AppendLine("  - Missing 'ModuleFileName' property.");
+                            sb.AppendLine(" * Missing 'ModuleFileName' property.");
                         }
 
-                        Log.Error($" Refusing to load the mod. Manifest has the following issues:\n{sb.ToString()}");
+                        Log.Error($"Refusing to load the mod. Manifest has the following issues:\n{sb.ToString()}");
                         continue;
                     }
 
                     if (manifest.SkipLoad)
                     {
-                        Log.Warning(" Skipping due to 'SkipLoad' property set to true.");
+                        Log.Warning("Skipping due to 'SkipLoad' property set to true.");
                         continue;
                     }
 
@@ -103,9 +106,10 @@ namespace Reactor.Extensibility
                         }
                     );
                 }
-                catch (MetadataReadException mre)
+                catch (ManifestReadException mre)
                 {
-                    Log.Exception(mre);
+                    Log.Error($"Manifest is invalid: {mre.Message}");
+                    Log.ExceptionSilent(mre);
                     continue;
                 }
             }
@@ -132,7 +136,7 @@ namespace Reactor.Extensibility
 
             if (!File.Exists(targetModulePath))
             {
-                Log.Error($" That was quick... Target DLL file does not exist.");
+                Log.Error($"That was quick... Target DLL file does not exist.");
                 return;
             }
 
@@ -144,7 +148,7 @@ namespace Reactor.Extensibility
                 }
                 catch (Exception e)
                 {
-                    Log.Error(" Failed to load dependencies, detailed exception has been logged to the mod loader log file.");
+                    Log.Error("Failed to load dependencies, detailed exception has been logged to the mod loader log file.");
                     Log.ExceptionSilent(e);
 
                     return;
@@ -158,7 +162,7 @@ namespace Reactor.Extensibility
             }
             catch (Exception e)
             {
-                Log.Error(" Assembly.LoadFrom failed. Detailed exception has been logged to the mod loader log file.");
+                Log.Error("Assembly.LoadFrom failed. Detailed exception has been logged to the mod loader log file.");
                 Log.ExceptionSilent(e);
 
                 return;
@@ -170,12 +174,12 @@ namespace Reactor.Extensibility
             }
             catch (TooManyEntryPointsException)
             {
-                Log.Error(" Mod assembly has more than one entry point defined.");
+                Log.Error("Mod assembly has more than one entry point defined.");
                 return;
             }
             catch (MissingEntryPointException)
             {
-                Log.Error(" Mod assembly has no entry points defined.");
+                Log.Error("Mod assembly has no entry points defined.");
                 return;
             }
 
@@ -186,7 +190,7 @@ namespace Reactor.Extensibility
             }
             catch (Exception e)
             {
-                Log.Error(" modAssembly.GetTypes() failed. Detailed exception has been logged to the mod loader log file.");
+                Log.Error("GetTypes() failed. Detailed exception has been logged to the mod loader log file.");
                 Log.ExceptionSilent(e);
 
                 return;
@@ -201,19 +205,19 @@ namespace Reactor.Extensibility
             }
             catch (InvalidModIdException e)
             {
-                Log.Error($" Mod ID invalid: {e.Message}");
+                Log.Error($"Mod ID invalid: {e.Message}");
                 return;
             }
             catch (Exception e)
             {
-                Log.Error($" {e.Message}");
+                Log.Error($"Mod ID invalid: {e.Message}");
                 return;
             }
 
             var initMethodInfo = entryPointType.GetMethod(entryPointInfo.InitializerName, new Type[] { typeof(IManager) });
             if (initMethodInfo == null)
             {
-                Log.Error($" Initializer method '{entryPointInfo.InitializerName}' accepting parameter of type 'IManager' not found.");
+                Log.Error($"Initializer method '{entryPointInfo.InitializerName}' accepting parameter of type 'IManager' not found.");
                 return;
             }
 
@@ -221,7 +225,7 @@ namespace Reactor.Extensibility
             foreach (var messageHandler in messageHandlers)
             {
                 Messenger.RegisterHandlerFor(messageHandler.ModID, messageHandler.MessageName, messageHandler.Method);
-                Log.Success($" Registered message handler '{messageHandler.ModID}:{messageHandler.MessageName}' <{messageHandler.Method.Name}>");
+                Log.Success($"Registered message handler <{messageHandler.Method.Name}> for '{messageHandler.ModID}:{messageHandler.MessageName}'");
             }
 
             var modHost = new ModHost
@@ -237,6 +241,11 @@ namespace Reactor.Extensibility
                 modHost.GameObject = new UnityEngine.GameObject(entryPointInfo.ModID);
                 UnityEngine.Object.DontDestroyOnLoad(modHost.GameObject);
 
+                if (entryPointInfo.AwakeAfterInitialize)
+                {
+                    modHost.GameObject.SetActive(false);
+                }
+
                 modHost.Instance = modHost.GameObject.AddComponent(entryPointType);
             }
             else
@@ -244,6 +253,9 @@ namespace Reactor.Extensibility
                 var instance = Activator.CreateInstance(entryPointType);
                 modHost.Instance = instance;
             }
+
+            Registry.RegisterMod(modHost);
+            Log.Success("Loaded and registered successfully. Initializing and activating.");
 
             entryPointType.GetMethod(
                 entryPointInfo.InitializerName,
@@ -253,9 +265,7 @@ namespace Reactor.Extensibility
                 new object[] { Manager }
             );
 
-            Registry.RegisterMod(modHost);
-            Log.Success(" Loaded successfully.");
-
+            modHost.GameObject.SetActive(true);
             Manager.OnModInitialized(modHost.ToExchangeableApiObject());
         }
 
