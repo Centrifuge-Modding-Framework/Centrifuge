@@ -1,4 +1,5 @@
-﻿using Reactor.API;
+﻿using Harmony;
+using Reactor.API;
 using Reactor.API.Configuration;
 using Reactor.API.DataModel;
 using Reactor.API.Events;
@@ -10,6 +11,7 @@ using Reactor.Extensibility;
 using Reactor.Input;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Reactor
 {
@@ -19,9 +21,11 @@ namespace Reactor
 
         private ModRegistry ModRegistry { get; set; }
         private ModLoader ModLoader { get; set; }
+        private HarmonyInstance Harmony { get; set; }
 
         public IHotkeyManager Hotkeys { get; private set; }
         public IMessenger Messenger { get; private set; }
+
 
         public event EventHandler<ModInitializationEventArgs> ModInitialized;
         public event EventHandler InitFinished;
@@ -29,6 +33,9 @@ namespace Reactor
         public void Awake()
         {
             DontDestroyOnLoad(gameObject);
+
+            Harmony = HarmonyInstance.Create(Global.ReactorModLoaderNamespace);
+            Harmony.PatchAll(Assembly.GetExecutingAssembly());
 
             InitializeSettings();
             InitializeLogger();
