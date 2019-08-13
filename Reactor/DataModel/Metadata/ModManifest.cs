@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace Reactor.DataModel
+namespace Reactor.DataModel.Metadata
 {
     internal class ModManifest
     {
@@ -44,7 +44,7 @@ namespace Reactor.DataModel
             }
             catch (Exception ex)
             {
-                throw new MetadataReadException("Failed to open the manifest file.", true, string.Empty, ex);
+                throw new ManifestReadException("Failed to open the manifest file.", true, string.Empty, ex);
             }
 
             try
@@ -53,7 +53,7 @@ namespace Reactor.DataModel
 
                 if (manifest == null)
                 {
-                    throw new MetadataReadException("JSON deserializer returned null.", false, json);
+                    throw new ManifestReadException("JSON deserializer returned null.", false, json);
                 }
 
                 if (manifest.Priority == null)
@@ -65,11 +65,11 @@ namespace Reactor.DataModel
             }
             catch (JsonException je)
             {
-                throw new MetadataReadException("Failed to deserialize JSON data.", false, json, je);
+                throw new ManifestReadException("Failed to deserialize JSON data.", false, json, je);
             }
             catch (Exception e)
             {
-                throw new MetadataReadException("Unexpected metadata read exception occured.", false, json, e);
+                throw new ManifestReadException("Unexpected metadata read exception occured.", false, json, e);
             }
         }
 
