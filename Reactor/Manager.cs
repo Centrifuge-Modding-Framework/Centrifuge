@@ -26,7 +26,6 @@ namespace Reactor
         public IHotkeyManager Hotkeys { get; private set; }
         public IMessenger Messenger { get; private set; }
 
-
         public event EventHandler<ModInitializationEventArgs> ModInitialized;
         public event EventHandler InitFinished;
 
@@ -34,9 +33,7 @@ namespace Reactor
         {
             DontDestroyOnLoad(gameObject);
 
-            Harmony = HarmonyInstance.Create(Global.ReactorModLoaderNamespace);
-            Harmony.PatchAll(Assembly.GetExecutingAssembly());
-
+            InitializeHarmony();
             InitializeSettings();
             InitializeLogger();
 
@@ -74,14 +71,21 @@ namespace Reactor
             InitFinished?.Invoke(this, EventArgs.Empty);
         }
 
+        private void InitializeHarmony()
+        {
+            Harmony = HarmonyInstance.Create(Global.ReactorModLoaderNamespace);
+            Harmony.PatchAll(Assembly.GetExecutingAssembly());
+        }
+
         private void InitializeSettings()
         {
             Global.Settings = new Settings("centrifuge");
-
             Global.Settings.GetOrCreate(Global.InterceptUnityLogsSettingsKey, true);
 
             if (Global.Settings.Dirty)
+            {
                 Global.Settings.Save();
+            }
         }
 
         private void InitializeLogger()
@@ -104,7 +108,9 @@ namespace Reactor
             var msg = $"[::UNITY::] {condition}";
 
             if (!string.IsNullOrEmpty(stackTrace))
+            {
                 msg += $"\n{stackTrace}";
+            }
 
             switch (type)
             {
