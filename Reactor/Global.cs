@@ -8,9 +8,6 @@ namespace Reactor
         internal static GameObject GameApiObject { get; set; }
         internal static Settings Settings { get; set; }
 
-        internal const string CentrifugeGameApiObjectName = "com.github.ciastex.CentrifugeGameAPI";
-        internal const string ReactorModLoaderNamespace = "com.github.ciastex.ReactorModLoader";
-
         internal const string InterceptUnityLogsSettingsKey = "InterceptUnityLogs";
     }
 }

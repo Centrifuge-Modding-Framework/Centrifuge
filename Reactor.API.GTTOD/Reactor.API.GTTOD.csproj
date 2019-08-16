@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lib.Harmony.1.2.0.1\lib\net35\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\Centrifuge.Shared\BinaryBlobs\GTTOD\Assembly-CSharp.dll</HintPath>
     </Reference>
@@ -49,8 +52,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Events\Args\ApiEventArgsBase.cs" />
+    <Compile Include="Events\Args\MethodPreviewEventArgs.cs" />
+    <Compile Include="Events\Weapon.cs" />
     <Compile Include="GameAPI.cs" />
+    <Compile Include="Mixins\WeaponScriptMixins.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Internal\Terminal.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Reactor.API\Reactor.API.csproj">
+      <Project>{e00cda95-c063-4bbe-bf73-fb2733be4f34}</Project>
+      <Name>Reactor.API</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

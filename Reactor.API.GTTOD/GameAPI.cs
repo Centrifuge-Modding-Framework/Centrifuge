@@ -1,28 +1,24 @@
-﻿using CommandTerminal;
-using System;
-using System.Collections;
+﻿using Harmony;
+using System.Reflection;
 using UnityEngine;
 
 namespace Reactor.API.GTTOD
 {
     public class GameAPI : MonoBehaviour
     {
-        public static event EventHandler TerminalInitialized;
+        internal HarmonyInstance HarmonyInstance { get; private set; }
+        public CommandTerminal.Terminal Terminal => Internal.Terminal.Reference;
 
         public void Awake()
         {
             DontDestroyOnLoad(gameObject);
+            InitializeMixins();
         }
 
-        public void Start()
+        private void InitializeMixins()
         {
-            StartCoroutine(WaitForTerminal());
-        }
-
-        IEnumerator WaitForTerminal()
-        {
-            yield return new WaitUntil(() => FindObjectOfType<Terminal>());
-            TerminalInitialized?.Invoke(this, EventArgs.Empty);
+            HarmonyInstance = HarmonyInstance.Create(Defaults.ReactorGameApiNamespace);
+            HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
         }
     }
 }

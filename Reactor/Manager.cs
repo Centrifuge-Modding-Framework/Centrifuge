@@ -1,5 +1,4 @@
-﻿using Harmony;
-using Reactor.API;
+﻿using Reactor.API;
 using Reactor.API.Configuration;
 using Reactor.API.DataModel;
 using Reactor.API.Events;
@@ -11,7 +10,6 @@ using Reactor.Extensibility;
 using Reactor.Input;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace Reactor
 {
@@ -21,7 +19,6 @@ namespace Reactor
 
         private ModRegistry ModRegistry { get; set; }
         private ModLoader ModLoader { get; set; }
-        private HarmonyInstance Harmony { get; set; }
 
         public IHotkeyManager Hotkeys { get; private set; }
         public IMessenger Messenger { get; private set; }
@@ -33,7 +30,6 @@ namespace Reactor
         {
             DontDestroyOnLoad(gameObject);
 
-            InitializeHarmony();
             InitializeSettings();
             InitializeLogger();
 
@@ -45,7 +41,7 @@ namespace Reactor
             ModRegistry = new ModRegistry();
             ModLoader = new ModLoader(this, Defaults.ManagerModDirectory, ModRegistry);
 
-            Global.GameApiObject = new UnityEngine.GameObject(Global.CentrifugeGameApiObjectName);
+            Global.GameApiObject = new UnityEngine.GameObject(Defaults.ReactorGameApiNamespace);
             Global.GameApiObject.AddComponent<GameAPI>();
 
             InitializeMods();
@@ -69,12 +65,6 @@ namespace Reactor
         internal void OnInitFinished()
         {
             InitFinished?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void InitializeHarmony()
-        {
-            Harmony = HarmonyInstance.Create(Global.ReactorModLoaderNamespace);
-            Harmony.PatchAll(Assembly.GetExecutingAssembly());
         }
 
         private void InitializeSettings()

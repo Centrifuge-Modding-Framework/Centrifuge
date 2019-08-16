@@ -27,5 +27,8 @@ namespace Reactor.API
         public const string ManagerLogFileName = "Manager";
 
         public const string ManifestFileName = "mod.json";
+
+        public const string ReactorModLoaderNamespace = "com.github.ciastex.ReactorModLoader";
+        public const string ReactorGameApiNamespace = "com.github.ciastex.ReactorGameAPI";
     }
 }
