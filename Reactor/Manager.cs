@@ -2,6 +2,7 @@
 using Reactor.API.Configuration;
 using Reactor.API.DataModel;
 using Reactor.API.Events;
+using Reactor.API.Extensions;
 using Reactor.API.GTTOD;
 using Reactor.API.Interfaces.Systems;
 using Reactor.API.Logging;
@@ -43,6 +44,8 @@ namespace Reactor
 
             Global.GameApiObject = new UnityEngine.GameObject(Defaults.ReactorGameApiNamespace);
             Global.GameApiObject.AddComponent<GameAPI>();
+
+            AddCetrifugeSpecificCommands();
 
             InitializeMods();
         }
@@ -92,6 +95,23 @@ namespace Reactor
         {
             ModLoader.Init();
         }
+
+        private void AddCetrifugeSpecificCommands()
+        {
+            CommandTerminal.Terminal.Shell.AddCommand("cnfg_version", (args) =>
+            {
+                var reactorAssembly = AssemblyEx.GetAssemblyByName("Reactor");
+                var centrifugeAssembly = AssemblyEx.GetAssemblyByName("Centrifuge");
+                var reactorApiAssembly = AssemblyEx.GetAssemblyByName("Reactor.API");
+                var reactorGameApiAssembly = AssemblyEx.GetAssemblyByName("Reactor.API.GTTOD");
+
+                CommandTerminal.Terminal.Log($"Reactor ModLoader version: {reactorAssembly.GetName().Version.ToString()}");
+                CommandTerminal.Terminal.Log($"Reactor GameAPI version: {reactorGameApiAssembly.GetName().Version.ToString()}");
+                CommandTerminal.Terminal.Log($"Reactor API version: {reactorApiAssembly.GetName().Version.ToString()}");
+                CommandTerminal.Terminal.Log($"Centrifuge version: {centrifugeAssembly.GetName().Version.ToString()}");
+            }, 0, -1, "Prints versions of all Centrifuge modules.");
+        }
+
 
         private void Application_logMessageReceived(string condition, string stackTrace, UnityEngine.LogType type)
         {
