@@ -64,6 +64,8 @@
   <ItemGroup>
     <Compile Include="Events\Args\ApiEventArgsBase.cs" />
     <Compile Include="Events\Args\MethodPreviewEventArgs.cs" />
+    <Compile Include="Events\Args\TerminalStateEventArgs.cs" />
+    <Compile Include="Events\Args\TerminalStyleEventArgs.cs" />
     <Compile Include="Events\Weapon.cs" />
     <Compile Include="GameAPI.cs" />
     <Compile Include="Global.cs" />
