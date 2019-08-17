@@ -66,6 +66,7 @@
     <Compile Include="Events\ModInitializationEventArgs.cs" />
     <Compile Include="Exceptions\ManifestReadException.cs" />
     <Compile Include="Exceptions\SettingsException.cs" />
+    <Compile Include="Extensions\AssemblyEx.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Input\Hotkey.cs" />
     <Compile Include="Input\Keyboard.cs" />

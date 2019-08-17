@@ -6,8 +6,6 @@ namespace Reactor.API.GTTOD.Internal
 {
     internal class Terminal
     {
-        internal static bool IsInitializing { get; private set; } = true;
-
         private Settings Settings { get; }
         public GttodTerminal GameTerminal { get; private set; }
 
@@ -15,6 +13,8 @@ namespace Reactor.API.GTTOD.Internal
         {
             Settings = settings;
             CreateGameApiTerminal();
+
+            GttodTerminal.Log("Reactor Game API has been loaded, game terminal overriden.");
         }
 
         private void CreateGameApiTerminal()
@@ -24,8 +24,6 @@ namespace Reactor.API.GTTOD.Internal
 
             GameTerminal = termGameObject.AddComponent<GttodTerminal>();
             SetUpTerminalSettings();
-
-            IsInitializing = false;
         }
 
         private void SetUpTerminalSettings()
