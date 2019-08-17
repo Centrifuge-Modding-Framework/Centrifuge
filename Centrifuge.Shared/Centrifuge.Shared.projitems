@@ -15,5 +15,8 @@
     <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\Unity\UnityEngine.AssetBundleModule.dll" />
     <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\Unity\UnityEngine.CoreModule.dll" />
     <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\Unity\UnityEngine.dll" />
+    <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\Unity\UnityEngine.IMGUIModule.dll" />
+    <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\Unity\UnityEngine.TextCoreModule.dll" />
+    <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\Unity\UnityEngine.TextRenderingModule.dll" />
   </ItemGroup>
 </Project>

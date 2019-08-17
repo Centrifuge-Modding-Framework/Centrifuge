@@ -42,7 +42,7 @@ namespace Reactor
             ModLoader = new ModLoader(this, Defaults.ManagerModDirectory, ModRegistry);
 
             Global.GameApiObject = new UnityEngine.GameObject(Defaults.ReactorGameApiNamespace);
-            Global.GameApiObject.AddComponent<GameAPI>();
+            var gameApiComponent = Global.GameApiObject.AddComponent<GameAPI>();
 
             InitializeMods();
         }
@@ -69,7 +69,7 @@ namespace Reactor
 
         private void InitializeSettings()
         {
-            Global.Settings = new Settings("centrifuge");
+            Global.Settings = new Settings("reactor");
             Global.Settings.GetOrCreate(Global.InterceptUnityLogsSettingsKey, true);
 
             if (Global.Settings.Dirty)

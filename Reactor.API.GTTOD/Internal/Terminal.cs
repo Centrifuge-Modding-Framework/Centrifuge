@@ -1,29 +1,43 @@
-﻿using UnityEngine;
+﻿using Reactor.API.Configuration;
+using UnityEngine;
 using GttodTerminal = CommandTerminal.Terminal;
 
 namespace Reactor.API.GTTOD.Internal
 {
     internal class Terminal
     {
-        private static GttodTerminal _reference;
-        public static GttodTerminal Reference
-        {
-            get
-            {
-                EnsureReferenceValid();
-                return _reference;
-            }
-        }
-        
-        private static void EnsureReferenceValid()
-        {
-            _reference = GameObject.FindObjectOfType<GttodTerminal>();
+        internal static bool IsInitializing { get; private set; } = true;
 
-            if (!_reference)
-            {
-                var termGameObject = new GameObject("com.github.ciastex/ReactorGameAPI.ReplacementGameTerminal");
-                _reference = termGameObject.AddComponent<GttodTerminal>();
-            }
+        private Settings Settings { get; }
+        public GttodTerminal GameTerminal { get; private set; }
+
+        internal Terminal(Settings settings)
+        {
+            Settings = settings;
+            CreateGameApiTerminal();
+        }
+
+        private void CreateGameApiTerminal()
+        {
+            var termGameObject = new GameObject(Global.GameTerminalNamespace);
+            GameObject.DontDestroyOnLoad(termGameObject);
+
+            GameTerminal = termGameObject.AddComponent<GttodTerminal>();
+            SetUpTerminalSettings();
+
+            IsInitializing = false;
+        }
+
+        private void SetUpTerminalSettings()
+        {
+            GameTerminal.ConsoleFont = Font.CreateDynamicFontFromOSFont(
+                Settings.GetItem<string>(Global.ConsoleFontNameSettingsKey),
+                Settings.GetItem<int>(Global.ConsoleFontSizeSettingsKey)
+            );
+
+            GameTerminal.ToggleSpeed = Settings.GetItem<int>(Global.ConsoleDropDownAnimationSpeedSettingsKey);
+            GameTerminal.BufferSize = Settings.GetItem<int>(Global.ConsoleBufferSizeSettingsKey);
+            GameTerminal.ShowGUIButtons = Settings.GetItem<bool>(Global.ConsoleShowGuiButtonsSettingsKey);
         }
     }
 }

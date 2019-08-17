@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,8 +35,8 @@
     <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Lib.Harmony.1.2.0.1\lib\net35\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\Centrifuge.Shared\BinaryBlobs\GTTOD\Assembly-CSharp.dll</HintPath>
+    <Reference Include="Assembly-CSharp.dev">
+      <HintPath>..\Centrifuge.Shared\BinaryBlobs\GTTOD\Assembly-CSharp.dev.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -50,12 +51,23 @@
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\Centrifuge.Shared\BinaryBlobs\Unity\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>..\Centrifuge.Shared\BinaryBlobs\Unity\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreModule">
+      <HintPath>..\Centrifuge.Shared\BinaryBlobs\Unity\UnityEngine.TextCoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>..\Centrifuge.Shared\BinaryBlobs\Unity\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Events\Args\ApiEventArgsBase.cs" />
     <Compile Include="Events\Args\MethodPreviewEventArgs.cs" />
     <Compile Include="Events\Weapon.cs" />
     <Compile Include="GameAPI.cs" />
+    <Compile Include="Global.cs" />
+    <Compile Include="Mixins\TerminalMixins.cs" />
     <Compile Include="Mixins\WeaponScriptMixins.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Internal\Terminal.cs" />
