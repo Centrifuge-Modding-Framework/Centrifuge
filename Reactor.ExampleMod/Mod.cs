@@ -2,7 +2,6 @@
 using Reactor.API.Attributes;
 using Reactor.API.Configuration;
 using Reactor.API.DataModel;
-using Reactor.API.GTTOD;
 using Reactor.API.Input;
 using Reactor.API.Interfaces.Systems;
 using System;
@@ -16,7 +15,7 @@ namespace Reactor.ExampleMod
     {
         public const string ModID = "com.github.ciastex/ExampleMod";
 
-        private Logger _logger = new Logger("diagnostics");
+        private readonly Logger _logger = new Logger("diagnostics");
         private Settings _settings;
 
         public void Initialize(IManager manager)
