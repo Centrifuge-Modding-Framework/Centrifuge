@@ -7,7 +7,7 @@ namespace Reactor.API.GTTOD.Mixins
     [HarmonyPatch(typeof(Terminal), "OnEnable")]
     internal class TerminalOnEnableMixin
     {
-        static bool Prefix(Terminal __instance)
+        public static bool Prefix(Terminal __instance)
         {
             if (__instance.gameObject.name == "Game")
                 return false;
@@ -19,7 +19,7 @@ namespace Reactor.API.GTTOD.Mixins
     [HarmonyPatch(typeof(Terminal), "Start")]
     internal class TerminalStartMixin
     {
-        static bool Prefix(Terminal __instance)
+        public static bool Prefix(Terminal __instance)
         {
             if (__instance.gameObject.name == "Game")
             {

@@ -42,7 +42,7 @@ namespace Reactor
             ModLoader = new ModLoader(this, Defaults.ManagerModDirectory, ModRegistry);
 
             Global.GameApiObject = new UnityEngine.GameObject(Defaults.ReactorGameApiNamespace);
-            var gameApiComponent = Global.GameApiObject.AddComponent<GameAPI>();
+            Global.GameApiObject.AddComponent<GameAPI>();
 
             InitializeMods();
         }

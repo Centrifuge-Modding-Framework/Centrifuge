@@ -7,7 +7,7 @@ namespace Reactor.API.GTTOD.Mixins
     [HarmonyPatch(typeof(WeaponScript), "Awake")]
     internal class WeaponScriptAwakeEventMixins
     {
-        static bool Prefix(WeaponScript __instance)
+        public static bool Prefix(WeaponScript __instance)
         {
             var eventArgs = new MethodPreviewEventArgs<WeaponScript>(__instance);
             Weapon.InvokePreviewAwake(eventArgs);
@@ -15,7 +15,7 @@ namespace Reactor.API.GTTOD.Mixins
             return !eventArgs.Cancel;
         }
 
-        static void Postfix(WeaponScript __instance)
+        public static void Postfix(WeaponScript __instance)
         {
             var eventArgs = new ApiEventArgsBase<WeaponScript>(__instance);
             Weapon.InvokeAwakeComplete(eventArgs);
