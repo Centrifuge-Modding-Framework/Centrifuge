@@ -7,15 +7,19 @@ namespace Reactor.API.GTTOD.Events
     {
         public static event EventHandler<MethodPreviewEventArgs<WeaponScript>> PreviewAwake;
         public static event EventHandler<ApiEventArgsBase<WeaponScript>> AwakeComplete;
+        public static event EventHandler<WeaponFireEventArgs> ShotFired;
 
-        internal static void InvokePreviewAwake(MethodPreviewEventArgs<WeaponScript> args)
-        {
-            PreviewAwake?.Invoke(null, args);
-        }
+        internal static void InvokePreviewAwake(MethodPreviewEventArgs<WeaponScript> e)
+            => PreviewAwake?.Invoke(null, e);
 
-        internal static void InvokeAwakeComplete(ApiEventArgsBase<WeaponScript> args)
-        {
-            AwakeComplete?.Invoke(null, args);
-        }
+        internal static void InvokeAwakeComplete(ApiEventArgsBase<WeaponScript> e)
+            => AwakeComplete?.Invoke(null, e);
+
+        internal static void InvokeShotFiredPrimary(WeaponScript weapon)
+            => ShotFired?.Invoke(null, new WeaponFireEventArgs(weapon.gameObject) { IsPrimaryFire = true });
+
+        internal static void InvokeShotFiredSecondary(WeaponScript weapon)
+            => ShotFired?.Invoke(null, new WeaponFireEventArgs(weapon.gameObject) { IsPrimaryFire = false });
     }
 }
+

@@ -1,26 +1,38 @@
 ﻿using Harmony;
 using Reactor.API.Configuration;
 using Reactor.API.GTTOD.Internal;
+using System;
 using System.Reflection;
 using UnityEngine;
+using Logger = Reactor.API.Logging.Logger;
 
 namespace Reactor.API.GTTOD
 {
     public class GameAPI : MonoBehaviour
     {
         private Settings Settings { get; set; }
+        private Logger Logger { get; set; }
 
-        internal HarmonyInstance HarmonyInstance { get; private set; }
-        internal Terminal Terminal { get; private set; }
+        private HarmonyInstance HarmonyInstance { get; set; }
+        private Terminal Terminal { get; set; }
 
         public void Awake()
         {
             DontDestroyOnLoad(gameObject);
+            Logger = new Logger("game_api");
 
             InitializeSettings();
-            InitializeMixins();
-
             Terminal = new Terminal(Settings);
+
+            try
+            {
+                InitializeMixins();
+            }
+            catch (Exception e)
+            {
+                Logger.Error("Failed to initialize Game API mix-ins. Mods will still be loaded, but may not function correctly.");
+                Logger.ExceptionSilent(e);
+            }
         }
 
         private void InitializeSettings()
@@ -41,6 +53,8 @@ namespace Reactor.API.GTTOD
         {
             HarmonyInstance = HarmonyInstance.Create(Defaults.ReactorGameApiNamespace);
             HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
+
+            Transpilers.WeaponScript.ApplyAll(HarmonyInstance);
         }
     }
 }
