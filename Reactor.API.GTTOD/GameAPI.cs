@@ -55,6 +55,7 @@ namespace Reactor.API.GTTOD
             HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
 
             Transpilers.WeaponScript.ApplyAll(HarmonyInstance);
+            Transpilers.EnemyNPC.ApplyAll(HarmonyInstance);
         }
     }
 }
