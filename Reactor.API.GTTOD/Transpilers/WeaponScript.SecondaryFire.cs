@@ -10,6 +10,9 @@ namespace Reactor.API.GTTOD.Transpilers
     {
         private static class SecondaryFire
         {
+            private const int EventHookOpCodeIndex = 91;
+            private const int PrevBranchOpCodeIndex = 93;
+
             private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instr)
             {
                 var modified = new List<CodeInstruction>(instr);
@@ -24,12 +27,12 @@ namespace Reactor.API.GTTOD.Transpilers
                     BindingFlags.NonPublic | BindingFlags.Static
                 );
 
-                modified.Insert(91, new CodeInstruction(OpCodes.Call, invoker));
-                modified.Insert(91, new CodeInstruction(OpCodes.Ldloc_1));
+                modified.Insert(EventHookOpCodeIndex, new CodeInstruction(OpCodes.Call, invoker));
+                modified.Insert(EventHookOpCodeIndex, new CodeInstruction(OpCodes.Ldloc_1));
 
-                var label = modified[93].labels[0];
-                modified[93].labels.Clear();
-                modified[91].labels.Add(label);
+                var label = modified[PrevBranchOpCodeIndex].labels[0];
+                modified[PrevBranchOpCodeIndex].labels.Clear();
+                modified[EventHookOpCodeIndex].labels.Add(label);
 
                 return modified;
             }
