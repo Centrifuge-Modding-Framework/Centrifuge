@@ -46,7 +46,6 @@ namespace Reactor
             Global.GameApiObject.AddComponent<GameAPI>();
 
             AddCetrifugeSpecificCommands();
-
             InitializeMods();
         }
 
