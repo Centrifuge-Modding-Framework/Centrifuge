@@ -2,6 +2,7 @@
 using Reactor.API.Attributes;
 using Reactor.API.Configuration;
 using Reactor.API.DataModel;
+using Reactor.API.GTTOD.Events.Args;
 using Reactor.API.Input;
 using Reactor.API.Interfaces.Systems;
 using System;
@@ -41,6 +42,17 @@ namespace Reactor.ExampleMod
             msg["test"] = "THIS BE A RESPONS";
 
             manager.Messenger.Send(msg);
+
+            API.GTTOD.Events.Weapon.ShotFired += Weapon_ShotFired;
+        }
+
+        private void Weapon_ShotFired(object sender, WeaponFireEventArgs e)
+        {
+            var components = e.Instance.GetComponents<Component>();
+            foreach (var comp in components)
+            {
+                _logger.Info($"{comp.GetType().Name}");
+            }
         }
 
         public void Awake()
