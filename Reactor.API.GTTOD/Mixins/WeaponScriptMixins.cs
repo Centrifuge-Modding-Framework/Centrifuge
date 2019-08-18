@@ -5,7 +5,7 @@ using Reactor.API.GTTOD.Events.Args;
 namespace Reactor.API.GTTOD.Mixins
 {
     [HarmonyPatch(typeof(WeaponScript), "Awake")]
-    internal static class WeaponScriptAwakeMixins
+    internal class WeaponScriptAwakeMixins
     {
         public static bool Prefix(WeaponScript __instance)
         {
