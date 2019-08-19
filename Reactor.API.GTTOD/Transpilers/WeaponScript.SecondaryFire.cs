@@ -12,6 +12,7 @@ namespace Reactor.API.GTTOD.Transpilers
         {
             private const int EventHookOpCodeIndex = 91;
             private const int PrevBranchOpCodeIndex = 93;
+            private const string SecondaryFireCoroutineClassName = "<SecondaryFire>d__130";
 
             private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instr)
             {
@@ -39,7 +40,7 @@ namespace Reactor.API.GTTOD.Transpilers
 
             public static void Apply(HarmonyInstance harmony)
             {
-                var methodInfo = typeof(global::WeaponScript).GetNestedType("<SecondaryFire>d__130", BindingFlags.NonPublic).GetMethod("MoveNext", BindingFlags.NonPublic | BindingFlags.Instance);
+                var methodInfo = typeof(global::WeaponScript).GetNestedType(SecondaryFireCoroutineClassName, BindingFlags.NonPublic).GetMethod("MoveNext", BindingFlags.NonPublic | BindingFlags.Instance);
                 var transpilerMethod = typeof(SecondaryFire).GetMethod(nameof(Transpiler), BindingFlags.NonPublic | BindingFlags.Static);
 
                 harmony.Patch(methodInfo, transpiler: new HarmonyMethod(transpilerMethod));
