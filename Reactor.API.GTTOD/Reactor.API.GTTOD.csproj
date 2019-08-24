@@ -63,13 +63,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Events\Args\ApiEventArgsBase.cs" />
+    <Compile Include="Events\Args\TypeInstanceEventArgs.cs" />
     <Compile Include="Events\Args\EnemyDeathEventArgs.cs" />
     <Compile Include="Events\Args\MethodPreviewEventArgs.cs" />
     <Compile Include="Events\Args\TerminalStateEventArgs.cs" />
     <Compile Include="Events\Args\TerminalStyleEventArgs.cs" />
     <Compile Include="Events\Args\WeaponFireEventArgs.cs" />
     <Compile Include="Events\EnemyNPC.cs" />
+    <Compile Include="Events\Rocket.cs" />
     <Compile Include="Events\Weapon.cs" />
     <Compile Include="GameAPI.cs" />
     <Compile Include="Global.cs" />
