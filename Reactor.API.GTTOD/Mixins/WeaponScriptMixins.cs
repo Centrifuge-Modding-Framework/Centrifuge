@@ -17,7 +17,7 @@ namespace Reactor.API.GTTOD.Mixins
 
         public static void Postfix(WeaponScript __instance)
         {
-            var eventArgs = new ApiEventArgsBase<WeaponScript>(__instance);
+            var eventArgs = new TypeInstanceEventArgs<WeaponScript>(__instance);
             Weapon.InvokeAwakeComplete(eventArgs);
         }
     }

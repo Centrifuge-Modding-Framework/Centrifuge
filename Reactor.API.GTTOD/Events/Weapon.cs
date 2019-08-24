@@ -6,13 +6,13 @@ namespace Reactor.API.GTTOD.Events
     public class Weapon
     {
         public static event EventHandler<MethodPreviewEventArgs<WeaponScript>> PreviewAwake;
-        public static event EventHandler<ApiEventArgsBase<WeaponScript>> AwakeComplete;
+        public static event EventHandler<TypeInstanceEventArgs<WeaponScript>> AwakeComplete;
         public static event EventHandler<WeaponFireEventArgs> ShotFired;
 
         internal static void InvokePreviewAwake(MethodPreviewEventArgs<WeaponScript> e)
             => PreviewAwake?.Invoke(null, e);
 
-        internal static void InvokeAwakeComplete(ApiEventArgsBase<WeaponScript> e)
+        internal static void InvokeAwakeComplete(TypeInstanceEventArgs<WeaponScript> e)
             => AwakeComplete?.Invoke(null, e);
 
         internal static void InvokeShotFiredPrimary(WeaponScript weapon)
