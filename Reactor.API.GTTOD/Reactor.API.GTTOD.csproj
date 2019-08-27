@@ -70,7 +70,6 @@
     <Compile Include="Events\Args\TerminalStyleEventArgs.cs" />
     <Compile Include="Events\Args\WeaponFireEventArgs.cs" />
     <Compile Include="Events\EnemyNPC.cs" />
-    <Compile Include="Events\Rocket.cs" />
     <Compile Include="Events\Weapon.cs" />
     <Compile Include="GameAPI.cs" />
     <Compile Include="Global.cs" />
