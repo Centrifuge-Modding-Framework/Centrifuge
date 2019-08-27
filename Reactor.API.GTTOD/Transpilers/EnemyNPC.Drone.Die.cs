@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using Reactor.API.GTTOD.Infrastructure;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -7,7 +8,7 @@ namespace Reactor.API.GTTOD.Transpilers
 {
     internal static partial class EnemyNPC
     {
-        private static class DroneDie
+        private class DroneDie : GameCodeTranspiler
         {
             private const int EventHookOpIndex = 27;
 
@@ -22,7 +23,7 @@ namespace Reactor.API.GTTOD.Transpilers
                 return modified;
             }
 
-            public static void Apply(HarmonyInstance harmony)
+            public override void Apply(HarmonyInstance harmony)
             {
                 var methodInfo = typeof(Drone).GetMethod(nameof(Drone.Die), BindingFlags.Public | BindingFlags.Instance);
                 var transpilerMethod = typeof(DroneDie).GetMethod(nameof(Transpiler), BindingFlags.NonPublic | BindingFlags.Static);

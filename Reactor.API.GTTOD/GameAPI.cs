@@ -1,5 +1,6 @@
 ﻿using Harmony;
 using Reactor.API.Configuration;
+using Reactor.API.GTTOD.Infrastructure;
 using Reactor.API.GTTOD.Internal;
 using System;
 using System.Reflection;
@@ -33,6 +34,16 @@ namespace Reactor.API.GTTOD
                 Logger.Error("Failed to initialize Game API mix-ins. Mods will still be loaded, but may not function correctly.");
                 Logger.ExceptionSilent(e);
             }
+
+            try
+            {
+                InitializeTranspilers();
+            }
+            catch (Exception e)
+            {
+                Logger.Error("Failed to initialize one or more transpilers. Mods will still be loaded, but may not function correctly.");
+                Logger.Exception(e);
+            }
         }
 
         private void InitializeSettings()
@@ -53,9 +64,23 @@ namespace Reactor.API.GTTOD
         {
             HarmonyInstance = HarmonyInstance.Create(Defaults.ReactorGameApiNamespace);
             HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
+        }
 
-            Transpilers.WeaponScript.ApplyAll(HarmonyInstance);
-            Transpilers.EnemyNPC.ApplyAll(HarmonyInstance);
+        private void InitializeTranspilers()
+        {
+            var asm = Assembly.GetExecutingAssembly();
+            var types = asm.GetTypes();
+
+            foreach (var type in types)
+            {
+                if (typeof(GameCodeTranspiler).IsAssignableFrom(type) && type != typeof(GameCodeTranspiler))
+                {
+                    var transpiler = (Activator.CreateInstance(type) as GameCodeTranspiler);
+
+                    Logger.Info($"Transpiler: {type.Name}");
+                    transpiler.Apply(HarmonyInstance);
+                }
+            }
         }
     }
 }

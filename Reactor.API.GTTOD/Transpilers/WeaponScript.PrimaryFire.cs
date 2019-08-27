@@ -1,5 +1,6 @@
 ﻿using Harmony;
 using Reactor.API.GTTOD.Events;
+using Reactor.API.GTTOD.Infrastructure;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -8,7 +9,7 @@ namespace Reactor.API.GTTOD.Transpilers
 {
     internal static partial class WeaponScript
     {
-        private static class PrimaryFire
+        private class PrimaryFire : GameCodeTranspiler
         {
             private const int EventHookOpCodeIndex = 130;
             private const string PrimaryFireCoroutineClassName = "<PrimaryFire>d__139";
@@ -33,7 +34,7 @@ namespace Reactor.API.GTTOD.Transpilers
                 return modified;
             }
 
-            public static void Apply(HarmonyInstance harmony)
+            public override void Apply(HarmonyInstance harmony)
             {
                 var methodInfo = typeof(global::WeaponScript).GetNestedType(PrimaryFireCoroutineClassName, BindingFlags.NonPublic).GetMethod("MoveNext", BindingFlags.NonPublic | BindingFlags.Instance);
                 var transpilerMethod = typeof(PrimaryFire).GetMethod(nameof(Transpiler), BindingFlags.NonPublic | BindingFlags.Static);
