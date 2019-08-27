@@ -9,7 +9,7 @@ namespace Reactor.API.GTTOD.Transpilers
     {
         private static class DroneDie
         {
-            private const int EventHookOpIndex = 24;
+            private const int EventHookOpIndex = 27;
 
             private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instr)
             {
