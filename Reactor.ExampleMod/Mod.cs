@@ -2,6 +2,7 @@
 using Reactor.API.Attributes;
 using Reactor.API.Configuration;
 using Reactor.API.DataModel;
+using Reactor.API.GTTOD;
 using Reactor.API.GTTOD.Events.Args;
 using Reactor.API.Input;
 using Reactor.API.Interfaces.Systems;
@@ -44,6 +45,15 @@ namespace Reactor.ExampleMod
             manager.Messenger.Send(msg);
 
             API.GTTOD.Events.Weapon.ShotFired += Weapon_ShotFired;
+            EnemyChatter.AttackMessages.Add("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!");
+            EnemyChatter.AttackMessages.Add("I AM HERE TO CHEW BUBBLE ASS AND KICK GUM!");
+            EnemyChatter.AttackMessages.Add("I GOT BALLS OF STEEL!");
+            EnemyChatter.DeathMessages.Add("HOW DARE YOU KILL MY DEREK FRIEND");
+            EnemyChatter.JokeMessages.Add("OWO WOTS DIS?!");
+            EnemyChatter.ReactionMessages.Add("OH GOD OH FUCK");
+            EnemyChatter.ReloadMessages.Add("SHIT I'M OUT AAAAAAAAAAAAAAAAAAAAA");
+            EnemyChatter.AngryMessages.Add("NOW I'M REALLY PISSED OFF");
+            EnemyChatter.AngryMessages.Add("CM'ERE YOU LIL' SHIT");
         }
 
         private void Weapon_ShotFired(object sender, WeaponFireEventArgs e)

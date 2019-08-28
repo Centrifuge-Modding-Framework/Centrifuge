@@ -77,7 +77,7 @@ namespace Reactor.API.GTTOD
                 {
                     var transpiler = (Activator.CreateInstance(type) as GameCodeTranspiler);
 
-                    Logger.Info($"Transpiler: {type.Name}");
+                    Logger.Info($"Transpiler: {type.FullName}");
                     transpiler.Apply(HarmonyInstance);
                 }
             }
