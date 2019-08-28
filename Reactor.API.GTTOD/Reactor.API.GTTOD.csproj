@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EnemyChatter.cs" />
     <Compile Include="Events\Args\TypeInstanceEventArgs.cs" />
     <Compile Include="Events\Args\EnemyDeathEventArgs.cs" />
     <Compile Include="Events\Args\MethodPreviewEventArgs.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Mixins\WeaponScriptMixins.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Internal\Terminal.cs" />
+    <Compile Include="Transpilers\AITalker.Start.cs" />
     <Compile Include="Transpilers\EnemyNPC.TurretCrab.Die.cs" />
     <Compile Include="Transpilers\EnemyNPC.Drone.Die.cs" />
     <Compile Include="Transpilers\EnemyNPC.Infantry.Die.cs" />
