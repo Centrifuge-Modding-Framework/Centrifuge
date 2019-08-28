@@ -71,10 +71,14 @@
     <Compile Include="Events\Args\TerminalStyleEventArgs.cs" />
     <Compile Include="Events\Args\WeaponFireEventArgs.cs" />
     <Compile Include="Events\EnemyNPC.cs" />
+    <Compile Include="Events\Player.cs" />
     <Compile Include="Events\Weapon.cs" />
+    <Compile Include="Events\Game.cs" />
     <Compile Include="GameAPI.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Infrastructure\GameCodeTranspiler.cs" />
+    <Compile Include="Mixins\GTTODManagerMixins.cs" />
+    <Compile Include="Mixins\MenuScriptMixins.cs" />
     <Compile Include="Mixins\TerminalMixins.cs" />
     <Compile Include="Mixins\WeaponScriptMixins.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -83,6 +87,7 @@
     <Compile Include="Transpilers\EnemyNPC.TurretCrab.Die.cs" />
     <Compile Include="Transpilers\EnemyNPC.Drone.Die.cs" />
     <Compile Include="Transpilers\EnemyNPC.Infantry.Die.cs" />
+    <Compile Include="Transpilers\Game.StartGame.cs" />
     <Compile Include="Transpilers\WeaponScript.PrimaryFire.cs" />
     <Compile Include="Transpilers\WeaponScript.SecondaryFire.cs" />
   </ItemGroup>

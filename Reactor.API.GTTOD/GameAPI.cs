@@ -9,7 +9,7 @@ using Logger = Reactor.API.Logging.Logger;
 
 namespace Reactor.API.GTTOD
 {
-    public class GameAPI : MonoBehaviour
+    internal class GameAPI : MonoBehaviour
     {
         private Settings Settings { get; set; }
         private Logger Logger { get; set; }
