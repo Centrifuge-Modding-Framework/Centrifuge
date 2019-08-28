@@ -50,6 +50,10 @@ namespace Reactor.ExampleMod
             manager.Messenger.Send(msg);
 
             API.GTTOD.Events.Weapon.ShotFired += Weapon_ShotFired;
+            API.GTTOD.Events.Game.GameModeStarted += Game_GameModeStarted;
+            API.GTTOD.Events.Game.PauseMenuOpened += Game_PauseMenuOpened;
+            API.GTTOD.Events.Game.PauseMenuClosed += Game_PauseMenuClosed;
+            API.GTTOD.Events.Player.Died += Player_Died;
             EnemyChatter.AttackMessages.Add("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!");
             EnemyChatter.AttackMessages.Add("I AM HERE TO CHEW BUBBLE ASS AND KICK GUM!");
             EnemyChatter.AttackMessages.Add("I GOT BALLS OF STEEL!");
@@ -61,6 +65,26 @@ namespace Reactor.ExampleMod
             EnemyChatter.AngryMessages.Add("CM'ERE YOU LIL' SHIT");
 
             API.GTTOD.Events.EnemyNPC.InfantryDied += EnemyNPC_InfantryDied;
+        }
+
+        private void Player_Died(object sender, EventArgs e)
+        {
+            _logger.Info("Lol, dead scrub.");
+        }
+
+        private void Game_PauseMenuOpened(object sender, EventArgs e)
+        {
+            _logger.Info("Pause menu opened.");
+        }
+
+        private void Game_PauseMenuClosed(object sender, EventArgs e)
+        {
+            _logger.Info("Pause menu closed.");
+        }
+
+        private void Game_GameModeStarted(object sender, EventArgs e)
+        {
+            _logger.Info("Game mode started!");
         }
 
         private void EnemyNPC_InfantryDied(object sender, EnemyDeathEventArgs e)
