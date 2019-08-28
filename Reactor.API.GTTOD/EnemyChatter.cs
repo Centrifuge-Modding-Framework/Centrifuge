@@ -5,6 +5,14 @@ namespace Reactor.API.GTTOD
 {
     public static class EnemyChatter
     {
+        public static bool RemoveDefaultAttackMessages { get; set; }
+        public static bool RemoveDefaultAngryMessages { get; set; }
+        public static bool RemoveDefaultDeathMessages { get; set; }
+        public static bool RemoveDefaultEquipmentMessages { get; set; }
+        public static bool RemoveDefaultJokeMessages { get; set; }
+        public static bool RemoveDefaultReactionMessages { get; set; }
+        public static bool RemoveDefaultReloadMessages { get; set; }
+
         public static List<string> AttackMessages { get; private set; }
         public static List<string> AngryMessages { get; private set; }
         public static List<string> DeathMessages { get; private set; }
@@ -24,7 +32,14 @@ namespace Reactor.API.GTTOD
             ReloadMessages = new List<string>();
         }
 
+        // It's ran every time an AITalker component is initialized
         internal static void InitializeAdditionalTalkerMessages(AITalker talker)
+        {
+            ClearDefaultsIfRequired(talker);
+            AddCustomMessages(talker);
+        }
+
+        private static void AddCustomMessages(AITalker talker)
         {
             talker.AttackMessages.AddRange(
                 AttackMessages.Select((message) => new TyperMessage { Text = message })
@@ -53,6 +68,44 @@ namespace Reactor.API.GTTOD
             talker.ReloadMessages.AddRange(
                 ReloadMessages.Select((message) => new TyperMessage { Text = message })
             );
+        }
+
+        private static void ClearDefaultsIfRequired(AITalker talker)
+        {
+            if (RemoveDefaultAttackMessages)
+            {
+                talker.AttackMessages.Clear();
+            }
+
+            if (RemoveDefaultAngryMessages)
+            {
+                talker.AngryMessages.Clear();
+            }
+
+            if (RemoveDefaultDeathMessages)
+            {
+                talker.DeathMessages.Clear();
+            }
+
+            if (RemoveDefaultEquipmentMessages)
+            {
+                talker.EquipmentMessages.Clear();
+            }
+
+            if (RemoveDefaultJokeMessages)
+            {
+                talker.JokeMessages.Clear();
+            }
+
+            if (RemoveDefaultReactionMessages)
+            {
+                talker.ReactionMessages.Clear();
+            }
+
+            if (RemoveDefaultReloadMessages)
+            {
+                talker.ReloadMessages.Clear();
+            }
         }
     }
 }
