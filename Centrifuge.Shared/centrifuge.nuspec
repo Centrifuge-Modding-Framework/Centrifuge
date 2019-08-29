@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Centrifuge.Mod.SDK</id>
+    <version>0.2.1-alpha</version>
+    <description>SDK package for Get To The Orange Door mod development.</description>
+    <authors>Ciastex</authors>
+    <license type="file">LICENSE.md</license>
+    <repository type="git" url="https://github.com/Ciastex/Centrifuge.git" branch="develop" />
+    <projectUrl>https://github.com/Ciastex/Centrifuge</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <tags>game-modding gttod modding-sdk modding-framework modding-toolkit sdk</tags>
+    <dependencies>
+      <group targetFramework="net40">
+        <dependency id="Lib.Harmony" version="1.2.0.1" />
+      </group>
+    </dependencies>
+
+    <releaseNotes>
+      Preliminary package for testing purposes. This version will probably get obsolete in a matter of days, but feel free to use it to have a feel around the SDK, as the core API (non-GTTOD) is considered stable.\r\nAlso please ignore the assembly version numbers, as they are bound to differ between what's on AppVeyor and what's here. 
+    </releaseNotes>
+  </metadata>
+
+  <files>
+    <file src="./NuGetScripts/Init.ps1" target="tools/Init.ps1" />
+
+    <file src="./mod.template.json" target="content/mod.json" />
+    <file src="./Mod.template.cs" target="content/Mod.cs" />
+
+    <file src="../LICENSE.md" target="" />
+    
+    <file src="./BinaryBlobs/GTTOD/Assembly-CSharp.dev.dll" target="lib/net40/Assembly-CSharp.dll" />
+    <file src="./BinaryBlobs/GTTOD/Newtonsoft.Json.dll" target="lib/net40" />
+    
+    <file src="./BinaryBlobs/Unity/UnityEngine.AssetBundleModule.dll" target="lib/net40" />
+    <file src="./BinaryBlobs/Unity/UnityEngine.CoreModule.dll" target="lib/net40" />
+    <file src="./BinaryBlobs/Unity/UnityEngine.dll" target="lib/net40" />
+    <file src="./BinaryBlobs/Unity/UnityEngine.IMGUIModule.dll" target="lib/net40" />
+    <file src="./BinaryBlobs/Unity/UnityEngine.TextCoreModule.dll" target="lib/net40" />
+    <file src="./BinaryBlobs/Unity/UnityEngine.TextRenderingModule.dll" target="lib/net40" />
+    
+    <file src="../Reactor.API/bin/Release/Reactor.API.dll" target="lib/net40" />
+    <file src="../Reactor.API.GTTOD/bin/Release/Reactor.API.GTTOD.dll" target="lib/net40" />
+  </files>
+</package>
