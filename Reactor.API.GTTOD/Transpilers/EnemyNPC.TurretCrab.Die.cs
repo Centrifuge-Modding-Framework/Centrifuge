@@ -15,7 +15,11 @@ namespace Reactor.API.GTTOD.Transpilers
             private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instr)
             {
                 var modified = new List<CodeInstruction>(instr);
-                var invoker = typeof(Events.EnemyNPC).GetMethod(nameof(Events.EnemyNPC.InvokeTurretCrabDied), BindingFlags.NonPublic | BindingFlags.Static);
+
+                var invoker = typeof(Events.EnemyNPC).GetMethod(
+                    nameof(Events.EnemyNPC.InvokeTurretCrabDied),
+                    BindingFlags.NonPublic | BindingFlags.Static
+                );
 
                 modified.Insert(EventHookOpIndex, new CodeInstruction(OpCodes.Call, invoker));
                 modified.Insert(EventHookOpIndex, new CodeInstruction(OpCodes.Ldarg_0));
@@ -25,10 +29,17 @@ namespace Reactor.API.GTTOD.Transpilers
 
             public override void Apply(HarmonyInstance harmony)
             {
-                var methodInfo = typeof(TurretCrab).GetMethod(nameof(TurretCrab.Die), BindingFlags.Public | BindingFlags.Instance);
-                var transpilerMethod = typeof(TurretCrabDie).GetMethod(nameof(Transpiler), BindingFlags.NonPublic | BindingFlags.Static);
+                var targetMethod = typeof(TurretCrab).GetMethod(
+                    nameof(TurretCrab.Die),
+                    BindingFlags.Public | BindingFlags.Instance
+                );
 
-                harmony.Patch(methodInfo, transpiler: new HarmonyMethod(transpilerMethod));
+                var transpilerMethod = typeof(TurretCrabDie).GetMethod(
+                    nameof(Transpiler),
+                    BindingFlags.NonPublic | BindingFlags.Static
+                );
+
+                harmony.Patch(targetMethod, transpiler: new HarmonyMethod(transpilerMethod));
             }
         }
     }

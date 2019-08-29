@@ -36,10 +36,20 @@ namespace Reactor.API.GTTOD.Transpilers
 
             public override void Apply(HarmonyInstance harmony)
             {
-                var methodInfo = typeof(global::WeaponScript).GetNestedType(PrimaryFireCoroutineClassName, BindingFlags.NonPublic).GetMethod("MoveNext", BindingFlags.NonPublic | BindingFlags.Instance);
-                var transpilerMethod = typeof(PrimaryFire).GetMethod(nameof(Transpiler), BindingFlags.NonPublic | BindingFlags.Static);
+                var targetMethod = typeof(global::WeaponScript).GetNestedType(
+                    PrimaryFireCoroutineClassName,
+                    BindingFlags.NonPublic
+                ).GetMethod(
+                    "MoveNext",
+                    BindingFlags.NonPublic | BindingFlags.Instance
+                );
 
-                harmony.Patch(methodInfo, transpiler: new HarmonyMethod(transpilerMethod));
+                var transpilerMethod = typeof(PrimaryFire).GetMethod(
+                    nameof(Transpiler),
+                    BindingFlags.NonPublic | BindingFlags.Static
+                );
+
+                harmony.Patch(targetMethod, transpiler: new HarmonyMethod(transpilerMethod));
             }
         }
     }

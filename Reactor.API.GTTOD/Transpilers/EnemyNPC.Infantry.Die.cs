@@ -15,7 +15,11 @@ namespace Reactor.API.GTTOD.Transpilers
             private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instr)
             {
                 var modified = new List<CodeInstruction>(instr);
-                var invoker = typeof(Events.EnemyNPC).GetMethod(nameof(Events.EnemyNPC.InvokeInfantryDied), BindingFlags.NonPublic | BindingFlags.Static);
+
+                var invoker = typeof(Events.EnemyNPC).GetMethod(
+                    nameof(Events.EnemyNPC.InvokeInfantryDied),
+                    BindingFlags.NonPublic | BindingFlags.Static
+                );
 
                 modified.Insert(EventHookOpIndex, new CodeInstruction(OpCodes.Call, invoker));
                 modified.Insert(EventHookOpIndex, new CodeInstruction(OpCodes.Ldarg_0));
@@ -25,10 +29,17 @@ namespace Reactor.API.GTTOD.Transpilers
 
             public override void Apply(HarmonyInstance harmony)
             {
-                var methodInfo = typeof(Infantry).GetMethod(nameof(Infantry.Die), BindingFlags.Public | BindingFlags.Instance);
-                var transpilerMethod = typeof(InfantryDie).GetMethod(nameof(Transpiler), BindingFlags.NonPublic | BindingFlags.Static);
+                var targetMethod = typeof(Infantry).GetMethod(
+                    nameof(Infantry.Die),
+                    BindingFlags.Public | BindingFlags.Instance
+                );
 
-                harmony.Patch(methodInfo, transpiler: new HarmonyMethod(transpilerMethod));
+                var transpilerMethod = typeof(InfantryDie).GetMethod(
+                    nameof(Transpiler),
+                    BindingFlags.NonPublic | BindingFlags.Static
+                );
+
+                harmony.Patch(targetMethod, transpiler: new HarmonyMethod(transpilerMethod));
             }
         }
     }
