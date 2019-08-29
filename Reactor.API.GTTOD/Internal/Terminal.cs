@@ -34,7 +34,7 @@ namespace Reactor.API.GTTOD.Internal
             GttodTerminal.Log("Reactor Game API has been loaded, game terminal overriden.");
 
             BackgroundTexture = new Texture2D(1, 1);
-            BackgroundTexture.SetPixel(0, 0, new Color(0, 0f, 0f, 0.8f));
+            BackgroundTexture.SetPixel(0, 0, new Color(0, 0f, 0f, 0.85f));
             BackgroundTexture.Apply();
 
             InputTexture = new Texture2D(1, 1);

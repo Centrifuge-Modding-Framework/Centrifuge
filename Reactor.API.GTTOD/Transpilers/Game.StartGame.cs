@@ -29,10 +29,20 @@ namespace Reactor.API.GTTOD.Transpilers
 
             public override void Apply(HarmonyInstance harmony)
             {
-                var methodInfo = typeof(global::GTTODManager).GetNestedType(StartGameCoroutineClassName, BindingFlags.NonPublic).GetMethod("MoveNext", BindingFlags.NonPublic | BindingFlags.Instance);
-                var transpilerMethod = typeof(StartGame).GetMethod(nameof(Transpiler), BindingFlags.NonPublic | BindingFlags.Static);
+                var targetMethod = typeof(global::GTTODManager).GetNestedType(
+                    StartGameCoroutineClassName,
+                    BindingFlags.NonPublic
+                ).GetMethod(
+                    "MoveNext",
+                    BindingFlags.NonPublic | BindingFlags.Instance
+                );
 
-                harmony.Patch(methodInfo, transpiler: new HarmonyMethod(transpilerMethod));
+                var transpilerMethod = typeof(StartGame).GetMethod(
+                    nameof(Transpiler),
+                    BindingFlags.NonPublic | BindingFlags.Static
+                );
+
+                harmony.Patch(targetMethod, transpiler: new HarmonyMethod(transpilerMethod));
             }
         }
     }
