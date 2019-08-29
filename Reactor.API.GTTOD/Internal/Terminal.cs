@@ -9,6 +9,10 @@ namespace Reactor.API.GTTOD.Internal
     public class Terminal
     {
         private Settings Settings { get; }
+
+        internal Texture2D BackgroundTexture { get; private set; }
+        internal Texture2D InputTexture { get; private set; }
+
         internal GttodTerminal GameTerminal { get; private set; }
 
         public static event EventHandler InitFinished;
@@ -28,6 +32,14 @@ namespace Reactor.API.GTTOD.Internal
             CreateGameApiTerminal();
 
             GttodTerminal.Log("Reactor Game API has been loaded, game terminal overriden.");
+
+            BackgroundTexture = new Texture2D(1, 1);
+            BackgroundTexture.SetPixel(0, 0, new Color(0, 0f, 0f, 0.8f));
+            BackgroundTexture.Apply();
+
+            InputTexture = new Texture2D(1, 1);
+            InputTexture.SetPixel(0, 0, new Color(0f, 0f, 0f, 0.5f));
+            InputTexture.Apply();
         }
 
         private void CreateGameApiTerminal()
@@ -54,6 +66,12 @@ namespace Reactor.API.GTTOD.Internal
         private void Terminal_LabelStyleSet(object sender, TerminalStyleEventArgs e)
         {
             e.Style.padding = new RectOffset(0, 0, 0, 4);
+        }
+
+        internal void ApplyStyle()
+        {
+            GameTerminal.window_style.normal.background = BackgroundTexture;
+            GameTerminal.input_style.normal.background = InputTexture;
         }
 
         internal static void OnInitFinished()

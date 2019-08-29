@@ -46,6 +46,11 @@ namespace Reactor.API.GTTOD
             }
         }
 
+        public void Update()
+        {
+            Terminal.ApplyStyle();
+        }
+
         private void InitializeSettings()
         {
             Settings = new Settings("game_api");
