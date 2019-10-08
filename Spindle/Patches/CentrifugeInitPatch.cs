@@ -3,6 +3,7 @@ using Mono.Cecil.Cil;
 using Spindle.Runtime;
 using Spindle.Runtime.EventArgs;
 using System;
+using System.Linq;
 
 namespace Spindle.Patches
 {
@@ -15,23 +16,25 @@ namespace Spindle.Patches
         {
             try
             {
-                var targetMethod = PatchHelper.FindInitializationMethodDefinition(targetModule);
-                var ilProcessor = targetMethod.Body.GetILProcessor();
+                var attributes = MethodAttributes.Static | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName | MethodAttributes.Assembly;
 
                 var initMethodReference = PatchHelper.ImportBootstrapMethodReference(targetModule, sourceModule);
-                var initializationInstruction = ilProcessor.Create(OpCodes.Call, initMethodReference);
+                var cctor = new MethodDefinition(".cctor", attributes, initMethodReference.ReturnType);
+                var ilProcessor = cctor.Body.GetILProcessor();
 
-                var lastAwakeInstruction = ilProcessor.Body.Instructions[ilProcessor.Body.Instructions.Count - 1];
+                var initInstruction = ilProcessor.Create(OpCodes.Call, initMethodReference);
+                ilProcessor.Append(initInstruction);
+                ilProcessor.Append(ilProcessor.Create(OpCodes.Ret));
 
-                if (lastAwakeInstruction.OpCode == OpCodes.Call)
+                var moduleClass = targetModule.Types.FirstOrDefault(t => t.Name == "<Module>");
+
+                if (moduleClass == null)
                 {
-                    var eventArgs = new PatchFailedEventArgs(Name, new Exception("This patch has already been applied."));
-                    OnPatchFailed(this, eventArgs);
-
-                    return;
+                    moduleClass = new TypeDefinition("", "<Module>", TypeAttributes.Class);
+                    targetModule.Types.Add(moduleClass);
                 }
 
-                ilProcessor.InsertBefore(lastAwakeInstruction, initializationInstruction);
+                moduleClass.Methods.Add(cctor);
                 OnPatchSucceeded(this, new PatchSucceededEventArgs(Name));
             }
             catch (Exception ex)

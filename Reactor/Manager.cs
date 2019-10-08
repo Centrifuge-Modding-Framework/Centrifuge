@@ -11,11 +11,13 @@ using Reactor.Extensibility;
 using Reactor.Input;
 using System;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 namespace Reactor
 {
     public class Manager : UnityEngine.MonoBehaviour, IManager
     {
+        private bool Initialized { get; set; }
         private Logger Log { get; set; }
 
         private ModRegistry ModRegistry { get; set; }
@@ -41,6 +43,15 @@ namespace Reactor
 
             ModRegistry = new ModRegistry();
             ModLoader = new ModLoader(this, Defaults.ManagerModDirectory, ModRegistry);
+
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (Initialized) return;
+
+            Initialized = true;
 
             Global.GameApiObject = new UnityEngine.GameObject(Defaults.ReactorGameApiNamespace);
             Global.GameApiObject.AddComponent<GameAPI>();

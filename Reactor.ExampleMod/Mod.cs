@@ -39,6 +39,12 @@ namespace Reactor.ExampleMod
                 _showTexture = !_showTexture;
             });
 
+            Terminal.Shell.AddCommand("tryload", (args) =>
+            {
+                var result = (bool)Resources.Load(args[0].String);
+                Terminal.Log(result.ToString());
+            }, 1, 1);
+
             _exampleImageTexture = _fileSystem.LoadTexture("stoptalking.jpg");
 
             manager.Hotkeys.Bind(new Hotkey(_settings.GetItem<string>("TestKeyBind")), () => { Console.WriteLine("REEEEEEEEEE"); });
