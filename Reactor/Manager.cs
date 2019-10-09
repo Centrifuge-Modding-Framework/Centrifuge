@@ -30,10 +30,11 @@ namespace Reactor
         public void Awake()
         {
             DontDestroyOnLoad(gameObject);
-            Log.Info("Spooling up!");
 
             InitializeSettings();
             InitializeLogger();
+
+            Log.Info("Spooling up!");
 
             Hotkeys = new HotkeyManager();
             Messenger = new Messenger();
@@ -73,11 +74,6 @@ namespace Reactor
             InitFinished?.Invoke(this, EventArgs.Empty);
         }
 
-        private void InitializeGameSupport()
-        {
-            GameSupport.Initialize();
-        }
-
         private void InitializeSettings()
         {
             Global.Settings = new Settings("reactor");
@@ -97,6 +93,11 @@ namespace Reactor
             {
                 UnityEngine.Application.logMessageReceived += Application_logMessageReceived;
             }
+        }
+
+        private void InitializeGameSupport()
+        {
+            GameSupport.Initialize();
         }
 
         private void InitializeMods()
