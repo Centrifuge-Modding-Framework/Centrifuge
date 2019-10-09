@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Centrifuge Project")]
 [assembly: AssemblyProduct("Reactor.API")]
-[assembly: AssemblyCopyright("Copyright © Centrifuge Project 2019")]
+[assembly: AssemblyCopyright("Copyright 2019 © Centrifuge Project")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -30,7 +30,7 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.2.1")]
-[assembly: AssemblyFileVersion("0.2.1")]
+[assembly: AssemblyVersion("0.3.0")]
+[assembly: AssemblyFileVersion("0.3.0")]
 
 [assembly: InternalsVisibleTo("Reactor", AllInternalsVisible = true)]
