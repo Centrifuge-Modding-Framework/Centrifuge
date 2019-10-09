@@ -35,7 +35,7 @@
       <HintPath>..\packages\Lib.Harmony.1.2.0.1\lib\net35\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\Centrifuge.Shared\BinaryBlobs\GTTOD\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\Centrifuge.Shared\BinaryBlobs\Core\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
