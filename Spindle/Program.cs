@@ -13,11 +13,11 @@ namespace Spindle
 {
     internal class Program
     {
-        private static string _gttodAssemblyFilename;
+        private static string _gameAssemblyFilename;
         private static string _bootstrapAssemblyFilename;
         private static string _requestedPatchName;
 
-        private static ModuleDefinition _gttodAssemblyDefinition;
+        private static ModuleDefinition _gameAssemblyDefinition;
         private static ModuleDefinition _bootstrapAssemblyDefinition;
 
         private static Patcher _patcher;
@@ -30,7 +30,7 @@ namespace Spindle
             {
                 ColoredOutput.WriteInformation($"Usage: {GetExecutingFileName()} <-t (--target) Assembly-CSharp.dll> [options]");
                 ColoredOutput.WriteInformation("  Options:");
-                ColoredOutput.WriteInformation("    -t [--target]+: Specify the target GTTOD DLL you want to patch.");
+                ColoredOutput.WriteInformation("    -t [--target]+: Specify the target Assembly-CSharp.dll you want to patch.");
                 ColoredOutput.WriteInformation("    -s [--source]+: Specify the source DLL you want to cross-reference.");
                 ColoredOutput.WriteInformation("    -p [--patch]+:  Run only patch with the specified name.");
                 ErrorHandler.TerminateWithError("Invalid syntax provided.", TerminationReason.InvalidSyntax);
@@ -38,7 +38,7 @@ namespace Spindle
 
             ParseArguments(args);
 
-            if (string.IsNullOrEmpty(_gttodAssemblyFilename))
+            if (string.IsNullOrEmpty(_gameAssemblyFilename))
                 ErrorHandler.TerminateWithError("Target DLL name not specified.", TerminationReason.TargetDllNotProvided);
             if ((args.Contains("-p") || args.Contains("--patch")) && string.IsNullOrEmpty(_requestedPatchName))
                 ErrorHandler.TerminateWithError("Patch name not specified.", TerminationReason.PatchNameNotProvided);
@@ -55,13 +55,13 @@ namespace Spindle
             PreparePatches();
             RunPatches();
 
-            ModuleWriter.SavePatchedFile(_gttodAssemblyDefinition, _gttodAssemblyFilename, false);
+            ModuleWriter.SavePatchedFile(_gameAssemblyDefinition, _gameAssemblyFilename, false);
 
             _patcher.AddPatch(new DecapsulationPatch());
             _patcher.RunSpecific("Decapsulation");
 
-            var devDllFileName = $"{Path.GetFileNameWithoutExtension(_gttodAssemblyFilename)}.dev.dll";
-            ModuleWriter.SavePatchedFile(_gttodAssemblyDefinition, devDllFileName, true);
+            var devDllFileName = $"{Path.GetFileNameWithoutExtension(_gameAssemblyFilename)}.dev.dll";
+            ModuleWriter.SavePatchedFile(_gameAssemblyDefinition, devDllFileName, true);
             ColoredOutput.WriteSuccess($"Saved decapsulated development DLL to {devDllFileName}");
 
             ColoredOutput.WriteSuccess("Patch process completed.");
@@ -71,7 +71,7 @@ namespace Spindle
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
             var version = Assembly.GetExecutingAssembly().GetName().Version;
-            Console.WriteLine($"Centrifuge Spindle for GTTOD. Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}");
+            Console.WriteLine($"Centrifuge Spindle for Unity Engine. Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}");
             Console.WriteLine("------------------------------------------");
             Console.ResetColor();
         }
@@ -93,7 +93,7 @@ namespace Spindle
 
                 if ((args[i] == "-t" || args[i] == "--target") && (i + 1) < args.Length)
                 {
-                    _gttodAssemblyFilename = args[i + 1];
+                    _gameAssemblyFilename = args[i + 1];
                     i++;
                 }
 
@@ -112,7 +112,7 @@ namespace Spindle
 
         private static bool DistanceFileExists()
         {
-            return File.Exists(_gttodAssemblyFilename);
+            return File.Exists(_gameAssemblyFilename);
         }
 
         private static bool BootstrapFileExists()
@@ -122,10 +122,10 @@ namespace Spindle
 
         private static void CreateBackup()
         {
-            if (!File.Exists($"{_gttodAssemblyFilename}.backup"))
+            if (!File.Exists($"{_gameAssemblyFilename}.backup"))
             {
                 ColoredOutput.WriteInformation("Performing a backup...");
-                File.Copy($"{_gttodAssemblyFilename}", $"{_gttodAssemblyFilename}.backup");
+                File.Copy($"{_gameAssemblyFilename}", $"{_gameAssemblyFilename}.backup");
             }
         }
 
@@ -133,13 +133,13 @@ namespace Spindle
         {
             ColoredOutput.WriteInformation("Preparing patches...");
 
-            _gttodAssemblyDefinition = ModuleLoader.LoadDistanceModule(_gttodAssemblyFilename);
+            _gameAssemblyDefinition = ModuleLoader.LoadGameModule(_gameAssemblyFilename);
 
             if (!string.IsNullOrEmpty(_bootstrapAssemblyFilename))
             {
                 _bootstrapAssemblyDefinition = ModuleLoader.LoadBootstrapModule(_bootstrapAssemblyFilename);
             }
-            _patcher = new Patcher(_bootstrapAssemblyDefinition, _gttodAssemblyDefinition);
+            _patcher = new Patcher(_bootstrapAssemblyDefinition, _gameAssemblyDefinition);
             _patcher.AddPatch(new CentrifugeInitPatch());
         }
 

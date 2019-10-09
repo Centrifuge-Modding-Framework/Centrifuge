@@ -2,8 +2,6 @@
 using Reactor.API.Configuration;
 using Reactor.API.DataModel;
 using Reactor.API.Events;
-using Reactor.API.Extensions;
-using Reactor.API.GTTOD;
 using Reactor.API.Interfaces.Systems;
 using Reactor.API.Logging;
 using Reactor.Communication;
@@ -17,9 +15,9 @@ namespace Reactor
 {
     public class Manager : UnityEngine.MonoBehaviour, IManager
     {
-        private bool Initialized { get; set; }
         private Logger Log { get; set; }
 
+        private GameSupport GameSupport { get; set; }
         private ModRegistry ModRegistry { get; set; }
         private ModLoader ModLoader { get; set; }
 
@@ -32,15 +30,15 @@ namespace Reactor
         public void Awake()
         {
             DontDestroyOnLoad(gameObject);
+            Log.Info("Spooling up!");
 
             InitializeSettings();
             InitializeLogger();
 
-            Log.Info("Definitely not up to no good...");
-
             Hotkeys = new HotkeyManager();
             Messenger = new Messenger();
 
+            GameSupport = new GameSupport();
             ModRegistry = new ModRegistry();
             ModLoader = new ModLoader(this, Defaults.ManagerModDirectory, ModRegistry);
 
@@ -49,14 +47,9 @@ namespace Reactor
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (Initialized) return;
-
-            Initialized = true;
-
-            Global.GameApiObject = new UnityEngine.GameObject(Defaults.ReactorGameApiNamespace);
-            Global.GameApiObject.AddComponent<GameAPI>();
-
-            AddCetrifugeSpecificCommands();
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            
+            InitializeGameSupport();
             InitializeMods();
         }
 
@@ -78,6 +71,11 @@ namespace Reactor
         internal void OnInitFinished()
         {
             InitFinished?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void InitializeGameSupport()
+        {
+            GameSupport.Initialize();
         }
 
         private void InitializeSettings()
@@ -105,23 +103,6 @@ namespace Reactor
         {
             ModLoader.Init();
         }
-
-        private void AddCetrifugeSpecificCommands()
-        {
-            CommandTerminal.Terminal.Shell.AddCommand("cnfg_version", (args) =>
-            {
-                var reactorAssembly = AssemblyEx.GetAssemblyByName("Reactor");
-                var centrifugeAssembly = AssemblyEx.GetAssemblyByName("Centrifuge");
-                var reactorApiAssembly = AssemblyEx.GetAssemblyByName("Reactor.API");
-                var reactorGameApiAssembly = AssemblyEx.GetAssemblyByName("Reactor.API.GTTOD");
-
-                CommandTerminal.Terminal.Log($"Reactor ModLoader version: {reactorAssembly.GetName().Version.ToString()}");
-                CommandTerminal.Terminal.Log($"Reactor GameAPI version: {reactorGameApiAssembly.GetName().Version.ToString()}");
-                CommandTerminal.Terminal.Log($"Reactor API version: {reactorApiAssembly.GetName().Version.ToString()}");
-                CommandTerminal.Terminal.Log($"Centrifuge version: {centrifugeAssembly.GetName().Version.ToString()}");
-            }, 0, -1, "Prints versions of all Centrifuge modules.");
-        }
-
 
         private void Application_logMessageReceived(string condition, string stackTrace, UnityEngine.LogType type)
         {

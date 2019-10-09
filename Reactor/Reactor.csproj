@@ -34,9 +34,6 @@
     <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Lib.Harmony.1.2.0.1\lib\net35\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\Centrifuge.Shared\BinaryBlobs\GTTOD\Assembly-CSharp.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Centrifuge.Shared\BinaryBlobs\GTTOD\Newtonsoft.Json.dll</HintPath>
@@ -64,6 +61,7 @@
     <Compile Include="Exceptions\InvalidModIdException.cs" />
     <Compile Include="Exceptions\MissingEntryPointException.cs" />
     <Compile Include="Exceptions\TooManyEntryPointsException.cs" />
+    <Compile Include="Extensibility\GameSupport.cs" />
     <Compile Include="Extensibility\ModLoader.cs" />
     <Compile Include="Extensibility\ModRegistry.cs" />
     <Compile Include="Extensibility\ModHost.cs" />
@@ -73,10 +71,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Reactor.API.GTTOD\Reactor.API.GTTOD.csproj">
-      <Project>{DB9FE521-A938-48F6-BE50-0BD8BA91F97C}</Project>
-      <Name>Reactor.API.GTTOD</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Reactor.API\Reactor.API.csproj">
       <Project>{E00CDA95-C063-4BBE-BF73-FB2733BE4F34}</Project>
       <Name>Reactor.API</Name>

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Spindle")]
-[assembly: AssemblyDescription("Centrifuge Patcher for GTTOD")]
+[assembly: AssemblyDescription("Centrifuge Patcher for Unity Engine")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Centrifuge Project")]
 [assembly: AssemblyProduct("Spindle")]
-[assembly: AssemblyCopyright("Copyright © Centrifuge Project 2019")]
+[assembly: AssemblyCopyright("Copyright 2019 © Centrifuge Project ")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

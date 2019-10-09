@@ -5,7 +5,7 @@ namespace Reactor.API
 {
     public class Defaults
     {
-        private static string CentrifugeRoot => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        public static string CentrifugeRoot => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
         public static string PrivateDependencyDirectory => "Dependencies";
         public static string PrivateSettingsDirectory => "Settings";
@@ -17,6 +17,8 @@ namespace Reactor.API
         public static string ManagerModDirectory => Path.Combine(CentrifugeRoot, "Mods");
         public static string ManagerLogDirectory => Path.Combine(CentrifugeRoot, "Logs");
 
+        public static string GameSupportLibraryPath => Path.Combine(CentrifugeRoot, GameSupportLibraryFilePattern);
+
         public const string DependencyResolverLogFileName = "DependencyResolver";
         public const string RuntimeAssetLoaderLogFileName = "RuntimeAssetLoader";
         public const string SettingsSystemLogFileName = "SettingsSystem";
@@ -25,10 +27,11 @@ namespace Reactor.API
         public const string MessengerLogFileName = "Messenger";
         public const string ModLoaderLogFileName = "Loader";
         public const string ManagerLogFileName = "Manager";
+        public const string GameSupportInitializerLogFileName = "GameSupport";
 
+        public const string GameSupportLibraryFilePattern = "*.GameSupport.dll";
         public const string ManifestFileName = "mod.json";
 
         public const string ReactorModLoaderNamespace = "com.github.ciastex.ReactorModLoader";
-        public const string ReactorGameApiNamespace = "com.github.ciastex.ReactorGameAPI";
     }
 }

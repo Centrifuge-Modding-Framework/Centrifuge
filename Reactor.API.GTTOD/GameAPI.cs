@@ -1,5 +1,7 @@
 ﻿using Harmony;
+using Reactor.API.Attributes;
 using Reactor.API.Configuration;
+using Reactor.API.Extensions;
 using Reactor.API.GTTOD.Infrastructure;
 using Reactor.API.GTTOD.Internal;
 using System;
@@ -9,8 +11,12 @@ using Logger = Reactor.API.Logging.Logger;
 
 namespace Reactor.API.GTTOD
 {
-    internal class GameAPI : MonoBehaviour
+
+    [GameSupportLibraryEntryPoint(GttodGameNamespace)]
+    internal sealed class GameAPI : MonoBehaviour
     {
+        internal const string GttodGameNamespace = "com.github.ciastex/GttodGameSupport";
+
         private Settings Settings { get; set; }
         private Logger Logger { get; set; }
 
@@ -24,6 +30,8 @@ namespace Reactor.API.GTTOD
 
             InitializeSettings();
             Terminal = new Terminal(Settings);
+            
+            AddCetrifugeSpecificCommands();
 
             try
             {
@@ -51,6 +59,22 @@ namespace Reactor.API.GTTOD
             Terminal.ApplyStyle();
         }
 
+        private void AddCetrifugeSpecificCommands()
+        {
+            CommandTerminal.Terminal.Shell.AddCommand("cnfg_version", (args) =>
+            {
+                var reactorAssembly = AssemblyEx.GetAssemblyByName("Reactor");
+                var centrifugeAssembly = AssemblyEx.GetAssemblyByName("Centrifuge");
+                var reactorApiAssembly = AssemblyEx.GetAssemblyByName("Reactor.API");
+                var reactorGameApiAssembly = AssemblyEx.GetAssemblyByName("Reactor.API.GTTOD");
+
+                CommandTerminal.Terminal.Log($"Reactor ModLoader version: {reactorAssembly.GetName().Version.ToString()}");
+                CommandTerminal.Terminal.Log($"Reactor GameAPI version: {reactorGameApiAssembly.GetName().Version.ToString()}");
+                CommandTerminal.Terminal.Log($"Reactor API version: {reactorApiAssembly.GetName().Version.ToString()}");
+                CommandTerminal.Terminal.Log($"Centrifuge version: {centrifugeAssembly.GetName().Version.ToString()}");
+            }, 0, -1, "Prints versions of all Centrifuge modules.");
+        }
+
         private void InitializeSettings()
         {
             Settings = new Settings("game_api");
@@ -67,7 +91,7 @@ namespace Reactor.API.GTTOD
 
         private void InitializeMixins()
         {
-            HarmonyInstance = HarmonyInstance.Create(Defaults.ReactorGameApiNamespace);
+            HarmonyInstance = HarmonyInstance.Create(GttodGameNamespace);
             HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
         }
 
