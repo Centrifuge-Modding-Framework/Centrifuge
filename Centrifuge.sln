@@ -18,8 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE.md = LICENSE.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reactor.ExampleMod", "Reactor.ExampleMod\Reactor.ExampleMod.csproj", "{957320E1-A43E-400F-9047-66C5C0B5141E}"
-EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Centrifuge.Shared\Centrifuge.Shared.projitems*{eef50c70-3582-4557-a6b2-2a5ec541b3d3}*SharedItemsImports = 13
@@ -45,10 +43,6 @@ Global
 		{E00CDA95-C063-4BBE-BF73-FB2733BE4F34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E00CDA95-C063-4BBE-BF73-FB2733BE4F34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E00CDA95-C063-4BBE-BF73-FB2733BE4F34}.Release|Any CPU.Build.0 = Release|Any CPU
-		{957320E1-A43E-400F-9047-66C5C0B5141E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{957320E1-A43E-400F-9047-66C5C0B5141E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{957320E1-A43E-400F-9047-66C5C0B5141E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{957320E1-A43E-400F-9047-66C5C0B5141E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

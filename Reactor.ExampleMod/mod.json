@@ -1,9 +1,0 @@
-﻿{
-	"FriendlyName": "Example Mod",
-	"Author": "Ciastex",
-	"Contact": "Discord: Ciastex#6170",
-	"ModuleFileName": "Reactor.ExampleMod.dll",
-	"Priority": "10",
-	"SkipLoad": false,
-	"Dependencies": [ ]
-}
