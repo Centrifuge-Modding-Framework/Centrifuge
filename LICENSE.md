@@ -26,10 +26,5 @@ Unity Engine binary blobs are the property of Unity Technologies. Centrifuge
 Project uses them to provide interoperability between user mods and the
 Reactor modding API.
 
-## GTTOD binary blobs
-Get To The Orange Door game assemblies in both original and decapsulated form
-are provided to ensure interoperability between user mods and the Reactor
-modding API.
-
 ## Lastly
 Just use your goddamn common sense, alright?
