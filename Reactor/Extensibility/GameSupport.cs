@@ -20,7 +20,7 @@ namespace Reactor.Extensibility
 
         public void Initialize()
         {
-            Logger.Info("Trying to initialize a game support library...");
+            Logger.Info("Trying to find a single game support library...");
 
             var gameSupportLibs = Directory.GetFiles(Defaults.CentrifugeRoot, Defaults.GameSupportLibraryFilePattern);
 
@@ -70,7 +70,7 @@ namespace Reactor.Extensibility
                 return;
             }
 
-            if (typeof(MonoBehaviour).IsAssignableFrom(decoratedType))
+            if (decoratedType.IsAssignableFrom(typeof(MonoBehaviour)))
             {
                 Logger.Error("The game support library has a decorated entry point but it doesn't inherit from MonoBehaviour.");
                 return;
