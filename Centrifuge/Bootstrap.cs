@@ -29,7 +29,7 @@ namespace Centrifuge
 
             var version = Assembly.GetAssembly(typeof(Bootstrap)).GetName().Version;
 
-            Console.WriteLine($"Centrifuge Mod Loader for GOTTD. Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}. Unity v{Application.unityVersion}.");
+            Console.WriteLine($"Centrifuge Mod Loader for Unity Engine. Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}. Unity v{Application.unityVersion}.");
             Console.WriteLine($"Diagnostics mode enabled. Remove '{StartupArguments.AllocateConsole}' command line argument to disable.");
             Console.WriteLine("--------------------------------------------");
 
@@ -55,7 +55,7 @@ namespace Centrifuge
             try
             {
                 EarlyLog.Info("Creating Reactor Manager GameObject...");
-                ReactorManagerObject = new GameObject("com.github.ciastex.ReactorModLoader");
+                ReactorManagerObject = new GameObject("com.github.ciastex/ReactorModLoader");
             }
             catch (Exception e)
             {
