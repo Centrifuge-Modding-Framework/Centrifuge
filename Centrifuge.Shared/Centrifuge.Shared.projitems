@@ -9,7 +9,6 @@
     <Import_RootNamespace>Centrifuge.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\Core\Newtonsoft.Json.dll" />
     <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\Unity\UnityEngine.AssetBundleModule.dll" />
     <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\Unity\UnityEngine.CoreModule.dll" />
     <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\Unity\UnityEngine.dll" />
