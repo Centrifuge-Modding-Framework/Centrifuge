@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Centrifuge</RootNamespace>
     <AssemblyName>Centrifuge</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile>
@@ -40,6 +40,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StartupArguments.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Centrifuge.UnityInterop\Centrifuge.UnityInterop.csproj">
+      <Project>{8DCC793A-BC56-4F07-A600-C0C109230C07}</Project>
+      <Name>Centrifuge.UnityInterop</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

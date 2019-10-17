@@ -1,13 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using UnityEngine;
 
 namespace Reactor.API.Storage
 {
     public class Assets
     {
-        private string _filePath = null;
+        /*private string _filePath = null;
 
         private string RootDirectory { get; }
         private string FileName { get; set; }
@@ -15,7 +14,7 @@ namespace Reactor.API.Storage
 
         private static Logging.Logger Log { get; }
 
-        public AssetBundle Bundle { get; private set; }
+        // public AssetBundle Bundle { get; private set; }
 
         static Assets()
         {
@@ -73,6 +72,6 @@ namespace Reactor.API.Storage
                 Log.Exception(ex);
                 return null;
             }
-        }
+        }*/
     }
 }

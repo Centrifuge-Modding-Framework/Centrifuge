@@ -1,7 +1,9 @@
-﻿using Reactor.API;
+﻿using Centrifuge.UnityInterop.Bridges;
+using Reactor.API;
 using Reactor.API.Attributes;
 using Reactor.API.DataModel;
 using Reactor.API.Exceptions;
+using Reactor.API.Extensions;
 using Reactor.API.Interfaces.Systems;
 using Reactor.API.Logging;
 using Reactor.Communication;
@@ -236,17 +238,17 @@ namespace Reactor.Extensibility
                 GameObject = null
             };
 
-            if (typeof(UnityEngine.MonoBehaviour).IsAssignableFrom(entryPointType))
+            if (MonoBehaviourBridge.MonoBehaviourType.IsAssignableFrom(entryPointType))
             {
-                modHost.GameObject = new UnityEngine.GameObject(entryPointInfo.ModID);
-                UnityEngine.Object.DontDestroyOnLoad(modHost.GameObject);
+                modHost.GameObject = GameObjectBridge.CreateGameObject(entryPointInfo.ModID);
+                GameObjectBridge.DontDestroyOnLoad(modHost.GameObject);
 
                 if (entryPointInfo.AwakeAfterInitialize)
                 {
-                    modHost.GameObject.SetActive(false);
+                    GameObjectBridge.SetActive(modHost.GameObject, false);
                 }
 
-                modHost.Instance = modHost.GameObject.AddComponent(entryPointType);
+                modHost.Instance = GameObjectBridge.AttachComponentTo(modHost.GameObject, entryPointType);
             }
             else
             {
@@ -265,7 +267,7 @@ namespace Reactor.Extensibility
                 new object[] { Manager }
             );
 
-            modHost.GameObject.SetActive(true);
+            GameObjectBridge.SetActive(modHost.GameObject, true);
             Manager.OnModInitialized(modHost.ToExchangeableApiObject());
         }
 

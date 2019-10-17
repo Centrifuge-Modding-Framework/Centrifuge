@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Centrifuge.UnityInterop.Bridges;
+using Centrifuge.UnityInterop.Builders;
+using System;
 using System.IO;
 using System.Reflection;
 
@@ -28,7 +30,7 @@ namespace Centrifuge
 
             var version = Assembly.GetAssembly(typeof(Bootstrap)).GetName().Version;
 
-            Console.WriteLine($"Centrifuge Mod Loader for Unity Engine. Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}. Unity v{Application.unityVersion}.");
+            Console.WriteLine($"Centrifuge Mod Loader for Unity Engine. Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}. Unity v{ApplicationBridge.UnityVersion}.");
             Console.WriteLine($"Diagnostics mode enabled. Remove '{StartupArguments.AllocateConsole}' command line argument to disable.");
             Console.WriteLine("--------------------------------------------");
 
@@ -41,20 +43,24 @@ namespace Centrifuge
                 return;
             }
 
-            EarlyLog.Info("Validating and loading Centrifuge Reactor DLL...");
-            var asm = Assembly.LoadFrom(reactorPath);
+            //EarlyLog.Info("Validating and loading Centrifuge Reactor DLL...");
+            //var asm = Assembly.LoadFrom(reactorPath);
 
-            var managerType = asm.GetType("Reactor.Manager");
-            if (managerType == null)
+            Type proxyType = null;
+            try
             {
-                EarlyLog.Error($"Invalid Reactor DLL. Could not find the type 'Reactor.Manager'. Mods will not be loaded.");
-                return;
+                proxyType = new ManagerProxyBuilder().Build();
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+                Console.WriteLine(e.InnerException);
             }
 
             try
             {
                 EarlyLog.Info("Creating Reactor Manager GameObject...");
-                ReactorManagerObject = new GameObject("com.github.ciastex/ReactorModLoader");
+                ReactorManagerObject = GameObjectBridge.CreateGameObject("com.github.ciastex/ReactorModLoaderProxy");
             }
             catch (Exception e)
             {
@@ -64,7 +70,7 @@ namespace Centrifuge
 
             EarlyLog.Info("About to add component to Reactor Manager GameObject...");
             Console.WriteLine("--------------------------------------------");
-            ReactorManagerObject.AddComponent(managerType);
+            GameObjectBridge.AttachComponentTo(ReactorManagerObject, proxyType);
         }
 
         private static string GetCrossPlatformCompatibleReactorPath()

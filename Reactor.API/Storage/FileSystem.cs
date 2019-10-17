@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using UnityEngine;
 using Logger = Reactor.API.Logging.Logger;
 
 namespace Reactor.API.Storage
@@ -200,6 +199,7 @@ namespace Reactor.API.Storage
         public FileStream OpenFile(string filePath)
             => OpenFile(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
 
+        /*
         public Texture2D LoadTexture(string filePath)
         {
             var bytes = ReadAllBytes(filePath);
@@ -212,7 +212,7 @@ namespace Reactor.API.Storage
 
             return tex;
         }
-
+        */
         public string CreateDirectory(string directoryName)
         {
             var targetDirectoryPath = Path.Combine(VirtualFileSystemRoot, directoryName);
