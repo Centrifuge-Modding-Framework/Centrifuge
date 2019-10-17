@@ -43,18 +43,27 @@ namespace Centrifuge
                 return;
             }
 
-            //EarlyLog.Info("Validating and loading Centrifuge Reactor DLL...");
-            //var asm = Assembly.LoadFrom(reactorPath);
+            EarlyLog.Info("Validating and loading Centrifuge Reactor DLL...");
+            Assembly.LoadFrom(reactorPath);
 
             Type proxyType = null;
             try
             {
                 proxyType = new ManagerProxyBuilder().Build();
             }
-            catch(Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e);
-                Console.WriteLine(e.InnerException);
+                if(ex.InnerException is ReflectionTypeLoadException rtle)
+                {
+                    Console.WriteLine(rtle);
+                    Console.WriteLine(rtle.InnerException);
+
+                    Console.WriteLine("------------- LOADER EXCEPTIONS FOLLOW --------------- ");
+                    foreach (var lex in rtle.LoaderExceptions)
+                    {
+                        Console.WriteLine(lex);
+                    }
+                }
             }
 
             try

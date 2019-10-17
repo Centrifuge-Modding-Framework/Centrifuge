@@ -27,6 +27,7 @@ namespace Centrifuge.UnityInterop.Builders
             );
 
             BuildManagerField();
+            BuildLogProxy();
 
             BuildAwakeMethod();
             BuildUpdateMethod();
@@ -44,6 +45,38 @@ namespace Centrifuge.UnityInterop.Builders
                 ReactorBridge.ReactorManagerType,
                 FieldAttributes.Public
             );
+        }
+
+        private void BuildLogProxy()
+        {
+            var methodBuilder = ProxyTypeBuilder.DefineMethod(
+                "LogProxy",
+                    MethodAttributes.Public |
+                    MethodAttributes.HideBySig,
+                CallingConventions.HasThis,
+                typeof(void),
+                new[] { typeof(string), typeof(string), LoggingBridge.UnityEngineLogTypeType }
+            );
+
+            var ilGen = methodBuilder.GetILGenerator();
+            ilGen.Emit(OpCodes.Ldarg_0);
+            ilGen.Emit(
+                OpCodes.Ldfld,
+                ProxyTypeBuilder.GetField("Manager")
+            );
+            ilGen.Emit(OpCodes.Ldarg_1);
+            ilGen.Emit(OpCodes.Ldarg_2);
+            ilGen.Emit(OpCodes.Ldarg_3);
+
+            ilGen.Emit(
+                OpCodes.Callvirt,
+                ReactorBridge.ReactorManagerType.GetMethod(
+                    Resources.ReactorManagerLogMethodName,
+                    BindingFlags.Public | BindingFlags.Instance
+                )
+            );
+
+            ilGen.Emit(OpCodes.Ret);
         }
 
         private void BuildAwakeMethod()
@@ -79,7 +112,7 @@ namespace Centrifuge.UnityInterop.Builders
             // Manager = new Manager();
             ilGen.Emit(OpCodes.Ldarg_0);
             ilGen.Emit(
-                OpCodes.Newobj, 
+                OpCodes.Newobj,
                 ReactorBridge.ReactorManagerType.GetConstructor(new Type[] { })
             );
 
@@ -88,8 +121,51 @@ namespace Centrifuge.UnityInterop.Builders
                 ProxyTypeBuilder.GetField("Manager")
             );
 
-            // TODO: InterceptUnityLogs
+            // if(Manager.InterceptUnityLogs)
+            //   UnityEngine.Application.logMessageReceived += LogProxy;
+            // 
+            /*ilGen.Emit(OpCodes.Ldarg_0);
+            ilGen.Emit(
+                OpCodes.Ldfld,
+                ProxyTypeBuilder.GetField("Manager")
+            );
+            ilGen.Emit(
+                OpCodes.Ldsfld,
+                ReactorBridge.ReactorGlobalType.GetField(
+                    Resources.ReactorGlobalInterceptUnityLogsFieldName,
+                    BindingFlags.Public | BindingFlags.Static
+                )
+            );
 
+            var retLabel = ilGen.DefineLabel();
+            ilGen.Emit(OpCodes.Brfalse_S, retLabel);
+
+            ilGen.Emit(OpCodes.Ldarg_0);
+            ilGen.Emit(
+                OpCodes.Ldftn,
+                ProxyTypeBuilder.GetMethod(
+                    "LogProxy",
+                    BindingFlags.Public | BindingFlags.Instance
+                )
+            );
+            
+            ilGen.Emit(
+                OpCodes.Newobj,
+                ApplicationBridge.LogCallbackType.GetConstructor(new[] {
+                     typeof(object),
+                     typeof(IntPtr)
+                })
+            );
+
+            ilGen.Emit(
+                OpCodes.Call,
+                ApplicationBridge.ApplicationType.GetMethod(
+                    "add_logMessageReceived",
+                    BindingFlags.Public | BindingFlags.Static
+                )
+            );
+
+            ilGen.MarkLabel(retLabel);*/
             ilGen.Emit(OpCodes.Ret);
         }
 
@@ -106,13 +182,13 @@ namespace Centrifuge.UnityInterop.Builders
 
             ilGen.Emit(OpCodes.Ldarg_0);
             ilGen.Emit(
-                OpCodes.Ldfld, 
+                OpCodes.Ldfld,
                 ProxyTypeBuilder.GetField("Manager")
             );
             ilGen.Emit(
                 OpCodes.Callvirt,
                 ReactorBridge.ReactorManagerType.GetMethod(
-                    "Update", 
+                    "Update",
                     BindingFlags.Instance | BindingFlags.Public
                 )
             );

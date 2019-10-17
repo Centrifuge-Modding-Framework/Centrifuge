@@ -16,8 +16,6 @@ namespace Reactor
     {
         private Logger Log { get; set; }
 
-        public bool InterceptUnityLogs { get; private set; }
-
         private static GameSupport GameSupport { get; set; }
         private static ModLoader ModLoader { get; set; }
         private static ModRegistry ModRegistry { get; set; }
@@ -41,6 +39,9 @@ namespace Reactor
             GameSupport = new GameSupport();
             ModRegistry = new ModRegistry();
             ModLoader = new ModLoader(this, Defaults.ManagerModDirectory, ModRegistry);
+
+            InitializeGameSupport();
+            InitializeMods();
         }
 
         public void Update()
@@ -77,8 +78,7 @@ namespace Reactor
         private void InitializeLogger()
         {
             Log = new Logger(Defaults.ManagerLogFileName);
-
-            InterceptUnityLogs = Global.Settings.GetItem<bool>(Global.InterceptUnityLogsSettingsKey);
+            Global.InterceptUnityLogs = Global.Settings.GetItem<bool>(Global.InterceptUnityLogsSettingsKey);
         }
 
         private static void InitializeGameSupport()
@@ -91,7 +91,7 @@ namespace Reactor
             ModLoader.Init();
         }
 
-        public void Application_LogMessage(string condition, string stackTrace, int logType)
+        public void LogUnityEngineMessage(string condition, string stackTrace, int logType)
         {
             var msg = $"[::UNITY::] {condition}";
 
