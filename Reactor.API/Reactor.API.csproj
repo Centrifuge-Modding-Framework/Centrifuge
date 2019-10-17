@@ -72,5 +72,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Centrifuge.UnityInterop\Centrifuge.UnityInterop.csproj">
+      <Project>{8DCC793A-BC56-4F07-A600-C0C109230C07}</Project>
+      <Name>Centrifuge.UnityInterop</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

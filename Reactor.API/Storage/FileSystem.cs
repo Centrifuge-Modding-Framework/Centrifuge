@@ -199,20 +199,6 @@ namespace Reactor.API.Storage
         public FileStream OpenFile(string filePath)
             => OpenFile(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
 
-        /*
-        public Texture2D LoadTexture(string filePath)
-        {
-            var bytes = ReadAllBytes(filePath);
-            var tex = new Texture2D(1, 1);
-
-            if (!ImageConversion.LoadImage(tex, bytes))
-            {
-                Log.Error($"Couldn't load a VFS texture '{filePath}'. Returning empty texture.");
-            }
-
-            return tex;
-        }
-        */
         public string CreateDirectory(string directoryName)
         {
             var targetDirectoryPath = Path.Combine(VirtualFileSystemRoot, directoryName);
