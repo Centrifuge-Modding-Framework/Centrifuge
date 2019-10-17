@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Centrifuge.UnityInterop.Bridges;
 
 namespace Reactor.API.Input
 {
@@ -6,11 +6,9 @@ namespace Reactor.API.Input
     {
         public static bool IsKeyPressed(string key)
         {
-            throw new NotImplementedException("Reimplementation in progress.");
-
             try
             {
-                // return UnityEngine.Input.GetKey((KeyCode)Enum.Parse(typeof(KeyCode), key));
+                return InputBridge.IsKeyPressed(key);
             }
             catch
             {
@@ -20,11 +18,9 @@ namespace Reactor.API.Input
 
         public static bool IsKeyDown(string key)
         {
-            throw new NotImplementedException("Reimplementation in progress.");
-
             try
             {
-                // return UnityEngine.Input.GetKeyDown((KeyCode)Enum.Parse(typeof(KeyCode), key));
+                return InputBridge.IsKeyDown(key);
             }
             catch
             {
@@ -34,11 +30,9 @@ namespace Reactor.API.Input
 
         public static bool IsKeyUp(string key)
         {
-            throw new NotImplementedException("Reimplementation in progress.");
-
             try
             {
-               // return UnityEngine.Input.GetKeyUp((KeyCode)Enum.Parse(typeof(KeyCode), key));
+                return IsKeyUp(key);
             }
             catch
             {
