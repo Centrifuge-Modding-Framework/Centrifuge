@@ -2,14 +2,11 @@
 
 namespace Reactor
 {
-    public static class Global
+    internal class Global
     {
-        public static bool InterceptUnityLogs;
-
         internal const string InterceptUnityLogsSettingsKey = "InterceptUnityLogs";
 
         internal static object GameApiObject { get; set; }
         internal static Settings Settings { get; set; }
-
     }
 }
