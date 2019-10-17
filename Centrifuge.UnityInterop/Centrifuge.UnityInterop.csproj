@@ -42,7 +42,6 @@
   <ItemGroup>
     <Compile Include="Bridges\ApplicationBridge.cs" />
     <Compile Include="Bridges\GameObjectBridge.cs" />
-    <Compile Include="Bridges\LoggingBridge.cs" />
     <Compile Include="Bridges\MonoBehaviourBridge.cs" />
     <Compile Include="Bridges\ReactorBridge.cs" />
     <Compile Include="Builders\ManagerProxyBuilder.cs" />

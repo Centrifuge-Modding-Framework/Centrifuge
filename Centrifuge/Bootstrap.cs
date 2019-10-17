@@ -53,7 +53,7 @@ namespace Centrifuge
             }
             catch (Exception ex)
             {
-                if(ex.InnerException is ReflectionTypeLoadException rtle)
+                if (ex.InnerException is ReflectionTypeLoadException rtle)
                 {
                     Console.WriteLine(rtle);
                     Console.WriteLine(rtle.InnerException);
@@ -79,7 +79,16 @@ namespace Centrifuge
 
             EarlyLog.Info("About to add component to Reactor Manager GameObject...");
             Console.WriteLine("--------------------------------------------");
-            GameObjectBridge.AttachComponentTo(ReactorManagerObject, proxyType);
+
+            var proxyComponent = GameObjectBridge.AttachComponentTo(ReactorManagerObject, proxyType);
+            try
+            {
+                ApplicationBridge.AttachLoggingEventHandler(proxyComponent);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private static string GetCrossPlatformCompatibleReactorPath()

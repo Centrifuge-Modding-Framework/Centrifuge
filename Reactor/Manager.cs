@@ -14,7 +14,8 @@ namespace Reactor
 {
     public class Manager : IManager
     {
-        private Logger Log { get; set; }
+        private static Logger Log { get; set; }
+        private static bool InterceptUnityLogs { get; set; }
 
         private static GameSupport GameSupport { get; set; }
         private static ModLoader ModLoader { get; set; }
@@ -78,7 +79,7 @@ namespace Reactor
         private void InitializeLogger()
         {
             Log = new Logger(Defaults.ManagerLogFileName);
-            Global.InterceptUnityLogs = Global.Settings.GetItem<bool>(Global.InterceptUnityLogsSettingsKey);
+            InterceptUnityLogs = Global.Settings.GetItem<bool>(Global.InterceptUnityLogsSettingsKey);
         }
 
         private static void InitializeGameSupport()
@@ -93,6 +94,9 @@ namespace Reactor
 
         public void LogUnityEngineMessage(string condition, string stackTrace, int logType)
         {
+            if (!InterceptUnityLogs)
+                return;
+
             var msg = $"[::UNITY::] {condition}";
 
             if (!string.IsNullOrEmpty(stackTrace))

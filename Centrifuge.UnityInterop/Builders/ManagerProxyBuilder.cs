@@ -27,10 +27,11 @@ namespace Centrifuge.UnityInterop.Builders
             );
 
             BuildManagerField();
-            BuildLogProxy();
 
             BuildAwakeMethod();
             BuildUpdateMethod();
+
+            BuildLoggerProxy();
         }
 
         public Type Build()
@@ -47,35 +48,30 @@ namespace Centrifuge.UnityInterop.Builders
             );
         }
 
-        private void BuildLogProxy()
+        private void BuildLoggerProxy()
         {
-            var methodBuilder = ProxyTypeBuilder.DefineMethod(
+            var proxyMethod = ProxyTypeBuilder.DefineMethod(
                 "LogProxy",
                     MethodAttributes.Public |
                     MethodAttributes.HideBySig,
                 CallingConventions.HasThis,
                 typeof(void),
-                new[] { typeof(string), typeof(string), LoggingBridge.UnityEngineLogTypeType }
+                new[] { typeof(string), typeof(string), ApplicationBridge.LogTypeType }
             );
 
-            var ilGen = methodBuilder.GetILGenerator();
-            ilGen.Emit(OpCodes.Ldarg_0);
-            ilGen.Emit(
-                OpCodes.Ldfld,
-                ProxyTypeBuilder.GetField("Manager")
+            var loggerMethod = ReactorBridge.ReactorManagerType.GetMethod(
+                Resources.ReactorManagerLogMethodName,
+                new[] { typeof(string), typeof(string), typeof(int) }
             );
+
+            var ilGen = proxyMethod.GetILGenerator();
+
+            ilGen.Emit(OpCodes.Ldarg_0);
+            ilGen.Emit(OpCodes.Ldfld, ProxyTypeBuilder.GetField("Manager"));
             ilGen.Emit(OpCodes.Ldarg_1);
             ilGen.Emit(OpCodes.Ldarg_2);
             ilGen.Emit(OpCodes.Ldarg_3);
-
-            ilGen.Emit(
-                OpCodes.Callvirt,
-                ReactorBridge.ReactorManagerType.GetMethod(
-                    Resources.ReactorManagerLogMethodName,
-                    BindingFlags.Public | BindingFlags.Instance
-                )
-            );
-
+            ilGen.Emit(OpCodes.Callvirt, loggerMethod);
             ilGen.Emit(OpCodes.Ret);
         }
 
@@ -121,51 +117,6 @@ namespace Centrifuge.UnityInterop.Builders
                 ProxyTypeBuilder.GetField("Manager")
             );
 
-            // if(Manager.InterceptUnityLogs)
-            //   UnityEngine.Application.logMessageReceived += LogProxy;
-            // 
-            /*ilGen.Emit(OpCodes.Ldarg_0);
-            ilGen.Emit(
-                OpCodes.Ldfld,
-                ProxyTypeBuilder.GetField("Manager")
-            );
-            ilGen.Emit(
-                OpCodes.Ldsfld,
-                ReactorBridge.ReactorGlobalType.GetField(
-                    Resources.ReactorGlobalInterceptUnityLogsFieldName,
-                    BindingFlags.Public | BindingFlags.Static
-                )
-            );
-
-            var retLabel = ilGen.DefineLabel();
-            ilGen.Emit(OpCodes.Brfalse_S, retLabel);
-
-            ilGen.Emit(OpCodes.Ldarg_0);
-            ilGen.Emit(
-                OpCodes.Ldftn,
-                ProxyTypeBuilder.GetMethod(
-                    "LogProxy",
-                    BindingFlags.Public | BindingFlags.Instance
-                )
-            );
-            
-            ilGen.Emit(
-                OpCodes.Newobj,
-                ApplicationBridge.LogCallbackType.GetConstructor(new[] {
-                     typeof(object),
-                     typeof(IntPtr)
-                })
-            );
-
-            ilGen.Emit(
-                OpCodes.Call,
-                ApplicationBridge.ApplicationType.GetMethod(
-                    "add_logMessageReceived",
-                    BindingFlags.Public | BindingFlags.Static
-                )
-            );
-
-            ilGen.MarkLabel(retLabel);*/
             ilGen.Emit(OpCodes.Ret);
         }
 
