@@ -1,13 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using UnityEngine;
 
 namespace Centrifuge
 {
     public static class Bootstrap
     {
-        private static GameObject ReactorManagerObject;
+        private static object ReactorManagerObject;
 
         public static void Initialize()
         {
