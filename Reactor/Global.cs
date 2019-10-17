@@ -1,5 +1,4 @@
 ﻿using Reactor.API.Configuration;
-using UnityEngine;
 
 namespace Reactor
 {
@@ -7,7 +6,7 @@ namespace Reactor
     {
         internal const string InterceptUnityLogsSettingsKey = "InterceptUnityLogs";
 
-        internal static GameObject GameApiObject { get; set; }
+        internal static object GameApiObject { get; set; }
         internal static Settings Settings { get; set; }
     }
 }

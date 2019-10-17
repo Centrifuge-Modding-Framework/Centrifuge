@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Centrifuge.UnityInterop</RootNamespace>
     <AssemblyName>Centrifuge.UnityInterop</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,8 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Builders\GameObjectBuilder.cs" />
+    <Compile Include="Bridges\ApplicationBridge.cs" />
+    <Compile Include="Bridges\GameObjectBridge.cs" />
+    <Compile Include="Bridges\MonoBehaviourBridge.cs" />
+    <Compile Include="Bridges\ReactorBridge.cs" />
+    <Compile Include="Builders\ManagerProxyBuilder.cs" />
+    <Compile Include="Kernel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

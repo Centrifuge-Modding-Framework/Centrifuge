@@ -1,10 +1,11 @@
-﻿using Reactor.API;
+﻿using Centrifuge.UnityInterop.Bridges;
+using Reactor.API;
 using Reactor.API.Attributes;
+using Reactor.API.Extensions;
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using UnityEngine;
 using Logger = Reactor.API.Logging.Logger;
 
 namespace Reactor.Extensibility
@@ -70,7 +71,7 @@ namespace Reactor.Extensibility
                 return;
             }
 
-            if (decoratedType.IsAssignableFrom(typeof(MonoBehaviour)))
+            if (decoratedType.IsAssignableFrom(MonoBehaviourBridge.MonoBehaviourType))
             {
                 Logger.Error("The game support library has a decorated entry point but it doesn't inherit from MonoBehaviour.");
                 return;
@@ -86,8 +87,8 @@ namespace Reactor.Extensibility
                 typeof(GameSupportLibraryEntryPointAttribute), false
             ).First() as GameSupportLibraryEntryPointAttribute;
 
-            Global.GameApiObject = new GameObject(attribute.LibraryID);
-            Global.GameApiObject.AddComponent(decoratedType);
+            Global.GameApiObject = GameObjectBridge.CreateGameObject(attribute.LibraryID);
+            GameObjectBridge.AttachComponentTo(Global.GameApiObject, decoratedType);
         }
     }
 }

@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Reactor</RootNamespace>
     <AssemblyName>Reactor</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,7 +36,7 @@
       <HintPath>..\packages\Lib.Harmony.1.2.0.1\lib\net35\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="LitJSON, Version=0.14.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LitJson.0.14.1\lib\net40\LitJSON.dll</HintPath>
+      <HintPath>..\packages\LitJson.0.14.1\lib\net35\LitJSON.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -66,6 +67,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Centrifuge.UnityInterop\Centrifuge.UnityInterop.csproj">
+      <Project>{8dcc793a-bc56-4f07-a600-c0c109230c07}</Project>
+      <Name>Centrifuge.UnityInterop</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Reactor.API\Reactor.API.csproj">
       <Project>{E00CDA95-C063-4BBE-BF73-FB2733BE4F34}</Project>
       <Name>Reactor.API</Name>
