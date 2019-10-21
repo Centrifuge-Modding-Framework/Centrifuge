@@ -9,14 +9,13 @@
     <Import_RootNamespace>Centrifuge.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\GTTOD\Assembly-CSharp.dev.dll" />
-    <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\GTTOD\Assembly-CSharp.dll" />
-    <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\GTTOD\Newtonsoft.Json.dll" />
-    <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\Unity\UnityEngine.AssetBundleModule.dll" />
-    <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\Unity\UnityEngine.CoreModule.dll" />
-    <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\Unity\UnityEngine.dll" />
-    <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\Unity\UnityEngine.IMGUIModule.dll" />
-    <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\Unity\UnityEngine.TextCoreModule.dll" />
-    <None Include="$(MSBuildThisFileDirectory)BinaryBlobs\Unity\UnityEngine.TextRenderingModule.dll" />
+    <None Include="$(MSBuildThisFileDirectory)centrifuge.nuspec" />
+    <None Include="$(MSBuildThisFileDirectory)NuGetScripts\Init.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)mod.template.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Mod.template.cs" />
   </ItemGroup>
 </Project>

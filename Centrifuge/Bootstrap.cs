@@ -1,13 +1,15 @@
-﻿using System;
+﻿using Centrifuge.UnityInterop.Bridges;
+using Centrifuge.UnityInterop.Builders;
+using Centrifuge.UnityInterop.DataModel;
+using System;
 using System.IO;
 using System.Reflection;
-using UnityEngine;
 
 namespace Centrifuge
 {
     public static class Bootstrap
     {
-        private static GameObject ReactorManagerObject;
+        private static object ReactorManagerObject;
 
         public static void Initialize()
         {
@@ -29,9 +31,15 @@ namespace Centrifuge
 
             var version = Assembly.GetAssembly(typeof(Bootstrap)).GetName().Version;
 
-            Console.WriteLine($"Centrifuge Mod Loader for GOTTD. Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}.");
+            Console.WriteLine($"Centrifuge Mod Loader for Unity Engine. Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}. Unity v{ApplicationBridge.UnityVersion}.");
             Console.WriteLine($"Diagnostics mode enabled. Remove '{StartupArguments.AllocateConsole}' command line argument to disable.");
             Console.WriteLine("--------------------------------------------");
+
+            if (ApplicationBridge.GetRunningUnityGeneration() == UnityGeneration.Unity4OrOlder)
+            {
+                EarlyLog.Error("Centrifuge requires Unity 5 or newer. Terminating.");
+                return;
+            }
 
             EarlyLog.Info("Trying to find Centrifuge Reactor DLL...");
 
@@ -42,20 +50,39 @@ namespace Centrifuge
                 return;
             }
 
-            EarlyLog.Info("Validating and loading Centrifuge Reactor DLL...");
-            var asm = Assembly.LoadFrom(reactorPath);
-
-            var managerType = asm.GetType("Reactor.Manager");
-            if (managerType == null)
+            Type proxyType;
+            try
             {
-                EarlyLog.Error($"Invalid Reactor DLL. Could not find the type 'Reactor.Manager'. Mods will not be loaded.");
+                EarlyLog.Info("Validating and loading Centrifuge Reactor DLL...");
+                Assembly.LoadFrom(reactorPath);
+                EarlyLog.Info("Loaded");
+
+                proxyType = new ManagerProxyBuilder().Build();
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException is ReflectionTypeLoadException rtle)
+                {
+                    EarlyLog.Exception(rtle);
+                    EarlyLog.Exception(rtle.InnerException);
+
+                    EarlyLog.Info("------------- LOADER EXCEPTIONS FOLLOW --------------- ");
+                    foreach (var lex in rtle.LoaderExceptions)
+                    {
+                        EarlyLog.Exception(lex);
+                    }
+                }
+                else
+                {
+                    EarlyLog.Exception(ex);
+                }
                 return;
             }
 
             try
             {
                 EarlyLog.Info("Creating Reactor Manager GameObject...");
-                ReactorManagerObject = new GameObject("com.github.ciastex.ReactorModLoader");
+                ReactorManagerObject = GameObjectBridge.CreateGameObject("com.github.ciastex/ReactorModLoaderProxy");
             }
             catch (Exception e)
             {
@@ -64,8 +91,28 @@ namespace Centrifuge
             }
 
             EarlyLog.Info("About to add component to Reactor Manager GameObject...");
+            object proxyComponent;
+            try
+            {
+                proxyComponent = GameObjectBridge.AttachComponentTo(ReactorManagerObject, proxyType);
+            }
+            catch (Exception e)
+            {
+                EarlyLog.Exception(e);
+                return;
+            }
+
+            try
+            {
+                EarlyLog.Info("Attaching log event handler...");
+                ApplicationBridge.AttachLoggingEventHandler(proxyComponent);
+            }
+            catch (Exception e)
+            {
+                EarlyLog.Exception(e);
+            }
+
             Console.WriteLine("--------------------------------------------");
-            ReactorManagerObject.AddComponent(managerType);
         }
 
         private static string GetCrossPlatformCompatibleReactorPath()

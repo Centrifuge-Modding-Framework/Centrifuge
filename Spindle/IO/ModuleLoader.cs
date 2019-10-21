@@ -7,12 +7,12 @@ namespace Spindle.IO
 {
     public class ModuleLoader
     {
-        public static ModuleDefinition LoadDistanceModule(string gttodAssemblyFileName)
+        public static ModuleDefinition LoadGameModule(string gameAssemblyFileName)
         {
             try
             {
                 ColoredOutput.WriteInformation("Loading TARGET module...");
-                return ModuleDefinition.ReadModule(gttodAssemblyFileName, new ReaderParameters() { ReadWrite = true, InMemory = true });
+                return ModuleDefinition.ReadModule(gameAssemblyFileName, new ReaderParameters() { ReadWrite = true, InMemory = true });
             }
             catch (Exception e)
             {

@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Reactor.API</RootNamespace>
     <AssemblyName>Reactor.API</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,30 +35,18 @@
     <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Lib.Harmony.1.2.0.1\lib\net35\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\Centrifuge.Shared\BinaryBlobs\GTTOD\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\Centrifuge.Shared\BinaryBlobs\GTTOD\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="LitJSON, Version=0.14.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LitJson.0.14.1\lib\net35\LitJSON.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine">
-      <HintPath>..\Centrifuge.Shared\BinaryBlobs\Unity\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AssetBundleModule">
-      <HintPath>..\Centrifuge.Shared\BinaryBlobs\Unity\UnityEngine.AssetBundleModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\Centrifuge.Shared\BinaryBlobs\Unity\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\GameSupportLibraryEntryPointAttribute.cs" />
     <Compile Include="Attributes\MessageHandlerAttribute.cs" />
     <Compile Include="Attributes\ModEntryPointAttribute.cs" />
     <Compile Include="Configuration\Section.cs" />
@@ -66,6 +55,7 @@
     <Compile Include="Events\ModInitializationEventArgs.cs" />
     <Compile Include="Exceptions\ManifestReadException.cs" />
     <Compile Include="Exceptions\SettingsException.cs" />
+    <Compile Include="Extensions\AssemblyEx.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Input\Hotkey.cs" />
     <Compile Include="Input\Keyboard.cs" />
@@ -81,6 +71,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Centrifuge.UnityInterop\Centrifuge.UnityInterop.csproj">
+      <Project>{8DCC793A-BC56-4F07-A600-C0C109230C07}</Project>
+      <Name>Centrifuge.UnityInterop</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

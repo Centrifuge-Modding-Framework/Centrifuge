@@ -4,14 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{957320E1-A43E-400F-9047-66C5C0B5141E}</ProjectGuid>
+    <ProjectGuid>{8DCC793A-BC56-4F07-A600-C0C109230C07}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Reactor.ExampleMod</RootNamespace>
-    <AssemblyName>Reactor.ExampleMod</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <RootNamespace>Centrifuge.UnityInterop</RootNamespace>
+    <AssemblyName>Centrifuge.UnityInterop</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,38 +32,25 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\Centrifuge.Shared\BinaryBlobs\GTTOD\Assembly-CSharp.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\Centrifuge.Shared\BinaryBlobs\Unity\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Mod.cs" />
+    <Compile Include="Bridges\ApplicationBridge.cs" />
+    <Compile Include="Bridges\AssetBundleBridge.cs" />
+    <Compile Include="Bridges\GameObjectBridge.cs" />
+    <Compile Include="Bridges\InputBridge.cs" />
+    <Compile Include="Bridges\MonoBehaviourBridge.cs" />
+    <Compile Include="Bridges\ReactorBridge.cs" />
+    <Compile Include="Builders\ManagerProxyBuilder.cs" />
+    <Compile Include="DataModel\UnityGeneration.cs" />
+    <Compile Include="Kernel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Reactor.API.GTTOD\Reactor.API.GTTOD.csproj">
-      <Project>{DB9FE521-A938-48F6-BE50-0BD8BA91F97C}</Project>
-      <Name>Reactor.API.GTTOD</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Reactor.API\Reactor.API.csproj">
-      <Project>{E00CDA95-C063-4BBE-BF73-FB2733BE4F34}</Project>
-      <Name>Reactor.API</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="mod.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Compile Include="Resources.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Centrifuge.UnityInterop.Bridges;
+using System;
 using System.IO;
 using System.Reflection;
-using UnityEngine;
 
 namespace Reactor.API.Storage
 {
@@ -15,7 +15,7 @@ namespace Reactor.API.Storage
 
         private static Logging.Logger Log { get; }
 
-        public AssetBundle Bundle { get; private set; }
+        public object Bundle { get; private set; }
 
         static Assets()
         {
@@ -59,11 +59,11 @@ namespace Reactor.API.Storage
             return ret;
         }
 
-        private AssetBundle Load()
+        private object Load()
         {
             try
             {
-                var assetBundle = AssetBundle.LoadFromFile(FilePath);
+                var assetBundle = AssetBundleBridge.LoadFrom(FilePath);
                 Log.Info($"Loaded asset bundle {FilePath}");
 
                 return assetBundle;

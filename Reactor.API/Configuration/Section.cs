@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using LitJson;
 using Reactor.API.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -54,14 +53,14 @@ namespace Reactor.API.Configuration
 
             try
             {
-                if (this[key] is JObject jObject)
+                /*if (this[key] is JObject jObject)
                     return jObject.ToObject<T>();
 
                 if (this[key] is JArray jArray)
                     return jArray.ToObject<T>();
 
                 if (this[key] is JToken jToken)
-                    return jToken.ToObject<T>();
+                    return jToken.ToObject<T>();*/
 
                 return (T)Convert.ChangeType(this[key], typeof(T));
             }

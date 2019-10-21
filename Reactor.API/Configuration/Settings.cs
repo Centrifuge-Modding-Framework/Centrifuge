@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using LitJson;
 using Reactor.API.Logging;
 using System;
 using System.IO;
@@ -19,6 +19,7 @@ namespace Reactor.API.Configuration
         public Settings(string fileName)
         {
             RootDirectory = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
+
             FileName = $"{fileName}.json";
 
             Logger.Info($"Settings instance for '{FilePath}' initializing...");
@@ -32,7 +33,7 @@ namespace Reactor.API.Configuration
 
                     try
                     {
-                        sec = JsonConvert.DeserializeObject<Section>(json);
+                        sec = JsonMapper.ToObject<Section>(json);
                     }
                     catch (JsonException je)
                     {
@@ -64,14 +65,13 @@ namespace Reactor.API.Configuration
             {
                 using (var sw = new StreamWriter(FilePath, false))
                 {
-                    sw.WriteLine(
-                        JsonConvert.SerializeObject(
-                            this,
-                            formatJson ?
-                                Formatting.Indented :
-                                Formatting.None
-                        )
-                    );
+                    var jw = new JsonWriter(sw)
+                    {
+                        PrettyPrint = formatJson,
+                        IndentValue = 2
+                    };
+
+                    JsonMapper.ToJson(this, jw);
                 }
 
                 Dirty = false;
