@@ -1,5 +1,6 @@
 ﻿using Centrifuge.UnityInterop.Bridges;
 using Centrifuge.UnityInterop.Builders;
+using Centrifuge.UnityInterop.DataModel;
 using System;
 using System.IO;
 using System.Reflection;
@@ -33,6 +34,12 @@ namespace Centrifuge
             Console.WriteLine($"Centrifuge Mod Loader for Unity Engine. Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}. Unity v{ApplicationBridge.UnityVersion}.");
             Console.WriteLine($"Diagnostics mode enabled. Remove '{StartupArguments.AllocateConsole}' command line argument to disable.");
             Console.WriteLine("--------------------------------------------");
+
+            if (ApplicationBridge.GetRunningUnityGeneration() == UnityGeneration.Unity4OrOlder)
+            {
+                EarlyLog.Error("Centrifuge requires Unity 5 or newer. Terminating.");
+                return;
+            }
 
             EarlyLog.Info("Trying to find Centrifuge Reactor DLL...");
 

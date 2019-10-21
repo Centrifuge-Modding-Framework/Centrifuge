@@ -29,31 +29,14 @@ namespace Centrifuge.UnityInterop.Bridges
 
         public static void AttachLoggingEventHandler(object target)
         {
-            Console.WriteLine(target);
-
             var d = Delegate.CreateDelegate(LogCallbackType, target, "LogProxy", false, true);
-            var unityGeneration = GetRunningUnityGeneration();
 
-            switch (unityGeneration)
-            {
-                case UnityGeneration.Unity5OrNewer:
-                    var ev = ApplicationType.GetEvent(
-                        "logMessageReceived",
-                        BindingFlags.Public | BindingFlags.Static
-                    );
+            var ev = ApplicationType.GetEvent(
+                "logMessageReceived",
+                BindingFlags.Public | BindingFlags.Static
+            );
 
-                    ev.AddEventHandler(null, d);
-                    break;
-
-                case UnityGeneration.Unity4OrOlder:
-                    var meth = ApplicationType.GetMethod(
-                        "RegisterLogCallback",
-                        BindingFlags.Public | BindingFlags.Static
-                    );
-
-                    meth.Invoke(null, new[] { d });
-                    break;
-            }
+            ev.AddEventHandler(null, d);
         }
     }
 }

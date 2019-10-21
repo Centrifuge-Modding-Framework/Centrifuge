@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Reflection;
 
 namespace Centrifuge.UnityInterop.Bridges
@@ -36,10 +35,9 @@ namespace Centrifuge.UnityInterop.Bridges
         {
             var addComponent = gameObject.GetType().GetMethod(
                 "AddComponent",
-                new[] { componentType }
+                new[] { typeof(Type) }
             );
 
-            Debug.Assert(addComponent != null);
             return addComponent.Invoke(gameObject, new object[] { componentType });
         }
     }

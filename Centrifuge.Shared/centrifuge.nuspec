@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Centrifuge.Mod.SDK</id>
-    <version>0.3.0-alpha</version>
+    <version>1.0.0-alpha</version>
     <description>SDK package for Unity Engine game mod development.</description>
     <authors>Ciastex</authors>
     <license type="file">LICENSE.md</license>
@@ -11,14 +11,15 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <tags>game-modding unity-engine modding-sdk modding-framework modding-toolkit sdk</tags>
     <dependencies>
-      <group targetFramework="net40">
+      <group targetFramework="net35">
         <dependency id="Lib.Harmony" version="1.2.0.1" />
+        <dependency id="LitJSON" version="0.14.1" />
       </group>
     </dependencies>
 
     <releaseNotes>
-This update makes the entire project game-agnostic, meaning the core should work for any Unity-based game.
- Also please ignore the assembly version numbers, as they are bound to differ between what's on AppVeyor and what's here. 
+This update makes Centrifuge a game-agnostic mod loader and API.
+ If you want to support a game, find a proper Game Support Library, or interface with the game binaries themselves.
     </releaseNotes>
   </metadata>
 
@@ -30,6 +31,6 @@ This update makes the entire project game-agnostic, meaning the core should work
 
     <file src="../LICENSE.md" target="" />
     
-    <file src="../Reactor.API/bin/Release/Reactor.API.dll" target="lib/net40" />
+    <file src="../Reactor.API/bin/Release/Reactor.API.dll" target="lib/net35" />
   </files>
 </package>
