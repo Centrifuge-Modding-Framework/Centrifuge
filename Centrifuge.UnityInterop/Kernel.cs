@@ -1,7 +1,5 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace Centrifuge.UnityInterop
 {
@@ -22,23 +20,6 @@ namespace Centrifuge.UnityInterop
             }
 
             throw new Exception($"Type {fullName} wasn't found at this moment in the main AppDomain.");
-        }
-
-        // Currently unused.
-        public static void LoadUnityAssembly(string asmName)
-        {
-            try
-            {
-                var location = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                var dllPath = Path.Combine(location, asmName);
-
-                if (File.Exists(dllPath))
-                    Assembly.LoadFrom(dllPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
         }
     }
 }

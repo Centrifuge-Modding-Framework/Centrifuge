@@ -94,12 +94,6 @@ namespace Reactor
             ModLoader.Init();
         }
 
-        public void HandleUnitySceneLoadEvent(object scene, int sceneLoadType)
-        {
-            // Reserved for future use.
-            // Required to be defined by Centrifuge.UnityInterop module.
-        }
-
         public void LogUnityEngineMessage(string condition, string stackTrace, int logType)
         {
             if (!InterceptUnityLogs)
