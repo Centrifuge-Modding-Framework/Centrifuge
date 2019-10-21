@@ -21,7 +21,7 @@ namespace Reactor.Extensibility
 
         public void Initialize()
         {
-            Logger.Info("Trying to find a single game support library...");
+            Logger.Info("Trying to find a GSL...");
 
             var gameSupportLibs = Directory.GetFiles(Defaults.CentrifugeRoot, Defaults.GameSupportLibraryFilePattern);
 
@@ -31,7 +31,7 @@ namespace Reactor.Extensibility
                 return;
             }
 
-            if(gameSupportLibs.Length > 1)
+            if (gameSupportLibs.Length > 1)
             {
                 Logger.Warning("More than one game support library detected, skipping this phase.");
                 Logger.Warning("Remove redundant game support libraries and restart the game.");

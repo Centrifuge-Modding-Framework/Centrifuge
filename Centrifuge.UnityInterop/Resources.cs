@@ -13,5 +13,6 @@
 
         public const string ReactorManagerTypeName = "Reactor.Manager";
         public const string ReactorManagerLogMethodName = "LogUnityEngineMessage";
+        public const string ReactorManagerOnLoadMethodName = "HandleUnitySceneLoadEvent";
     }
 }

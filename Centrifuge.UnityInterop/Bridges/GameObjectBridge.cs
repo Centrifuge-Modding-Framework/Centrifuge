@@ -39,8 +39,8 @@ namespace Centrifuge.UnityInterop.Bridges
                 "AddComponent",
                 new[] { typeof(Type) },
                 new[] { new ParameterModifier(1) }
-            ) ;
-            
+            );
+
             Debug.Assert(addComponent != null);
             return addComponent.Invoke(gameObject, new object[] { componentType });
         }
