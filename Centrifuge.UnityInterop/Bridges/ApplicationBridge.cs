@@ -21,7 +21,7 @@ namespace Centrifuge.UnityInterop.Bridges
 
             var major = int.Parse(version[0]);
 
-            if (major <= 5)
+            if (major >= 5)
                 return UnityGeneration.Unity5OrNewer;
 
             return UnityGeneration.Unity4OrOlder;
