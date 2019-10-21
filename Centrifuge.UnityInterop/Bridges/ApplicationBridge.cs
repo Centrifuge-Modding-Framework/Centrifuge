@@ -14,6 +14,19 @@ namespace Centrifuge.UnityInterop.Bridges
             BindingFlags.Public | BindingFlags.Static
         ).GetGetMethod().Invoke(null, new object[] { }) as string;
 
+        public static bool IsSupportedUnityVersion()
+        {
+            var version = UnityVersion.Split('.');
+
+            var major = int.Parse(version[0]);
+            var minor = int.Parse(version[1]);
+
+            if (major < 5 || (major == 5 && minor <= 1))
+                return false;
+
+            return true;
+        }
+
         public static void AttachLoggingEventHandler(object target)
         {
             var ev = ApplicationType.GetEvent(

@@ -34,6 +34,12 @@ namespace Centrifuge
             Console.WriteLine($"Diagnostics mode enabled. Remove '{StartupArguments.AllocateConsole}' command line argument to disable.");
             Console.WriteLine("--------------------------------------------");
 
+            if (!ApplicationBridge.IsSupportedUnityVersion())
+            {
+                EarlyLog.Error("This version of Unity is unsupported. Centrifuge requires at least Unity 5.2+. Terminating.");
+                return;
+            }
+
             EarlyLog.Info("Trying to find Centrifuge Reactor DLL...");
 
             var reactorPath = GetCrossPlatformCompatibleReactorPath();
@@ -43,27 +49,33 @@ namespace Centrifuge
                 return;
             }
 
-            EarlyLog.Info("Validating and loading Centrifuge Reactor DLL...");
-            Assembly.LoadFrom(reactorPath);
-
-            Type proxyType = null;
+            Type proxyType;
             try
             {
+                EarlyLog.Info("Validating and loading Centrifuge Reactor DLL...");
+                Assembly.LoadFrom(reactorPath);
+                EarlyLog.Info("Loaded");
+
                 proxyType = new ManagerProxyBuilder().Build();
             }
             catch (Exception ex)
             {
                 if (ex.InnerException is ReflectionTypeLoadException rtle)
                 {
-                    Console.WriteLine(rtle);
-                    Console.WriteLine(rtle.InnerException);
+                    EarlyLog.Exception(rtle);
+                    EarlyLog.Exception(rtle.InnerException);
 
-                    Console.WriteLine("------------- LOADER EXCEPTIONS FOLLOW --------------- ");
+                    EarlyLog.Info("------------- LOADER EXCEPTIONS FOLLOW --------------- ");
                     foreach (var lex in rtle.LoaderExceptions)
                     {
-                        Console.WriteLine(lex);
+                        EarlyLog.Exception(lex);
                     }
                 }
+                else
+                {
+                    EarlyLog.Exception(ex);
+                }
+                return;
             }
 
             try
@@ -78,17 +90,31 @@ namespace Centrifuge
             }
 
             EarlyLog.Info("About to add component to Reactor Manager GameObject...");
-            Console.WriteLine("--------------------------------------------");
-
-            var proxyComponent = GameObjectBridge.AttachComponentTo(ReactorManagerObject, proxyType);
+            object proxyComponent;
             try
             {
-                ApplicationBridge.AttachLoggingEventHandler(proxyComponent);
+                proxyComponent = GameObjectBridge.AttachComponentTo(ReactorManagerObject, proxyType);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                EarlyLog.Exception(e);
+                return;
             }
+
+            try
+            {
+                EarlyLog.Info("Attaching log event handler...");
+                ApplicationBridge.AttachLoggingEventHandler(proxyComponent);
+
+                EarlyLog.Info("Attaching scene load event handler...");
+                SceneManagementBridge.AttachOnLoadEventHandler(proxyComponent);
+            }
+            catch (Exception e)
+            {
+                EarlyLog.Exception(e);
+            }
+
+            Console.WriteLine("--------------------------------------------");
         }
 
         private static string GetCrossPlatformCompatibleReactorPath()

@@ -17,9 +17,9 @@ namespace Reactor
         private static Logger Log { get; set; }
         private static bool InterceptUnityLogs { get; set; }
 
-        private static GameSupport GameSupport { get; set; }
-        private static ModLoader ModLoader { get; set; }
-        private static ModRegistry ModRegistry { get; set; }
+        private GameSupport GameSupport { get; set; }
+        private ModLoader ModLoader { get; set; }
+        private ModRegistry ModRegistry { get; set; }
 
         public IHotkeyManager Hotkeys { get; private set; }
         public IMessenger Messenger { get; private set; }
@@ -82,14 +82,22 @@ namespace Reactor
             InterceptUnityLogs = Global.Settings.GetItem<bool>(Global.InterceptUnityLogsSettingsKey);
         }
 
-        private static void InitializeGameSupport()
+        private void InitializeGameSupport()
         {
+            Log.Info("Initializing game support.");
             GameSupport.Initialize();
         }
 
-        private static void InitializeMods()
+        private void InitializeMods()
         {
+            Log.Info("Initializing mods.");
             ModLoader.Init();
+        }
+
+        public void HandleUnitySceneLoadEvent(object scene, int sceneLoadType)
+        {
+            // Reserved for future use.
+            // Required to be defined by Centrifuge.UnityInterop module.
         }
 
         public void LogUnityEngineMessage(string condition, string stackTrace, int logType)

@@ -30,15 +30,6 @@ This update makes the entire project game-agnostic, meaning the core should work
 
     <file src="../LICENSE.md" target="" />
     
-    <file src="./BinaryBlobs/Core/Newtonsoft.Json.dll" target="lib/net40" />
-    
-    <file src="./BinaryBlobs/Unity/UnityEngine.AssetBundleModule.dll" target="lib/net40" />
-    <file src="./BinaryBlobs/Unity/UnityEngine.CoreModule.dll" target="lib/net40" />
-    <file src="./BinaryBlobs/Unity/UnityEngine.dll" target="lib/net40" />
-    <file src="./BinaryBlobs/Unity/UnityEngine.IMGUIModule.dll" target="lib/net40" />
-    <file src="./BinaryBlobs/Unity/UnityEngine.TextCoreModule.dll" target="lib/net40" />
-    <file src="./BinaryBlobs/Unity/UnityEngine.TextRenderingModule.dll" target="lib/net40" />
-    
     <file src="../Reactor.API/bin/Release/Reactor.API.dll" target="lib/net40" />
   </files>
 </package>

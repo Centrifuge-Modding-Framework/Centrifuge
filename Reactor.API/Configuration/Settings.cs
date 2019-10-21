@@ -1,8 +1,8 @@
+using LitJson;
 using Reactor.API.Logging;
 using System;
 using System.IO;
 using System.Reflection;
-using LitJson;
 
 namespace Reactor.API.Configuration
 {
@@ -19,6 +19,7 @@ namespace Reactor.API.Configuration
         public Settings(string fileName)
         {
             RootDirectory = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
+
             FileName = $"{fileName}.json";
 
             Logger.Info($"Settings instance for '{FilePath}' initializing...");

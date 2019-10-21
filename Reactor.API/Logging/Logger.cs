@@ -6,14 +6,7 @@ namespace Reactor.API.Logging
 {
     public class Logger
     {
-        public ConsoleColor ErrorColor { get; set; } = ConsoleColor.Red;
-        public ConsoleColor WarningColor { get; set; } = ConsoleColor.Yellow;
-        public ConsoleColor SuccessColor { get; set; } = ConsoleColor.Green;
-        public ConsoleColor InfoColor { get; set; } = ConsoleColor.White;
-        public ConsoleColor ExceptionColor { get; set; } = ConsoleColor.Magenta;
-
         public bool WriteToConsole { get; set; } = true;
-        public bool ColorizeLines { get; set; }
 
         private string RootDirectory { get; }
         private string FileName { get; }
@@ -22,8 +15,6 @@ namespace Reactor.API.Logging
 
         public Logger(string fileName)
         {
-            ColorizeLines = true;
-
             RootDirectory = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
             FileName = $"{fileName}.log";
 
@@ -35,62 +26,32 @@ namespace Reactor.API.Logging
 
         public void Error(string message)
         {
-            if (ColorizeLines)
-                Console.ForegroundColor = ErrorColor;
-
             WriteLine($"[!][{DateTime.Now}] {message}");
-
-            if (ColorizeLines)
-                Console.ResetColor();
         }
 
         public void Warning(string message)
         {
-            if (ColorizeLines)
-                Console.ForegroundColor = WarningColor;
-
             WriteLine($"[*][{DateTime.Now}] {message}");
-
-            if (ColorizeLines)
-                Console.ResetColor();
         }
 
         public void Success(string message)
         {
-            if (ColorizeLines)
-                Console.ForegroundColor = SuccessColor;
-
             WriteLine($"[+][{DateTime.Now}] {message}");
-
-            if (ColorizeLines)
-                Console.ResetColor();
         }
 
         public void Info(string message, bool noNewLine = false)
         {
-            if (ColorizeLines)
-                Console.ForegroundColor = InfoColor;
-
             var msg = $"[i][{DateTime.Now}] {message}";
 
             if (noNewLine)
                 Write(msg);
             else
                 WriteLine(msg);
-
-            if (ColorizeLines)
-                Console.ResetColor();
         }
 
         public void Exception(Exception e)
         {
-            if (ColorizeLines)
-                Console.ForegroundColor = ExceptionColor;
-
             WriteLine($"[e][{DateTime.Now}] {e.Message}");
-
-            if (ColorizeLines)
-                Console.ResetColor();
 
             WriteLine($"   Target site: {e.TargetSite}");
             WriteLine("   Stack trace:");
