@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using Centrifuge.UnityInterop.Bridges;
 
 namespace Reactor.API.Input
 {
@@ -9,7 +8,7 @@ namespace Reactor.API.Input
         {
             try
             {
-                return UnityEngine.Input.GetKey((KeyCode)Enum.Parse(typeof(KeyCode), key));
+                return InputBridge.IsKeyPressed(key);
             }
             catch
             {
@@ -21,7 +20,7 @@ namespace Reactor.API.Input
         {
             try
             {
-                return UnityEngine.Input.GetKeyDown((KeyCode)Enum.Parse(typeof(KeyCode), key));
+                return InputBridge.IsKeyDown(key);
             }
             catch
             {
@@ -33,7 +32,7 @@ namespace Reactor.API.Input
         {
             try
             {
-                return UnityEngine.Input.GetKeyUp((KeyCode)Enum.Parse(typeof(KeyCode), key));
+                return IsKeyUp(key);
             }
             catch
             {

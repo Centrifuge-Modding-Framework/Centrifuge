@@ -2,7 +2,6 @@
 using Reactor.API.Configuration;
 using Reactor.API.DataModel;
 using Reactor.API.Events;
-using Reactor.API.GTTOD;
 using Reactor.API.Interfaces.Systems;
 using Reactor.API.Logging;
 using Reactor.Communication;
@@ -13,12 +12,14 @@ using System.Collections.Generic;
 
 namespace Reactor
 {
-    public class Manager : UnityEngine.MonoBehaviour, IManager
+    public class Manager : IManager
     {
-        private Logger Log { get; set; }
+        private static Logger Log { get; set; }
+        private static bool InterceptUnityLogs { get; set; }
 
-        private ModRegistry ModRegistry { get; set; }
+        private GameSupport GameSupport { get; set; }
         private ModLoader ModLoader { get; set; }
+        private ModRegistry ModRegistry { get; set; }
 
         public IHotkeyManager Hotkeys { get; private set; }
         public IMessenger Messenger { get; private set; }
@@ -26,24 +27,21 @@ namespace Reactor
         public event EventHandler<ModInitializationEventArgs> ModInitialized;
         public event EventHandler InitFinished;
 
-        public void Awake()
+        public Manager()
         {
-            DontDestroyOnLoad(gameObject);
-
             InitializeSettings();
             InitializeLogger();
 
-            Log.Info("Definitely not up to no good...");
+            Log.Info("Spooling up!");
 
             Hotkeys = new HotkeyManager();
             Messenger = new Messenger();
 
+            GameSupport = new GameSupport();
             ModRegistry = new ModRegistry();
             ModLoader = new ModLoader(this, Defaults.ManagerModDirectory, ModRegistry);
 
-            Global.GameApiObject = new UnityEngine.GameObject(Defaults.ReactorGameApiNamespace);
-            var gameApiComponent = Global.GameApiObject.AddComponent<GameAPI>();
-
+            InitializeGameSupport();
             InitializeMods();
         }
 
@@ -81,20 +79,26 @@ namespace Reactor
         private void InitializeLogger()
         {
             Log = new Logger(Defaults.ManagerLogFileName);
+            InterceptUnityLogs = Global.Settings.GetItem<bool>(Global.InterceptUnityLogsSettingsKey);
+        }
 
-            if (Global.Settings.GetItem<bool>(Global.InterceptUnityLogsSettingsKey))
-            {
-                UnityEngine.Application.logMessageReceived += Application_logMessageReceived;
-            }
+        private void InitializeGameSupport()
+        {
+            Log.Info("Initializing game support.");
+            GameSupport.Initialize();
         }
 
         private void InitializeMods()
         {
+            Log.Info("Initializing mods.");
             ModLoader.Init();
         }
 
-        private void Application_logMessageReceived(string condition, string stackTrace, UnityEngine.LogType type)
+        public void LogUnityEngineMessage(string condition, string stackTrace, int logType)
         {
+            if (!InterceptUnityLogs)
+                return;
+
             var msg = $"[::UNITY::] {condition}";
 
             if (!string.IsNullOrEmpty(stackTrace))
@@ -102,20 +106,20 @@ namespace Reactor
                 msg += $"\n{stackTrace}";
             }
 
-            switch (type)
+            switch (logType)
             {
-                case UnityEngine.LogType.Exception:
-                case UnityEngine.LogType.Assert:
-                case UnityEngine.LogType.Error:
+                case 0: // LogType.Error
+                case 1: // LogType.Assert
+                case 4: // LogType.Exception
                     Log.Error(msg);
                     break;
 
-                case UnityEngine.LogType.Log:
-                    Log.Info(msg);
+                case 2:
+                    Log.Warning(msg);
                     break;
 
-                case UnityEngine.LogType.Warning:
-                    Log.Warning(msg);
+                case 3:
+                    Log.Info(msg);
                     break;
             }
         }

@@ -1,10 +1,10 @@
-﻿using Reactor.API.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Logger = Reactor.API.Logging.Logger;
 
 namespace Reactor.API.Storage
 {

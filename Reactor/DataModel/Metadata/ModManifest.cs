@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using LitJson;
 using Reactor.API.Exceptions;
 using System;
 using System.IO;
@@ -8,25 +8,12 @@ namespace Reactor.DataModel.Metadata
 {
     internal class ModManifest
     {
-        [JsonProperty("FriendlyName")]
-        public string FriendlyName { get; protected set; } // Newtonsoft.Json refuses to set private
-                                                           // properties, protected is the lowest possible.
-        [JsonProperty("Author")]
+        public string FriendlyName { get; protected set; }
         public string Author { get; protected set; }
-
-        [JsonProperty("Contact")]
         public string Contact { get; protected set; }
-
-        [JsonProperty("ModuleFileName")]
         public string ModuleFileName { get; protected set; }
-
-        [JsonProperty("Dependencies")]
         public string[] Dependencies { get; protected set; }
-
-        [JsonProperty("Priority")]
         public int? Priority { get; protected set; }
-
-        [JsonProperty("SkipLoad")]
         public bool SkipLoad { get; protected set; }
 
         private ModManifest() { }
@@ -49,7 +36,7 @@ namespace Reactor.DataModel.Metadata
 
             try
             {
-                var manifest = JsonConvert.DeserializeObject<ModManifest>(json);
+                var manifest = JsonMapper.ToObject<ModManifest>(json);
 
                 if (manifest == null)
                 {
