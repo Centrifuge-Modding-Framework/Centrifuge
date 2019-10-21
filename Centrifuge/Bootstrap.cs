@@ -34,12 +34,6 @@ namespace Centrifuge
             Console.WriteLine($"Diagnostics mode enabled. Remove '{StartupArguments.AllocateConsole}' command line argument to disable.");
             Console.WriteLine("--------------------------------------------");
 
-            if (!ApplicationBridge.IsSupportedUnityVersion())
-            {
-                EarlyLog.Error("This version of Unity is unsupported. Centrifuge requires at least Unity 5.2+. Terminating.");
-                return;
-            }
-
             EarlyLog.Info("Trying to find Centrifuge Reactor DLL...");
 
             var reactorPath = GetCrossPlatformCompatibleReactorPath();
@@ -105,9 +99,6 @@ namespace Centrifuge
             {
                 EarlyLog.Info("Attaching log event handler...");
                 ApplicationBridge.AttachLoggingEventHandler(proxyComponent);
-
-                EarlyLog.Info("Attaching scene load event handler...");
-                SceneManagementBridge.AttachOnLoadEventHandler(proxyComponent);
             }
             catch (Exception e)
             {

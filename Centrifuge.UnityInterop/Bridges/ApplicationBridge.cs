@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Centrifuge.UnityInterop.DataModel;
+using System;
 using System.Reflection;
 
 namespace Centrifuge.UnityInterop.Bridges
@@ -14,28 +15,45 @@ namespace Centrifuge.UnityInterop.Bridges
             BindingFlags.Public | BindingFlags.Static
         ).GetGetMethod().Invoke(null, new object[] { }) as string;
 
-        public static bool IsSupportedUnityVersion()
+        public static UnityGeneration GetRunningUnityGeneration()
         {
             var version = UnityVersion.Split('.');
 
             var major = int.Parse(version[0]);
-            var minor = int.Parse(version[1]);
 
-            if (major < 5 || (major == 5 && minor <= 1))
-                return false;
+            if (major <= 5)
+                return UnityGeneration.Unity5OrNewer;
 
-            return true;
+            return UnityGeneration.Unity4OrOlder;
         }
 
         public static void AttachLoggingEventHandler(object target)
         {
-            var ev = ApplicationType.GetEvent(
-                "logMessageReceived",
-                BindingFlags.Public | BindingFlags.Static
-            );
+            Console.WriteLine(target);
 
-            var d = Delegate.CreateDelegate(ev.EventHandlerType, target, "LogProxy", false, true);
-            ev.AddEventHandler(null, d);
+            var d = Delegate.CreateDelegate(LogCallbackType, target, "LogProxy", false, true);
+            var unityGeneration = GetRunningUnityGeneration();
+
+            switch (unityGeneration)
+            {
+                case UnityGeneration.Unity5OrNewer:
+                    var ev = ApplicationType.GetEvent(
+                        "logMessageReceived",
+                        BindingFlags.Public | BindingFlags.Static
+                    );
+
+                    ev.AddEventHandler(null, d);
+                    break;
+
+                case UnityGeneration.Unity4OrOlder:
+                    var meth = ApplicationType.GetMethod(
+                        "RegisterLogCallback",
+                        BindingFlags.Public | BindingFlags.Static
+                    );
+
+                    meth.Invoke(null, new[] { d });
+                    break;
+            }
         }
     }
 }
