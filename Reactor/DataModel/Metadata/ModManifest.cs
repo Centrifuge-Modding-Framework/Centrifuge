@@ -16,7 +16,7 @@ namespace Reactor.DataModel.Metadata
         public int? Priority { get; protected set; }
         public bool SkipLoad { get; protected set; }
 
-        private ModManifest() { }
+        public ModManifest() { }
 
         public static ModManifest FromFile(string filePath)
         {

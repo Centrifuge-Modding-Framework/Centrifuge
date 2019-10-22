@@ -24,13 +24,7 @@ This update makes Centrifuge a game-agnostic mod loader and API for mods or Game
   </metadata>
 
   <files>
-    <file src="./NuGetScripts/Init.ps1" target="tools/Init.ps1" />
-
-    <file src="./mod.template.json" target="content/mod.json" />
-    <file src="./Mod.template.cs" target="content/Mod.cs" />
-
     <file src="../LICENSE.md" target="" />
-    
     <file src="../Reactor.API/bin/Release/Reactor.API.dll" target="lib/net35" />
   </files>
 </package>
