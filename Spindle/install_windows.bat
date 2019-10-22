@@ -1,2 +1,1 @@
-﻿@echo off
-spindle -s Centrifuge.dll -t Assembly-CSharp.dll
+﻿spindle -s Centrifuge.dll -t Assembly-CSharp.dll
