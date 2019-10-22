@@ -18,7 +18,7 @@
     </dependencies>
 
     <releaseNotes>
-This update makes Centrifuge a game-agnostic mod loader and API.
+This update makes Centrifuge a game-agnostic mod loader and API for mods or Game Support Libraries.
  If you want to support a game, find a proper Game Support Library, or interface with the game binaries themselves.
     </releaseNotes>
   </metadata>
