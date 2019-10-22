@@ -122,8 +122,35 @@ namespace Reactor.Extensibility
 
         private void LoadAllMods(List<LoadData> loadData)
         {
-            foreach (var dataObject in loadData)
-                LoadMod(dataObject);
+            if (!Directory.Exists(SourceDirectory))
+            {
+                Log.Warning($"Mod repository '{SourceDirectory}' doesn't exist. Creating and skipping mod loading step.");
+                Directory.CreateDirectory(SourceDirectory);
+            }
+            else
+            {
+                foreach (var dataObject in loadData)
+                {
+                    try
+                    {
+                        LoadMod(dataObject);
+                    }
+                    catch (ReflectionTypeLoadException rtle)
+                    {
+                        Log.Error($"Some dependencies for '{dataObject.Manifest.FriendlyName}' have failed to load. Read loader exceptions below.");
+
+                        foreach (var le in rtle.LoaderExceptions)
+                        {
+                            Log.Error(le.ToString());
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error($"Failed to load mod '{dataObject.Manifest.FriendlyName}'.");
+                        Log.Exception(e);
+                    }
+                }
+            }
 
             Manager.OnInitFinished();
         }

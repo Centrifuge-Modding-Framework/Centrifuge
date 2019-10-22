@@ -102,16 +102,6 @@ namespace Centrifuge
                 return;
             }
 
-            try
-            {
-                EarlyLog.Info("Attaching log event handler...");
-                ApplicationBridge.AttachLoggingEventHandler(proxyComponent);
-            }
-            catch (Exception e)
-            {
-                EarlyLog.Exception(e);
-            }
-
             Console.WriteLine("--------------------------------------------");
         }
 

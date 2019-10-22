@@ -102,6 +102,16 @@ namespace Centrifuge.UnityInterop.Builders
                     BindingFlags.Public | BindingFlags.Static
                 )
             );
+
+            // ApplicationBridge.AttachLoggingEventHandler(this);
+            ilGen.Emit(OpCodes.Ldarg_0);
+            ilGen.Emit(
+                OpCodes.Call,
+                typeof(ApplicationBridge).GetMethod(
+                    nameof(ApplicationBridge.AttachLoggingEventHandler),
+                    BindingFlags.Public | BindingFlags.Static
+                )
+            );
             // -------------------------------------------
 
             // Manager = new Manager();
