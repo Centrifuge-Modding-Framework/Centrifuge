@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Centrifuge.Mod.SDK</id>
-    <version>1.0.0-alpha</version>
+    <version>1.0.1-alpha</version>
     <description>SDK package for Unity Engine game mod development.</description>
     <authors>Ciastex</authors>
     <license type="file">LICENSE.md</license>
@@ -18,8 +18,7 @@
     </dependencies>
 
     <releaseNotes>
-This update makes Centrifuge a game-agnostic mod loader and API for mods or Game Support Libraries.
- If you want to support a game, find a proper Game Support Library, or interface with the game binaries themselves.
+Fixed a breaking bug causing manifests not to be parsed.
     </releaseNotes>
   </metadata>
 
