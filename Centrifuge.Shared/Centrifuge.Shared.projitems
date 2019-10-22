@@ -10,12 +10,5 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)centrifuge.nuspec" />
-    <None Include="$(MSBuildThisFileDirectory)NuGetScripts\Init.ps1" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)mod.template.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Mod.template.cs" />
   </ItemGroup>
 </Project>
