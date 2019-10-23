@@ -42,7 +42,7 @@ namespace Reactor.Extensibility
                 return;
             }
 
-            Log.Info("Single game support library found. Trying to initialize...");
+            Log.Info("GSL found. Trying to initialize...");
 
             try
             {

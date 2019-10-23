@@ -28,9 +28,14 @@ namespace Centrifuge
 
             if (e.InnerException != null)
             {
-                Console.WriteLine("-------------- INNER EXCEPTION FOLLOWS --------------");
+                Separator("INNER EXCEPTION FOLLOWS");
                 Exception(e.InnerException);
             }
+        }
+
+        public static void Separator(string message)
+        {
+            Console.WriteLine($"-------------- {message} --------------");
         }
 
         private static void WriteMessage(char symbol, string message)

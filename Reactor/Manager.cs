@@ -15,7 +15,6 @@ namespace Reactor
     public class Manager : IManager
     {
         private static Logger Log { get; set; }
-        private static bool InterceptUnityLogs { get; set; }
 
         private GameSupport GameSupport { get; set; }
         private ModLoader ModLoader { get; set; }
@@ -34,8 +33,6 @@ namespace Reactor
             InitializeSettings();
             InitializeLogger();
 
-            Log.Info("Spooling up!");
-
             Hotkeys = new HotkeyManager();
             Messenger = new Messenger();
 
@@ -43,18 +40,30 @@ namespace Reactor
             ModRegistry = new ModRegistry();
             ModLoader = new ModLoader(this, Defaults.ManagerModDirectory, ModRegistry);
 
-            InitializeGameSupport();
-            InitializeMods();
-        }
-
-        public void Update()
-        {
-            ((HotkeyManager)Hotkeys).Update();
+            GameSupport.Initialize();
+            ModLoader.Initialize();
         }
 
         public List<ModInfo> GetLoadedMods()
         {
             return ModRegistry.GetLoadedMods();
+        }
+
+        private void InitializeSettings()
+        {
+            Global.Settings = new Settings("reactor");
+            Global.InterceptUnityLogs = Global.Settings.GetOrCreate(Global.InterceptUnityLogsSettingsKey, true);
+
+            if (Global.Settings.Dirty)
+            {
+                Global.Settings.Save();
+            }
+        }
+
+        private void InitializeLogger()
+        {
+            Log = new Logger(Defaults.ManagerLogFileName);
+            Log.Info("Spooling up!");
         }
 
         internal void OnModInitialized(ModInfo modInfo)
@@ -67,38 +76,14 @@ namespace Reactor
             InitFinished?.Invoke(this, EventArgs.Empty);
         }
 
-        private void InitializeSettings()
+        public void Update()
         {
-            Global.Settings = new Settings("reactor");
-            Global.Settings.GetOrCreate(Global.InterceptUnityLogsSettingsKey, true);
-
-            if (Global.Settings.Dirty)
-            {
-                Global.Settings.Save();
-            }
-        }
-
-        private void InitializeLogger()
-        {
-            Log = new Logger(Defaults.ManagerLogFileName);
-            InterceptUnityLogs = Global.Settings.GetItem<bool>(Global.InterceptUnityLogsSettingsKey);
-        }
-
-        private void InitializeGameSupport()
-        {
-            Log.Info("Initializing game support.");
-            GameSupport.Initialize();
-        }
-
-        private void InitializeMods()
-        {
-            Log.Info("Initializing mods.");
-            ModLoader.Init();
+            ((HotkeyManager)Hotkeys).Update();
         }
 
         public void LogUnityEngineMessage(string condition, string stackTrace, int logType)
         {
-            if (!InterceptUnityLogs)
+            if (!Global.InterceptUnityLogs)
                 return;
 
             var msg = $"[::UNITY::] {condition}";

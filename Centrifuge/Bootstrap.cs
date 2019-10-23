@@ -31,9 +31,9 @@ namespace Centrifuge
 
             var version = Assembly.GetAssembly(typeof(Bootstrap)).GetName().Version;
 
-            Console.WriteLine($"Centrifuge Mod Loader for Unity Engine. Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}. Unity v{ApplicationBridge.UnityVersion}.");
-            Console.WriteLine($"Diagnostics mode enabled. Remove '{StartupArguments.AllocateConsole}' command line argument to disable.");
-            Console.WriteLine("--------------------------------------------");
+            EarlyLog.Info($"Centrifuge Mod Loader for Unity Engine. Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}. Unity v{ApplicationBridge.UnityVersion}.");
+            EarlyLog.Info($"Diagnostics mode enabled. Remove '{StartupArguments.AllocateConsole}' command line argument to disable.");
+            EarlyLog.Separator("--------------------------------------------");
 
             if (ApplicationBridge.GetRunningUnityGeneration() == UnityGeneration.Unity4OrOlder)
             {
@@ -55,27 +55,24 @@ namespace Centrifuge
             {
                 EarlyLog.Info("Validating and loading Centrifuge Reactor DLL...");
                 Assembly.LoadFrom(reactorPath);
-                EarlyLog.Info("Loaded");
 
                 proxyType = new ManagerProxyBuilder().Build();
             }
+            catch (ReflectionTypeLoadException rtle)
+            {
+                EarlyLog.Exception(rtle);
+                EarlyLog.Exception(rtle.InnerException);
+
+                EarlyLog.Separator("--------------- LOADER EXCEPTIONS FOLLOW --------------- ");
+                foreach (var lex in rtle.LoaderExceptions)
+                {
+                    EarlyLog.Exception(lex);
+                }
+                return;
+            }
             catch (Exception ex)
             {
-                if (ex.InnerException is ReflectionTypeLoadException rtle)
-                {
-                    EarlyLog.Exception(rtle);
-                    EarlyLog.Exception(rtle.InnerException);
-
-                    EarlyLog.Info("------------- LOADER EXCEPTIONS FOLLOW --------------- ");
-                    foreach (var lex in rtle.LoaderExceptions)
-                    {
-                        EarlyLog.Exception(lex);
-                    }
-                }
-                else
-                {
-                    EarlyLog.Exception(ex);
-                }
+                EarlyLog.Exception(ex);
                 return;
             }
 
@@ -91,6 +88,7 @@ namespace Centrifuge
             }
 
             EarlyLog.Info("About to add component to Reactor Manager GameObject...");
+
             object proxyComponent;
             try
             {
@@ -102,7 +100,27 @@ namespace Centrifuge
                 return;
             }
 
-            Console.WriteLine("--------------------------------------------");
+            if (proxyComponent == null)
+            {
+                EarlyLog.Error("Manager proxy component has failed to attach when it wasn't really supposed to fail on Unity 5+.");
+
+                EarlyLog.Info("Report this stuff to https://github.com/Ciastex/Centrifuge/issues.");
+                EarlyLog.Info("Make sure to check for and - if existing - include your game's output_log.txt (and/or Player.log) in the report.");
+                EarlyLog.Info("Definitely include this entire log as well.");
+                EarlyLog.Info("Otherwise I'll be very angry and ask you for this stuff in a very rude manner.");
+
+                if (IsUnix())
+                {
+                    EarlyLog.Info("Look in ~/.config/unity3d/<CompanyName>/<GameName>/ for any .log and/or .txt files.");
+                }
+                else
+                {
+                    var path = Path.Combine(Environment.GetEnvironmentVariable("USERPROFILE"), "\\AppData\\LocalLow");
+                    EarlyLog.Info($"Look in {path}\\<CompanyName>\\<GameName> for any .log and/or .txt files.");
+                }
+            }
+
+            EarlyLog.Separator("--------------- BOOTSTRAPPER FINISHED ---------------");
         }
 
         private static string GetCrossPlatformCompatibleReactorPath()
