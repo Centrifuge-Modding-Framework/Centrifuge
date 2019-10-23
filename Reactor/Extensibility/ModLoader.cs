@@ -135,15 +135,6 @@ namespace Reactor.Extensibility
                     {
                         LoadMod(dataObject);
                     }
-                    catch (ReflectionTypeLoadException rtle)
-                    {
-                        Log.Error($"Some dependencies for '{dataObject.Manifest.FriendlyName}' have failed to load. Read loader exceptions below.");
-
-                        foreach (var le in rtle.LoaderExceptions)
-                        {
-                            Log.Error(le.ToString());
-                        }
-                    }
                     catch (Exception e)
                     {
                         Log.Error($"Failed to load mod '{dataObject.Manifest.FriendlyName}'.");
@@ -177,8 +168,8 @@ namespace Reactor.Extensibility
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Failed to load dependencies, detailed exception has been logged to the mod loader log file.");
-                    Log.ExceptionSilent(e);
+                    Log.Error("Failed to load dependencies.");
+                    Log.Exception(e);
 
                     return;
                 }
@@ -188,6 +179,11 @@ namespace Reactor.Extensibility
             try
             {
                 modAssembly = Assembly.LoadFrom(targetModulePath);
+            }
+            catch (ReflectionTypeLoadException rtle)
+            {
+                LogTypeResolverFailure(rtle);
+                return;
             }
             catch (Exception e)
             {
@@ -313,9 +309,14 @@ namespace Reactor.Extensibility
                 {
                     Assembly.LoadFrom(targetDepPath);
                 }
-                catch
+                catch (ReflectionTypeLoadException rtle)
                 {
-                    throw;
+                    LogTypeResolverFailure(rtle);
+                }
+                catch (Exception e)
+                {
+                    Log.Error($"Failed to load dependency '{dep}'.");
+                    Log.Exception(e);
                 }
             }
         }
@@ -404,6 +405,16 @@ namespace Reactor.Extensibility
 
             if (modId == "*")
                 throw new InvalidModIdException("The Mod ID '*' is a reserved broadcast name - you have the whole UTF-8 ffs, use it.");
+        }
+
+        private void LogTypeResolverFailure(ReflectionTypeLoadException rtle)
+        {
+            Log.Exception(rtle);
+
+            foreach (var le in rtle.LoaderExceptions)
+            {
+                Log.Error(le.ToString());
+            }
         }
     }
 }
