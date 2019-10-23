@@ -406,15 +406,5 @@ namespace Reactor.Extensibility
             if (modId == "*")
                 throw new InvalidModIdException("The Mod ID '*' is a reserved broadcast name - you have the whole UTF-8 ffs, use it.");
         }
-
-        private void LogTypeResolverFailure(ReflectionTypeLoadException rtle)
-        {
-            Log.Exception(rtle);
-
-            foreach (var le in rtle.LoaderExceptions)
-            {
-                Log.Error(le.ToString());
-            }
-        }
     }
 }
