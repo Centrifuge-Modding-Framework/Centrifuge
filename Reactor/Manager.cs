@@ -24,6 +24,8 @@ namespace Reactor
         public IHotkeyManager Hotkeys { get; private set; }
         public IMessenger Messenger { get; private set; }
 
+        public string LoadedGameSupportID => GameSupport.GameSupportID;
+
         public event EventHandler<ModInitializationEventArgs> ModInitialized;
         public event EventHandler InitFinished;
 
