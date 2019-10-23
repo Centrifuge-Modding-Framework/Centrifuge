@@ -41,7 +41,7 @@ namespace Reactor.Extensibility
             Log = new Logger(Defaults.ModLoaderLogFileName);
         }
 
-        public void Init()
+        public void Initialize()
         {
             var loadData = PrepareLoadData();
             LoadAllMods(loadData);
