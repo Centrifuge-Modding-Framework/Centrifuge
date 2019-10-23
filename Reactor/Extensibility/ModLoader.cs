@@ -182,7 +182,7 @@ namespace Reactor.Extensibility
             }
             catch (ReflectionTypeLoadException rtle)
             {
-                LogTypeResolverFailure(rtle);
+                Log.TypeResolverFailure(rtle);
                 return;
             }
             catch (Exception e)
@@ -311,7 +311,7 @@ namespace Reactor.Extensibility
                 }
                 catch (ReflectionTypeLoadException rtle)
                 {
-                    LogTypeResolverFailure(rtle);
+                    Log.TypeResolverFailure(rtle);
                 }
                 catch (Exception e)
                 {
