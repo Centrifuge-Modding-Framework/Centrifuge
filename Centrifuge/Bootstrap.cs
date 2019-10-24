@@ -33,7 +33,7 @@ namespace Centrifuge
 
             EarlyLog.Info($"Centrifuge Mod Loader for Unity Engine. Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}. Unity v{ApplicationBridge.UnityVersion}.");
             EarlyLog.Info($"Diagnostics mode enabled. Remove '{StartupArguments.AllocateConsole}' command line argument to disable.");
-            EarlyLog.Separator("--------------------------------------------");
+            EarlyLog.Separator(string.Empty);
 
             if (ApplicationBridge.GetRunningUnityGeneration() == UnityGeneration.Unity4OrOlder)
             {
@@ -63,7 +63,7 @@ namespace Centrifuge
                 EarlyLog.Exception(rtle);
                 EarlyLog.Exception(rtle.InnerException);
 
-                EarlyLog.Separator("--------------- LOADER EXCEPTIONS FOLLOW --------------- ");
+                EarlyLog.Separator("LOADER EXCEPTIONS FOLLOW");
                 foreach (var lex in rtle.LoaderExceptions)
                 {
                     EarlyLog.Exception(lex);
@@ -120,7 +120,7 @@ namespace Centrifuge
                 }
             }
 
-            EarlyLog.Separator("--------------- BOOTSTRAPPER FINISHED ---------------");
+            EarlyLog.Separator("BOOTSTRAPPER FINISHED");
         }
 
         private static string GetCrossPlatformCompatibleReactorPath()
