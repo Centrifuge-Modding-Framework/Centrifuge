@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Centrifuge.Mod.SDK</id>
-    <version>1.0.1-alpha</version>
+    <version>1.0.2-alpha</version>
     <description>SDK package for Unity Engine game mod development.</description>
     <authors>Ciastex</authors>
     <license type="file">LICENSE.md</license>
@@ -13,12 +13,12 @@
     <dependencies>
       <group targetFramework="net35">
         <dependency id="Lib.Harmony" version="1.2.0.1" />
-        <dependency id="LitJSON" version="0.14.1" />
+        <dependency id="LitJSON" version="0.15.0" />
       </group>
     </dependencies>
 
     <releaseNotes>
-Fixed a breaking bug causing manifests not to be parsed.
+Updated dependencies.
     </releaseNotes>
   </metadata>
 
