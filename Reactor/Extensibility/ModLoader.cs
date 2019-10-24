@@ -41,7 +41,7 @@ namespace Reactor.Extensibility
             Log = new Logger(Defaults.ModLoaderLogFileName);
         }
 
-        public void Init()
+        public void Initialize()
         {
             var loadData = PrepareLoadData();
             LoadAllMods(loadData);
@@ -135,15 +135,6 @@ namespace Reactor.Extensibility
                     {
                         LoadMod(dataObject);
                     }
-                    catch (ReflectionTypeLoadException rtle)
-                    {
-                        Log.Error($"Some dependencies for '{dataObject.Manifest.FriendlyName}' have failed to load. Read loader exceptions below.");
-
-                        foreach (var le in rtle.LoaderExceptions)
-                        {
-                            Log.Error(le.ToString());
-                        }
-                    }
                     catch (Exception e)
                     {
                         Log.Error($"Failed to load mod '{dataObject.Manifest.FriendlyName}'.");
@@ -177,8 +168,8 @@ namespace Reactor.Extensibility
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Failed to load dependencies, detailed exception has been logged to the mod loader log file.");
-                    Log.ExceptionSilent(e);
+                    Log.Error("Failed to load dependencies.");
+                    Log.Exception(e);
 
                     return;
                 }
@@ -188,6 +179,11 @@ namespace Reactor.Extensibility
             try
             {
                 modAssembly = Assembly.LoadFrom(targetModulePath);
+            }
+            catch (ReflectionTypeLoadException rtle)
+            {
+                Log.TypeResolverFailure(rtle);
+                return;
             }
             catch (Exception e)
             {
@@ -313,9 +309,14 @@ namespace Reactor.Extensibility
                 {
                     Assembly.LoadFrom(targetDepPath);
                 }
-                catch
+                catch (ReflectionTypeLoadException rtle)
                 {
-                    throw;
+                    Log.TypeResolverFailure(rtle);
+                }
+                catch (Exception e)
+                {
+                    Log.Error($"Failed to load dependency '{dep}'.");
+                    Log.Exception(e);
                 }
             }
         }
