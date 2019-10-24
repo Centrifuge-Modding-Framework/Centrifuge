@@ -66,6 +66,16 @@ namespace Reactor.API.Logging
             }
         }
 
+        public void TypeResolverFailure(ReflectionTypeLoadException rtle)
+        {
+            Exception(rtle);
+
+            foreach (var le in rtle.LoaderExceptions)
+            {
+                Error(le.ToString());
+            }
+        }
+
         public void ExceptionSilent(Exception e)
         {
             WriteLineSilent($"[e][{DateTime.Now}] {e.Message}");

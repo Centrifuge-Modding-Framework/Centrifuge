@@ -21,6 +21,7 @@ namespace Reactor.Extensibility
             {
                 throw new DuplicateModIdException(modHost.ModID, "Mod with this ID has already been registered.");
             }
+
             Mods.Add(modHost);
         }
 
