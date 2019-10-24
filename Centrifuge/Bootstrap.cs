@@ -56,12 +56,12 @@ namespace Centrifuge
                 EarlyLog.Info("Validating and loading Centrifuge Reactor DLL...");
                 Assembly.LoadFrom(reactorPath);
 
+                EarlyLog.Info("Building manager proxy component for Unity Engine...");
                 proxyType = new ManagerProxyBuilder().Build();
             }
             catch (ReflectionTypeLoadException rtle)
             {
                 EarlyLog.Exception(rtle);
-                EarlyLog.Exception(rtle.InnerException);
 
                 EarlyLog.Separator("LOADER EXCEPTIONS FOLLOW");
                 foreach (var lex in rtle.LoaderExceptions)
@@ -87,8 +87,7 @@ namespace Centrifuge
                 return;
             }
 
-            EarlyLog.Info("About to add component to Reactor Manager GameObject...");
-
+            EarlyLog.Info("About to add component to Reactor Manager GameObject.");
             object proxyComponent;
             try
             {
