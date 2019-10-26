@@ -5,12 +5,23 @@ namespace Centrifuge.UnityInterop.Bridges
 {
     public static class InputBridge
     {
-        public static Type InputType => Kernel.FindTypeByFullName("UnityEngine.Input");
-        public static Type KeyCodeType => Kernel.FindTypeByFullName("UnityEngine.KeyCode");
+        public static Type InputType => Kernel.FindTypeByFullName(Resources.UnityEngine.InputTypeName);
+        public static Type KeyCodeType => Kernel.FindTypeByFullName(Resources.UnityEngine.KeyCodeTypeName);
 
-        private static MethodInfo GetKey => InputType.GetMethod("GetKey", new[] { KeyCodeType });
-        private static MethodInfo GetKeyDown => InputType.GetMethod("GetKeyDown", new[] { KeyCodeType });
-        private static MethodInfo GetKeyUp => InputType.GetMethod("GetKeyUp", new[] { KeyCodeType });
+        private static MethodInfo GetKey => InputType.GetMethod(
+            Resources.UnityEngine.InputGetKeyMethodName,
+            new[] { KeyCodeType }
+        );
+
+        private static MethodInfo GetKeyDown => InputType.GetMethod(
+            Resources.UnityEngine.InputGetKeyDownMethodName,
+            new[] { KeyCodeType }
+        );
+
+        private static MethodInfo GetKeyUp => InputType.GetMethod(
+            Resources.UnityEngine.InputGetKeyUpMethodName,
+            new[] { KeyCodeType }
+        );
 
         public static bool IsKeyPressed(string key)
         {

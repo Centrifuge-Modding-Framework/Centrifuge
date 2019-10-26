@@ -5,10 +5,10 @@ namespace Centrifuge.UnityInterop.Bridges
 {
     public static class AssetBundleBridge
     {
-        public static Type AssetBundleType => Kernel.FindTypeByFullName("UnityEngine.AssetBundle");
+        public static Type AssetBundleType => Kernel.FindTypeByFullName(Resources.UnityEngine.AssetBundleTypeName);
 
         private static MethodInfo LoadFromFile => AssetBundleType.GetMethod(
-            "LoadFromFile",
+            Resources.UnityEngine.AssetBundleLoadFromFileMethodName,
             new[] { typeof(string) }
         );
 
