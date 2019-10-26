@@ -1,6 +1,6 @@
 ﻿namespace Centrifuge.UnityInterop
 {
-    public static class Resources
+    internal static class Resources
     {
         public const string UnityEngineObjectTypeName = "UnityEngine.Object";
         public const string UnityEngineGameObjectTypeName = "UnityEngine.GameObject";
