@@ -19,7 +19,7 @@ namespace Centrifuge.UnityInterop
                 return type;
             }
 
-            throw new Exception($"Type {fullName} wasn't found at this moment in the main AppDomain.");
+            throw new Exception($"Type {fullName} wasn't found in the main AppDomain at this moment.");
         }
     }
 }
