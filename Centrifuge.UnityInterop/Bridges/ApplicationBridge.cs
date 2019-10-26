@@ -29,6 +29,8 @@ namespace Centrifuge.UnityInterop.Bridges
 
         public static void AttachLoggingEventHandler(object target)
         {
+            Integrity.EnsureNotNull(target);
+
             var d = Delegate.CreateDelegate(LogCallbackType, target, "LogProxy", false, true);
 
             var ev = ApplicationType.GetEvent(

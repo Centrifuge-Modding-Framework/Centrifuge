@@ -8,14 +8,13 @@ namespace Reactor.API.Logging
     {
         public bool WriteToConsole { get; set; } = true;
 
-        private string RootDirectory { get; }
+        private string RootDirectory => Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
         private string FileName { get; }
 
         private string FilePath => Path.Combine(Path.Combine(RootDirectory, Defaults.PrivateLogDirectory), FileName);
 
         public Logger(string fileName)
         {
-            RootDirectory = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
             FileName = $"{fileName}.log";
 
             Directory.CreateDirectory(Path.GetDirectoryName(FilePath));
