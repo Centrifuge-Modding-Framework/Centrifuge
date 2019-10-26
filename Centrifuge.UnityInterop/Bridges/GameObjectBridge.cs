@@ -13,6 +13,9 @@ namespace Centrifuge.UnityInterop.Bridges
 
         public static void DontDestroyOnLoad(object gameObject)
         {
+            Integrity.EnsureNotNull(gameObject);
+            Integrity.EnsureGameObject(gameObject);
+
             var dontDestroy = ObjectType.GetMethod(
                 "DontDestroyOnLoad",
                 BindingFlags.Public | BindingFlags.Static
@@ -23,7 +26,10 @@ namespace Centrifuge.UnityInterop.Bridges
 
         public static void SetActive(object gameObject, bool active)
         {
-            var setActive = gameObject.GetType().GetMethod(
+            Integrity.EnsureNotNull(gameObject);
+            Integrity.EnsureGameObject(gameObject);
+
+            var setActive = GameObjectType.GetMethod(
                 "SetActive",
                 BindingFlags.Public | BindingFlags.Instance
             );
@@ -33,11 +39,15 @@ namespace Centrifuge.UnityInterop.Bridges
 
         public static object AttachComponentTo(object gameObject, Type componentType)
         {
-            var addComponent = gameObject.GetType().GetMethod(
+            Integrity.EnsureNotNull(gameObject);
+            Integrity.EnsureGameObject(gameObject);
+
+            var addComponent = GameObjectType.GetMethod(
                 "AddComponent",
                 new[] { typeof(Type) }
             );
 
+            Integrity.EnsureNotNull(componentType);
             return addComponent.Invoke(gameObject, new object[] { componentType });
         }
     }
