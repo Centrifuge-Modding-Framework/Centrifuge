@@ -5,8 +5,8 @@ namespace Centrifuge.UnityInterop.Bridges
 {
     public static class GameObjectBridge
     {
-        public static Type GameObjectType => Kernel.FindTypeByFullName(Resources.UnityEngineGameObjectTypeName);
-        public static Type ObjectType => Kernel.FindTypeByFullName(Resources.UnityEngineObjectTypeName);
+        public static Type GameObjectType => Kernel.FindTypeByFullName(Resources.UnityEngine.GameObjectTypeName);
+        public static Type ObjectType => Kernel.FindTypeByFullName(Resources.UnityEngine.ObjectTypeName);
 
         public static object CreateGameObject(string name)
             => Activator.CreateInstance(GameObjectType, new object[] { name });
@@ -17,7 +17,7 @@ namespace Centrifuge.UnityInterop.Bridges
             Integrity.EnsureGameObject(gameObject);
 
             var dontDestroy = ObjectType.GetMethod(
-                "DontDestroyOnLoad",
+                Resources.UnityEngine.ObjectDontDestroyOnLoadMethodName,
                 BindingFlags.Public | BindingFlags.Static
             );
 
@@ -30,7 +30,7 @@ namespace Centrifuge.UnityInterop.Bridges
             Integrity.EnsureGameObject(gameObject);
 
             var setActive = GameObjectType.GetMethod(
-                "SetActive",
+                Resources.UnityEngine.GameObjectSetActiveMethodName,
                 BindingFlags.Public | BindingFlags.Instance
             );
 
@@ -43,7 +43,7 @@ namespace Centrifuge.UnityInterop.Bridges
             Integrity.EnsureGameObject(gameObject);
 
             var addComponent = GameObjectType.GetMethod(
-                "AddComponent",
+                Resources.UnityEngine.GameObjectAddComponentMethodName,
                 new[] { typeof(Type) }
             );
 

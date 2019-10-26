@@ -6,12 +6,12 @@ namespace Centrifuge.UnityInterop.Bridges
 {
     public static class ApplicationBridge
     {
-        public static Type ApplicationType => Kernel.FindTypeByFullName("UnityEngine.Application");
-        public static Type LogCallbackType => Kernel.FindTypeByFullName("UnityEngine.Application+LogCallback");
-        public static Type LogTypeType => Kernel.FindTypeByFullName("UnityEngine.LogType");
+        public static Type ApplicationType => Kernel.FindTypeByFullName(Resources.UnityEngine.ApplicationTypeName);
+        public static Type LogCallbackType => Kernel.FindTypeByFullName(Resources.UnityEngine.LogCallbackTypeName);
+        public static Type LogTypeType => Kernel.FindTypeByFullName(Resources.UnityEngine.LogTypeTypeName);
 
         public static string UnityVersion => ApplicationType.GetProperty(
-            "unityVersion",
+            Resources.UnityEngine.ApplicationVersionPropertyName,
             BindingFlags.Public | BindingFlags.Static
         ).GetGetMethod().Invoke(null, new object[] { }) as string;
 
@@ -31,10 +31,10 @@ namespace Centrifuge.UnityInterop.Bridges
         {
             Integrity.EnsureNotNull(target);
 
-            var d = Delegate.CreateDelegate(LogCallbackType, target, "LogProxy", false, true);
+            var d = Delegate.CreateDelegate(LogCallbackType, target, Resources.Proxy.LogProxyMethodName, false, true);
 
             var ev = ApplicationType.GetEvent(
-                "logMessageReceived",
+                Resources.UnityEngine.LogMessageReceivedEventName,
                 BindingFlags.Public | BindingFlags.Static
             );
 

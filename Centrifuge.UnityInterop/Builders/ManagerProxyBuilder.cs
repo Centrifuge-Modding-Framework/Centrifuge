@@ -14,11 +14,11 @@ namespace Centrifuge.UnityInterop.Builders
 
         public ManagerProxyBuilder()
         {
-            ProxyAssemblyName = new AssemblyName(Resources.ProxyAssemblyName);
+            ProxyAssemblyName = new AssemblyName(Resources.Proxy.AssemblyName);
             ProxyAssemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(ProxyAssemblyName, AssemblyBuilderAccess.Run);
-            ProxyModuleBuilder = ProxyAssemblyBuilder.DefineDynamicModule("UnityProxyModule");
+            ProxyModuleBuilder = ProxyAssemblyBuilder.DefineDynamicModule(Resources.Proxy.ModuleName);
             ProxyTypeBuilder = ProxyModuleBuilder.DefineType(
-                Resources.ProxyManagerTypeName,
+                Resources.Proxy.ManagerTypeName,
                   TypeAttributes.Class |
                   TypeAttributes.Public |
                   TypeAttributes.AnsiClass |
@@ -28,7 +28,6 @@ namespace Centrifuge.UnityInterop.Builders
 
             BuildManagerField();
             BuildLoggerProxy();
-
             BuildAwakeMethod();
             BuildUpdateMethod();
         }
@@ -41,7 +40,7 @@ namespace Centrifuge.UnityInterop.Builders
         private void BuildManagerField()
         {
             ProxyTypeBuilder.DefineField(
-                "Manager",
+                Resources.Proxy.ManagerFieldName,
                 ReactorBridge.ReactorManagerType,
                 FieldAttributes.Public
             );
@@ -50,7 +49,7 @@ namespace Centrifuge.UnityInterop.Builders
         private void BuildLoggerProxy()
         {
             var proxyMethod = ProxyTypeBuilder.DefineMethod(
-                "LogProxy",
+                Resources.Proxy.LogProxyMethodName,
                     MethodAttributes.Public |
                     MethodAttributes.HideBySig,
                 CallingConventions.HasThis,
@@ -59,14 +58,14 @@ namespace Centrifuge.UnityInterop.Builders
             );
 
             var loggerMethod = ReactorBridge.ReactorManagerType.GetMethod(
-                Resources.ReactorManagerLogMethodName,
+                Resources.ReactorManager.LogMethodName,
                 new[] { typeof(string), typeof(string), typeof(int) }
             );
 
             var ilGen = proxyMethod.GetILGenerator();
 
             ilGen.Emit(OpCodes.Ldarg_0);
-            ilGen.Emit(OpCodes.Ldfld, ProxyTypeBuilder.GetField("Manager"));
+            ilGen.Emit(OpCodes.Ldfld, ProxyTypeBuilder.GetField(Resources.Proxy.ManagerFieldName));
             ilGen.Emit(OpCodes.Ldarg_1);
             ilGen.Emit(OpCodes.Ldarg_2);
             ilGen.Emit(OpCodes.Ldarg_3);
@@ -77,7 +76,7 @@ namespace Centrifuge.UnityInterop.Builders
         private void BuildAwakeMethod()
         {
             var methodBuilder = ProxyTypeBuilder.DefineMethod(
-                "Awake",
+                Resources.Proxy.AwakeMethodName,
                     MethodAttributes.Public |
                     MethodAttributes.HideBySig,
                 CallingConventions.HasThis
@@ -90,7 +89,7 @@ namespace Centrifuge.UnityInterop.Builders
             ilGen.Emit(
                 OpCodes.Call,
                 MonoBehaviourBridge.MonoBehaviourType.GetProperty(
-                    "gameObject",
+                    Resources.UnityEngine.MonoBehaviourGameObjectFieldName,
                     BindingFlags.Public | BindingFlags.Instance
                 ).GetGetMethod()
             );
@@ -98,7 +97,7 @@ namespace Centrifuge.UnityInterop.Builders
             ilGen.Emit(
                 OpCodes.Call,
                 GameObjectBridge.ObjectType.GetMethod(
-                    "DontDestroyOnLoad",
+                    Resources.UnityEngine.ObjectDontDestroyOnLoadMethodName,
                     BindingFlags.Public | BindingFlags.Static
                 )
             );
@@ -123,7 +122,7 @@ namespace Centrifuge.UnityInterop.Builders
 
             ilGen.Emit(
                 OpCodes.Stfld,
-                ProxyTypeBuilder.GetField("Manager")
+                ProxyTypeBuilder.GetField(Resources.Proxy.ManagerFieldName)
             );
 
             ilGen.Emit(OpCodes.Ret);
@@ -132,7 +131,7 @@ namespace Centrifuge.UnityInterop.Builders
         private void BuildUpdateMethod()
         {
             var methodBuilder = ProxyTypeBuilder.DefineMethod(
-                "Update",
+                Resources.Proxy.UpdateMethodName,
                     MethodAttributes.Public |
                     MethodAttributes.HideBySig,
                 CallingConventions.HasThis
@@ -143,12 +142,12 @@ namespace Centrifuge.UnityInterop.Builders
             ilGen.Emit(OpCodes.Ldarg_0);
             ilGen.Emit(
                 OpCodes.Ldfld,
-                ProxyTypeBuilder.GetField("Manager")
+                ProxyTypeBuilder.GetField(Resources.Proxy.ManagerFieldName)
             );
             ilGen.Emit(
                 OpCodes.Callvirt,
                 ReactorBridge.ReactorManagerType.GetMethod(
-                    "Update",
+                    Resources.ReactorManager.UpdateMethodName,
                     BindingFlags.Instance | BindingFlags.Public
                 )
             );
