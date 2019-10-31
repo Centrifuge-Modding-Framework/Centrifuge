@@ -28,7 +28,7 @@ namespace Reactor.Extensibility
 
             var gameSupportLibs = Directory.GetFiles(Defaults.CentrifugeRoot, Defaults.GameSupportLibraryFilePattern);
 
-            if (gameSupportLibs.Length == 0)
+            if (!gameSupportLibs.Any())
             {
                 Log.Warning("Game support library not found, skipping this phase.");
                 return;

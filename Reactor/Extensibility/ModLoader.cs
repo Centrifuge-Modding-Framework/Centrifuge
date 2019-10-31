@@ -255,13 +255,15 @@ namespace Reactor.Extensibility
 
             var modHost = new ModHost
             {
+                Assembly = modAssembly,
                 ModID = entryPointInfo.ModID,
                 LoadData = data,
                 Instance = null,
                 GameObject = null
             };
 
-            if (MonoBehaviourBridge.MonoBehaviourType.IsAssignableFrom(entryPointType))
+            var dealingWithGameObject = MonoBehaviourBridge.MonoBehaviourType.IsAssignableFrom(entryPointType);
+            if (dealingWithGameObject)
             {
                 modHost.GameObject = GameObjectBridge.CreateGameObject(entryPointInfo.ModID);
                 GameObjectBridge.DontDestroyOnLoad(modHost.GameObject);
@@ -282,15 +284,26 @@ namespace Reactor.Extensibility
             Registry.RegisterMod(modHost);
             Log.Success("Loaded and registered successfully. Initializing and activating.");
 
-            entryPointType.GetMethod(
+            var initializer = entryPointType.GetMethod(
                 entryPointInfo.InitializerName,
                 new Type[] { typeof(IManager) }
-            ).Invoke(
-                modHost.Instance,
-                new object[] { Manager }
             );
 
-            GameObjectBridge.SetActive(modHost.GameObject, true);
+            if (initializer != null)
+            {
+                initializer.Invoke(
+                    modHost.Instance,
+                    new object[] { Manager }
+                );
+            }
+            else
+            {
+                Log.Error($"Failed to call initializer method '{entryPointInfo.InitializerName}' for Mod ID '{modHost.ModID}'. Seems like it doesn't exist.");
+            }
+
+            if(dealingWithGameObject && entryPointInfo.AwakeAfterInitialize)
+                GameObjectBridge.SetActive(modHost.GameObject, true);
+
             Manager.OnModInitialized(modHost.ToExchangeableApiObject());
         }
 
@@ -303,20 +316,22 @@ namespace Reactor.Extensibility
                 var targetDepPath = Path.Combine(baseDependencyDirPath, dep);
 
                 if (!File.Exists(targetDepPath))
-                    throw new FileNotFoundException("Declared private dependency file not found.", targetDepPath);
+                    throw new DependencyLoadException(targetDepPath, "Declared private dependency file not found.");
 
                 try
                 {
+                    Log.Info($"Loading dependency assembly '{dep}'...");
                     Assembly.LoadFrom(targetDepPath);
                 }
                 catch (ReflectionTypeLoadException rtle)
                 {
                     Log.TypeResolverFailure(rtle);
+                    throw;
                 }
                 catch (Exception e)
                 {
-                    Log.Error($"Failed to load dependency '{dep}'.");
                     Log.Exception(e);
+                    throw;
                 }
             }
         }
