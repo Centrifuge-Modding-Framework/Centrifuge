@@ -51,7 +51,6 @@
     <Compile Include="DataModel\Metadata\ManifestValidationFlags.cs" />
     <Compile Include="DataModel\Communication\MessageHandlerInvocationParameters.cs" />
     <Compile Include="DataModel\Metadata\ModManifest.cs" />
-    <Compile Include="Exceptions\DependencyLoadException.cs" />
     <Compile Include="Exceptions\DuplicateModIdException.cs" />
     <Compile Include="Exceptions\InvalidModIdException.cs" />
     <Compile Include="Exceptions\MissingEntryPointException.cs" />
