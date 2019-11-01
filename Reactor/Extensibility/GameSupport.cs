@@ -2,23 +2,23 @@
 using Reactor.API;
 using Reactor.API.Attributes;
 using Reactor.API.Extensions;
+using Reactor.API.Logging;
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Logger = Reactor.API.Logging.Logger;
 
 namespace Reactor.Extensibility
 {
     internal class GameSupport
     {
-        private Logger Log { get; }
+        private Log Log { get; }
 
         public string GameSupportID { get; private set; }
 
         public GameSupport()
         {
-            Log = new Logger(Defaults.GameSupportInitializerLogFileName);
+            Log = new Log(Defaults.GameSupportInitializerLogFileName);
             GameSupportID = string.Empty;
         }
 

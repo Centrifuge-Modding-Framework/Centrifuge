@@ -43,11 +43,20 @@ namespace Reactor.API.Input
             }
         }
 
+        /// <summary>
+        /// Creates a hotkey given a key combinaton.
+        /// </summary>
+        /// <param name="hotkeyString">Unity key names separated with '+'.</param>
         public Hotkey(string hotkeyString)
         {
             Keys = Parse(hotkeyString);
         }
 
+        /// <summary>
+        /// Creates a hotkey given a key combination.
+        /// </summary>
+        /// <param name="hotkeyString">Unity key names separated with '+'.</param>
+        /// <param name="isOneTime">Whether to register the keypress every frame, or just once.</param>
         public Hotkey(string hotkeyString, bool isOneTime) : this(hotkeyString)
         {
             IsOneTime = isOneTime;

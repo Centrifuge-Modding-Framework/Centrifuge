@@ -10,12 +10,12 @@ namespace Reactor.Communication
 {
     internal class Messenger : IMessenger
     {
-        private Logger Log { get; }
+        private Log Log { get; }
         private Dictionary<string, Dictionary<string, List<MethodInfo>>> MessageHandlers { get; }
 
         public Messenger()
         {
-            Log = new Logger(Defaults.MessengerLogFileName);
+            Log = new Log(Defaults.MessengerLogFileName);
             MessageHandlers = new Dictionary<string, Dictionary<string, List<MethodInfo>>>();
         }
 

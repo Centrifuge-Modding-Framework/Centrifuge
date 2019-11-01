@@ -1,4 +1,5 @@
 ﻿using Centrifuge.UnityInterop.Bridges;
+using Reactor.API.Logging;
 using System;
 using System.IO;
 using System.Reflection;
@@ -13,17 +14,22 @@ namespace Reactor.API.Storage
         private string FileName { get; set; }
         private string FilePath => _filePath ?? Path.Combine(Path.Combine(RootDirectory, Defaults.PrivateAssetsDirectory), FileName);
 
-        private static Logging.Logger Log { get; }
+        private static Log Log { get; }
 
         public object Bundle { get; private set; }
 
         static Assets()
         {
-            Log = new Logging.Logger(Defaults.RuntimeAssetLoaderLogFileName);
+            Log = new Log(Defaults.RuntimeAssetLoaderLogFileName);
         }
 
         private Assets() { }
 
+        /// <summary>
+        /// Attempts to construct a Unity AssetBundle via a Centrifuge Type Bridge. 
+        /// You will have to cast the Bundle property to Unity's AssetBundle type for usage.
+        /// </summary>
+        /// <param name="fileName">Filename/path relative to mod's private asset directory.</param>
         public Assets(string fileName)
         {
             RootDirectory = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);

@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Bridges\ApplicationBridge.cs" />
     <Compile Include="Bridges\AssetBundleBridge.cs" />
+    <Compile Include="Bridges\ConsoleBridge.cs" />
     <Compile Include="Bridges\GameObjectBridge.cs" />
     <Compile Include="Bridges\InputBridge.cs" />
     <Compile Include="Bridges\MonoBehaviourBridge.cs" />
