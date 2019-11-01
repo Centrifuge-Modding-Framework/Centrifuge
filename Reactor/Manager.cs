@@ -14,7 +14,7 @@ namespace Reactor
 {
     public class Manager : IManager
     {
-        private static Logger Log { get; set; }
+        private static Log Log { get; set; }
 
         private GameSupport GameSupport { get; set; }
         private ModLoader ModLoader { get; set; }
@@ -62,7 +62,7 @@ namespace Reactor
 
         private void InitializeLogger()
         {
-            Log = new Logger(Defaults.ManagerLogFileName);
+            Log = new Log(Defaults.ManagerLogFileName);
             Log.Info("Spooling up!");
         }
 

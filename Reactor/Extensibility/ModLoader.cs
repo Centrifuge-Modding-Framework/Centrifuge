@@ -28,7 +28,7 @@ namespace Reactor.Extensibility
         private ModRegistry Registry { get; }
         private string SourceDirectory { get; }
 
-        private Logger Log { get; }
+        private Log Log { get; }
 
         public ModLoader(Manager manager, string sourceDirectory, ModRegistry registry)
         {
@@ -38,7 +38,13 @@ namespace Reactor.Extensibility
             SourceDirectory = sourceDirectory;
             Registry = registry;
 
-            Log = new Logger(Defaults.ModLoaderLogFileName);
+            Log = new Log(Defaults.ModLoaderLogFileName);
+
+            if (!Directory.Exists(SourceDirectory))
+            {
+                Log.Info($"Directory {SourceDirectory} does not exist. Creating.");
+                Directory.CreateDirectory(SourceDirectory);
+            }
         }
 
         public void Initialize()
@@ -111,7 +117,7 @@ namespace Reactor.Extensibility
                 catch (ManifestReadException mre)
                 {
                     Log.Error($"Manifest is invalid: {mre.Message}");
-                    Log.ExceptionSilent(mre);
+                    Log.Exception(mre, true);
                     continue;
                 }
             }
@@ -187,8 +193,8 @@ namespace Reactor.Extensibility
             }
             catch (Exception e)
             {
-                Log.Error("Assembly.LoadFrom failed. Detailed exception has been logged to the mod loader log file.");
-                Log.ExceptionSilent(e);
+                Log.Error($"Assembly loading failed: {e.Message}.");
+                Log.Exception(e, true);
 
                 return;
             }
@@ -213,11 +219,9 @@ namespace Reactor.Extensibility
             {
                 types = modAssembly.GetTypes();
             }
-            catch (Exception e)
+            catch (ReflectionTypeLoadException rtle)
             {
-                Log.Error("GetTypes() failed. Detailed exception has been logged to the mod loader log file.");
-                Log.ExceptionSilent(e);
-
+                Log.TypeResolverFailure(rtle);
                 return;
             }
 
@@ -230,7 +234,7 @@ namespace Reactor.Extensibility
             }
             catch (InvalidModIdException e)
             {
-                Log.Error($"Mod ID invalid: {e.Message}");
+                Log.Error($"Mod ID is not well-formed: {e.Message}");
                 return;
             }
             catch (Exception e)
@@ -301,7 +305,7 @@ namespace Reactor.Extensibility
                 Log.Error($"Failed to call initializer method '{entryPointInfo.InitializerName}' for Mod ID '{modHost.ModID}'. Seems like it doesn't exist.");
             }
 
-            if(dealingWithGameObject && entryPointInfo.AwakeAfterInitialize)
+            if (dealingWithGameObject && entryPointInfo.AwakeAfterInitialize)
                 GameObjectBridge.SetActive(modHost.GameObject, true);
 
             Manager.OnModInitialized(modHost.ToExchangeableApiObject());

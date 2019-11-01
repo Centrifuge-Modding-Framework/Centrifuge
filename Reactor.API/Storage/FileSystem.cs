@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Reactor.API.Logging;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Logger = Reactor.API.Logging.Logger;
 
 namespace Reactor.API.Storage
 {
@@ -13,13 +13,16 @@ namespace Reactor.API.Storage
         public string RootDirectory { get; }
         public string VirtualFileSystemRoot => Path.Combine(RootDirectory, Defaults.PrivateDataDirectory);
 
-        private static Logger Log { get; set; }
+        private static Log Log { get; set; }
 
         static FileSystem()
         {
-            Log = new Logger(Defaults.FileSystemLogFileName);
+            Log = new Log(Defaults.FileSystemLogFileName);
         }
 
+        /// <summary>
+        /// Creates a pseudo-VFS object for file management inside the mod's private data directory.
+        /// </summary>
         public FileSystem()
         {
             RootDirectory = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
@@ -134,7 +137,7 @@ namespace Reactor.API.Storage
                 catch (Exception e)
                 {
                     Log.Error($"Action for the element at path '{path}' failed. See file system exception log for details.");
-                    Log.ExceptionSilent(e);
+                    Log.Exception(e, true);
 
                     return;
                 }

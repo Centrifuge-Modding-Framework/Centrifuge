@@ -11,12 +11,12 @@ namespace Reactor.Input
     {
         private Dictionary<Hotkey, Action> ActionHotkeys { get; }
 
-        private Logger Log { get; }
+        private Log Log { get; }
 
         public HotkeyManager()
         {
             ActionHotkeys = new Dictionary<Hotkey, Action>();
-            Log = new Logger(Defaults.HotkeyManagerLogFileName);
+            Log = new Log(Defaults.HotkeyManagerLogFileName);
         }
 
         public void Bind(Hotkey hotkey, Action action)
