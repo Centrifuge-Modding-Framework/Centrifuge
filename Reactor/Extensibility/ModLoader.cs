@@ -172,6 +172,7 @@ namespace Reactor.Extensibility
                 {
                     LoadDependenciesForMod(rootPath, manifest.Dependencies);
                 }
+
                 catch (Exception e)
                 {
                     Log.Error("Failed to load dependencies.");
@@ -318,9 +319,6 @@ namespace Reactor.Extensibility
             foreach (var dep in deps)
             {
                 var targetDepPath = Path.Combine(baseDependencyDirPath, dep);
-
-                if (!File.Exists(targetDepPath))
-                    throw new DependencyLoadException(targetDepPath, "Declared private dependency file not found.");
 
                 try
                 {
