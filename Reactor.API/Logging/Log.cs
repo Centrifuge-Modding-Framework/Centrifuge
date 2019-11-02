@@ -15,10 +15,10 @@ namespace Reactor.API.Logging
         private string FilePath => Path.Combine(Path.Combine(RootDirectory, Defaults.PrivateLogDirectory), FileName);
 
         /// <summary>
-        /// Creates a Centrifuge-controlled logger 
+        /// Creates a logger integrated with Centrifuge.
         /// </summary>
-        /// <param name="fileName">Log file name without the extension.</param>
-        public Log(string fileName = "mod_log")
+        /// <param name="fileName">Log file name without an extension.</param>
+        public Log(string fileName)
         {
             RootDirectory = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
             FileName = $"{fileName}.txt";
@@ -29,6 +29,17 @@ namespace Reactor.API.Logging
                 File.Delete(FilePath);
 
             Options = new LogOptions();
+        }
+        
+        /// <summary>
+        /// Creates a logger integrated with Centrifuge, allows you to provide alternative logging configuration.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="options"></param>
+        public Log(string fileName, LogOptions options)
+            : this(fileName)
+        {
+            Options = options;
         }
 
         public void Error(string message)
