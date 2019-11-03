@@ -6,6 +6,10 @@ namespace Centrifuge
 {
     internal static class ConsoleAllocator
     {
+        private const int StdOutputHandle = -11;
+        private const uint EnableVirtualTerminalProcessing = 0x4;
+        private const uint DisableNewlineAutoReturn = 0x8;
+
         private static StreamWriter _outputWriter;
         private static TextWriter _originalStream;
 
@@ -18,6 +22,15 @@ namespace Centrifuge
 
             AllocConsole();
             RecreateOutputStream();
+
+            var stdOutHandle = GetStdHandle(StdOutputHandle);
+
+            if (GetConsoleMode(stdOutHandle, out uint mode))
+            {
+                mode |= EnableVirtualTerminalProcessing | DisableNewlineAutoReturn;
+                SetConsoleMode(stdOutHandle, mode);
+            }
+
             _allocated = true;
         }
         public static void DestroyWin32()
@@ -61,5 +74,14 @@ namespace Centrifuge
 
         [DllImport("kernel32.dll")]
         private static extern bool FreeConsole();
+
+        [DllImport("kernel32.dll")]
+        private static extern bool GetConsoleMode(IntPtr consoleHandle, out uint mode);
+
+        [DllImport("kernel32.dll")]
+        private static extern bool SetConsoleMode(IntPtr consoleHandle, uint mode);
+
+        [DllImport("kernel32.dll")]
+        private static extern IntPtr GetStdHandle(int handle);
     }
 }
