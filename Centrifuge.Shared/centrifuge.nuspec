@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Centrifuge.Mod.SDK</id>
-    <version>1.0.2-alpha</version>
+    <version>1.1.0</version>
     <description>SDK package for Unity Engine game mod development.</description>
     <authors>Ciastex</authors>
     <license type="file">LICENSE.md</license>
@@ -18,7 +18,7 @@
     </dependencies>
 
     <releaseNotes>
-Updated dependencies.
+Improved logging system to use a consolidate log file for easier investigation in case of errors.
     </releaseNotes>
   </metadata>
 

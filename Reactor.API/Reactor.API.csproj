@@ -67,6 +67,7 @@
     <Compile Include="DataModel\ModMessage.cs" />
     <Compile Include="DataModel\ModInfo.cs" />
     <Compile Include="Interfaces\Systems\IMessenger.cs" />
+    <Compile Include="Logging\ConsolidatedLog.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\LogOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

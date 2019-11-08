@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Reactor.API
 {
-    public class Defaults
+    public static class Defaults
     {
         public static string CentrifugeRoot => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
@@ -18,6 +18,7 @@ namespace Reactor.API
         public static string ManagerLogDirectory => Path.Combine(CentrifugeRoot, "Logs");
 
         public static string GameSupportLibraryPath => Path.Combine(CentrifugeRoot, GameSupportLibraryFilePattern);
+        public static string ConsolidatedLogFilePath => Path.Combine(ManagerLogDirectory, ConsolidatedLogFileName);
 
         public const string DependencyResolverLogFileName = "DependencyResolver";
         public const string RuntimeAssetLoaderLogFileName = "RuntimeAssetLoader";
@@ -31,6 +32,7 @@ namespace Reactor.API
 
         public const string GameSupportLibraryFilePattern = "*.GameSupport.dll";
         public const string ManifestFileName = "mod.json";
+        public const string ConsolidatedLogFileName = "CommonLog.txt";
 
         public const string ReactorModLoaderNamespace = "com.github.ciastex.ReactorModLoader";
     }
