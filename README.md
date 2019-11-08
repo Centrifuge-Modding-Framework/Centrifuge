@@ -16,3 +16,9 @@ The backbone of the Reactor Settings System.
 >
 > [**Harmony**](https://github.com/pardeike/Harmony)  
 Making Game Support Libraries development easier since whenever that thingamajig got invented.  
+>  
+> [**Distance**](https://store.steampowered.com/app/233610/Distance)  
+Centrifuge is Spectrum's sister, and Spectrum would not exist if Distance was never created.  
+>  
+> [**Get To The Orange Door**](https://store.steampowered.com/app/541200/Get_To_The_Orange_Door)  
+Centrifuge was originally built for this game, then it evolved - all thanks to amazing ideas of people behind that game.
