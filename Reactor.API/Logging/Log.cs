@@ -1,4 +1,5 @@
 using Centrifuge.UnityInterop.Bridges;
+using Reactor.API.Extensions;
 using System;
 using System.IO;
 using System.Reflection;
@@ -7,19 +8,20 @@ namespace Reactor.API.Logging
 {
     public class Log
     {
-        public LogOptions Options { get; }
-
         private string RootDirectory { get; }
         private string FileName { get; }
 
-        private string FilePath => Path.Combine(Path.Combine(RootDirectory, Defaults.PrivateLogDirectory), FileName);
+        private string FilePath => Path.Combine(
+            Path.Combine(RootDirectory, Defaults.PrivateLogDirectory), 
+            FileName
+        );
 
-        /// <summary>
-        /// Creates a logger integrated with Centrifuge.
-        /// </summary>
-        /// <param name="fileName">Log file name without an extension.</param>
+        public LogOptions Options { get; }
+
         public Log(string fileName)
         {
+            Options = new LogOptions();
+
             RootDirectory = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
             FileName = $"{fileName}.txt";
 
@@ -28,14 +30,8 @@ namespace Reactor.API.Logging
             if (File.Exists(FilePath))
                 File.Delete(FilePath);
 
-            Options = new LogOptions();
         }
-        
-        /// <summary>
-        /// Creates a logger integrated with Centrifuge, allows you to provide alternative logging configuration.
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="options"></param>
+
         public Log(string fileName, LogOptions options)
             : this(fileName)
         {
@@ -44,6 +40,9 @@ namespace Reactor.API.Logging
 
         public void Error(string message)
         {
+            if (!Options.Toggles.HasFlag(LogToggles.Error))
+                return;
+
             var msg = $"[!][{DateTime.Now}] {message}";
 
             ColorizeIfPossible(
@@ -54,6 +53,9 @@ namespace Reactor.API.Logging
 
         public void Warning(string message)
         {
+            if (!Options.Toggles.HasFlag(LogToggles.Warning))
+                return;
+
             var msg = $"[*][{DateTime.Now}] {message}";
 
             ColorizeIfPossible(
@@ -64,6 +66,9 @@ namespace Reactor.API.Logging
 
         public void Success(string message)
         {
+            if (!Options.Toggles.HasFlag(LogToggles.Error))
+                return;
+
             var msg = $"[+][{DateTime.Now}] {message}";
 
             ColorizeIfPossible(
@@ -120,6 +125,9 @@ namespace Reactor.API.Logging
 
         public void WriteLine(string text, bool suppressConsole = false)
         {
+            if (Options.UseConsolidatedLogFile)
+                ConsolidatedLog.WriteLine(text);
+
             using (var sw = new StreamWriter(FilePath, true))
                 sw.WriteLine(text);
 
