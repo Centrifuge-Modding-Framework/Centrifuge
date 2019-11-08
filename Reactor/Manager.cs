@@ -52,7 +52,9 @@ namespace Reactor
         private void InitializeSettings()
         {
             Global.Settings = new Settings("reactor");
+
             Global.InterceptUnityLogs = Global.Settings.GetOrCreate(Global.InterceptUnityLogsSettingsKey, true);
+            Global.UseConsolidatedLog = Global.Settings.GetOrCreate(Global.UseConsolidatedLogSettingsKey, true);
 
             if (Global.Settings.Dirty)
             {
@@ -64,6 +66,13 @@ namespace Reactor
         {
             Log = new Log(Defaults.ManagerLogFileName);
             Log.Info("Spooling up!");
+
+
+            if (Global.UseConsolidatedLog)
+            {
+                ConsolidatedLog.Start();
+                Log.Info($"Using consolidated log file at '{Defaults.ConsolidatedLogFilePath}'");
+            }
         }
 
         internal void OnModInitialized(ModInfo modInfo)
