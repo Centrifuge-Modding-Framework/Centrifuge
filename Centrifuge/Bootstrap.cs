@@ -2,6 +2,7 @@
 using Centrifuge.UnityInterop.Builders;
 using Centrifuge.UnityInterop.DataModel;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
@@ -31,7 +32,7 @@ namespace Centrifuge
 
             var version = Assembly.GetAssembly(typeof(Bootstrap)).GetName().Version;
 
-            EarlyLog.Info($"Centrifuge Mod Loader for Unity Engine. Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}. Unity v{ApplicationBridge.UnityVersion}.");
+            EarlyLog.Info($"Centrifuge bootstrap for Reactor Mod Loader and API. Version {version}. Unity v{ApplicationBridge.UnityVersion}.");
             EarlyLog.Info($"Diagnostics mode enabled. Remove '{StartupArguments.AllocateConsole}' command line argument to disable.");
             EarlyLog.Separator(string.Empty);
 
