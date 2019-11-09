@@ -11,4 +11,7 @@
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)centrifuge.nuspec" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)mod.json" />
+  </ItemGroup>
 </Project>
