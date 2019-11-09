@@ -55,6 +55,7 @@
     <Compile Include="Configuration\Settings.cs" />
     <Compile Include="Defaults.cs" />
     <Compile Include="Events\ModInitializationEventArgs.cs" />
+    <Compile Include="Events\SettingsChangedEventArgs.cs" />
     <Compile Include="Exceptions\ManifestReadException.cs" />
     <Compile Include="Exceptions\SettingsException.cs" />
     <Compile Include="Extensions\AssemblyEx.cs" />
