@@ -9,6 +9,7 @@ using Reactor.Extensibility;
 using Reactor.Input;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Reactor
 {
@@ -22,8 +23,6 @@ namespace Reactor
 
         public IHotkeyManager Hotkeys { get; private set; }
         public IMessenger Messenger { get; private set; }
-
-        public string LoadedGameSupportID => GameSupport.GameSupportID;
 
         public event EventHandler<ModInitializationEventArgs> ModInitialized;
         public event EventHandler InitFinished;
@@ -49,6 +48,11 @@ namespace Reactor
             return ModRegistry.GetLoadedMods();
         }
 
+        public List<string> GetLoadedGslIds()
+        {
+            return Global.GameApiObjects.Keys.ToList();
+        }
+
         private void InitializeSettings()
         {
             Global.Settings = new Settings("reactor");
@@ -66,7 +70,6 @@ namespace Reactor
         {
             Log = new Log(Defaults.ManagerLogFileName);
             Log.Info("Spooling up!");
-
 
             if (Global.UseConsolidatedLog)
             {
