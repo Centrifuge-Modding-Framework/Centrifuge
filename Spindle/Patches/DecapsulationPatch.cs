@@ -14,7 +14,7 @@ namespace Spindle.Patches
         public override void Run(ModuleDefinition moduleDefinition)
         {
             ColoredOutput.WriteInformation("Decapsulating non-public types and their members...");
-            ColoredOutput.WriteInformation("WARNING: You will need to compile your plug-ins with\n           unsafe code allowed if you're going to publish them.");
+            ColoredOutput.WriteInformation("WARNING: You will need to compile your mods with\n           unsafe code allowed if you're going to publish them.");
 
             var assemblyTypes = ScanTypes(moduleDefinition);
             DecapsulateMembers(assemblyTypes);

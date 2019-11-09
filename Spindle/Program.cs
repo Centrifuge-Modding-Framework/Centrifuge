@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 
 namespace Spindle
 {
@@ -16,6 +17,9 @@ namespace Spindle
         private static string _gameAssemblyFilename;
         private static string _bootstrapAssemblyFilename;
         private static string _requestedPatchName;
+
+        private static bool _generateHashFile;
+        private static bool _decapOnly;
 
         private static ModuleDefinition _gameAssemblyDefinition;
         private static ModuleDefinition _bootstrapAssemblyDefinition;
@@ -28,11 +32,14 @@ namespace Spindle
 
             if (!IsValidSyntax(args))
             {
-                ColoredOutput.WriteInformation($"Usage: {GetExecutingFileName()} <-t (--target) Assembly-CSharp.dll> [options]");
+                ColoredOutput.WriteInformation($"Usage: {GetExecutingFileName()} <(-t | --target) target_assembly.dll> [options]");
                 ColoredOutput.WriteInformation("  Options:");
-                ColoredOutput.WriteInformation("    -t [--target]+: Specify the target Assembly-CSharp.dll you want to patch.");
-                ColoredOutput.WriteInformation("    -s [--source]+: Specify the source DLL you want to cross-reference.");
-                ColoredOutput.WriteInformation("    -p [--patch]+:  Run only patch with the specified name.");
+                ColoredOutput.WriteInformation("    -t [--target]+: Specify the target assembly you want to patch.");
+                ColoredOutput.WriteInformation("    -s [--source]+: Specify the source DLL you want to source the init code from.");
+                ColoredOutput.WriteInformation("    -p [--patch]+:  Run only the patch with the specified name.");
+                ColoredOutput.WriteInformation("    -h [--hash]: Generate a .md5 file of the patched assembly.");
+                ColoredOutput.WriteInformation("    -d [--decap-only]: Only decapsulate the target DLL. Invalidates -s -p and -h.");
+
                 ErrorHandler.TerminateWithError("Invalid syntax provided.", TerminationReason.InvalidSyntax);
             }
 
@@ -45,17 +52,28 @@ namespace Spindle
             if ((args.Contains("-s") || args.Contains("--source")) && string.IsNullOrEmpty(_bootstrapAssemblyFilename))
                 ErrorHandler.TerminateWithError("Source DLL name not specified.", TerminationReason.SourceDllNotProvided);
 
-            if (!DistanceFileExists())
-                ErrorHandler.TerminateWithError("Specified TARGET DLL not found.", TerminationReason.TargetDllNonexistant);
-
             if (!BootstrapFileExists() && (args.Contains("-s") || args.Contains("--source")))
                 ErrorHandler.TerminateWithError("Specified SOURCE DLL not found.", TerminationReason.SourceDllNonexistant);
 
-            CreateBackup();
-            PreparePatches();
-            RunPatches();
+            if (!GameFileExists())
+                ErrorHandler.TerminateWithError("Specified TARGET DLL not found.", TerminationReason.TargetDllNonexistant);
 
-            ModuleWriter.SavePatchedFile(_gameAssemblyDefinition, _gameAssemblyFilename, false);
+            PreparePatches();
+
+            if (!_decapOnly)
+            {
+                CreateBackup();
+                RunPatches();
+
+                ModuleWriter.SavePatchedFile(_gameAssemblyDefinition, _gameAssemblyFilename, false);
+
+                if (_generateHashFile)
+                    GenerateHashFile();
+            }
+            else
+            {
+                ColoredOutput.WriteInformation("Attention! Decap-only run requested.");
+            }
 
             _patcher.AddPatch(new DecapsulationPatch());
             _patcher.RunSpecific("Decapsulation");
@@ -102,6 +120,16 @@ namespace Spindle
                     _requestedPatchName = args[i + 1];
                     i++;
                 }
+
+                if (args[i] == "-d" || args[i] == "--decap-only")
+                {
+                    _decapOnly = true;
+                }
+
+                if (args[i] == "-h" || args[i] == "--hash")
+                {
+                    _generateHashFile = true;
+                }
             }
         }
 
@@ -110,7 +138,7 @@ namespace Spindle
             return Path.GetFileName(Assembly.GetExecutingAssembly().Location);
         }
 
-        private static bool DistanceFileExists()
+        private static bool GameFileExists()
         {
             return File.Exists(_gameAssemblyFilename);
         }
@@ -132,7 +160,6 @@ namespace Spindle
         private static void PreparePatches()
         {
             ColoredOutput.WriteInformation("Preparing patches...");
-
             _gameAssemblyDefinition = ModuleLoader.LoadGameModule(_gameAssemblyFilename);
 
             if (!string.IsNullOrEmpty(_bootstrapAssemblyFilename))
@@ -155,6 +182,23 @@ namespace Spindle
                 ColoredOutput.WriteInformation($"Running the requested patch: '{_requestedPatchName}'");
                 _patcher.RunSpecific(_requestedPatchName);
             }
+        }
+
+        private static void GenerateHashFile()
+        {
+            var md5Path = Path.Combine(
+                Path.GetDirectoryName(_gameAssemblyFilename),
+                $"{Path.GetFileNameWithoutExtension(_gameAssemblyFilename)}.md5"
+            );
+
+            using var md5 = MD5.Create();
+            using var stream = File.OpenRead(_gameAssemblyFilename);
+            using var sw = new StreamWriter(md5Path);
+
+            var hash = md5.ComputeHash(stream);
+            var hashString = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+
+            sw.Write(hashString);
         }
     }
 }
