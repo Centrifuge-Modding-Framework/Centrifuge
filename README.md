@@ -1,8 +1,8 @@
 <p align="center"><img src="https://github.com/Ciastex/Centrifuge/blob/master/Centrifuge.Shared/Graphics/cnfg_logo.png"></img></p>
 
-[![Nuget](https://img.shields.io/nuget/v/Centrifuge.Mod.SDK?style=for-the-badge)](https://www.nuget.org/packages/Centrifuge.Mod.SDK) [![GitHub](https://img.shields.io/github/license/Ciastex/Centrifuge?style=for-the-badge)](https://github.com/Ciastex/Centrifuge/blob/master/LICENSE.md) [![Discord](https://img.shields.io/discord/610890844878405641?color=%23007ACC&label=Discord&style=for-the-badge)](https://discord.gg/dhju4gQ) [![AppVeyor](https://img.shields.io/appveyor/ci/Ciastex/centrifuge?label=APPVEYOR&style=for-the-badge)](https://ci.appveyor.com/project/Ciastex/centrifuge)
-
 Bootstrapper, loader and API for Unity game mods. Supporting Unity 5 and up!
+
+[![Nuget](https://img.shields.io/nuget/v/Centrifuge.Mod.SDK?style=for-the-badge)](https://www.nuget.org/packages/Centrifuge.Mod.SDK) [![GitHub](https://img.shields.io/github/license/Ciastex/Centrifuge?style=for-the-badge)](https://github.com/Ciastex/Centrifuge/blob/master/LICENSE.md) [![Discord](https://img.shields.io/discord/610890844878405641?color=%23007ACC&label=Discord&style=for-the-badge)](https://discord.gg/dhju4gQ) [![AppVeyor](https://img.shields.io/appveyor/ci/Ciastex/centrifuge?label=APPVEYOR&style=for-the-badge)](https://ci.appveyor.com/project/Ciastex/centrifuge)
 
 Documentation is under construction. You can visit it [over here](https://github.com/Ciastex/Centrifuge/wiki).  
   

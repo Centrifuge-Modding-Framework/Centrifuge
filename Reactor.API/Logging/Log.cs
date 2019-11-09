@@ -29,7 +29,6 @@ namespace Reactor.API.Logging
 
             if (File.Exists(FilePath))
                 File.Delete(FilePath);
-
         }
 
         public Log(string fileName, LogOptions options)
@@ -79,6 +78,9 @@ namespace Reactor.API.Logging
 
         public void Info(string message)
         {
+            if (!Options.Toggles.HasFlag(LogToggles.Info))
+                return;
+
             var msg = $"[i][{DateTime.Now}] {message}";
 
             ColorizeIfPossible(
@@ -89,6 +91,9 @@ namespace Reactor.API.Logging
 
         public void Exception(Exception e, bool silent = false)
         {
+            if (!Options.Toggles.HasFlag(LogToggles.Exception))
+                return;
+
             WriteLine($"[e][{DateTime.Now}] {e.Message}", silent);
 
             if (e.TargetSite != null)
@@ -112,6 +117,9 @@ namespace Reactor.API.Logging
 
         public void TypeResolverFailure(ReflectionTypeLoadException rtle)
         {
+            if (!Options.Toggles.HasFlag(LogToggles.Exception))
+                return;
+
             Exception(rtle);
 
             foreach (var le in rtle.LoaderExceptions)
