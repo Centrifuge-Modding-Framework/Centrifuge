@@ -24,8 +24,9 @@ Further improved logging system, simplified exception handling, added settings c
 
   <files>
     <file src="../LICENSE.md" target="" />
+    <file src="./mod.json" target="content" />
     <file src="../Reactor.API/bin/Release/Reactor.API.dll" target="lib/net35" />
-
-    <file src="./mod.json" target="content" copyToOutput="true" />
   </files>
+  
+
 </package>
