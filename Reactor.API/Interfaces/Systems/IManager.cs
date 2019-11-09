@@ -13,8 +13,7 @@ namespace Reactor.API.Interfaces.Systems
         IHotkeyManager Hotkeys { get; }
         IMessenger Messenger { get; }
 
-        string LoadedGameSupportID { get; }
-
         List<ModInfo> GetLoadedMods();
+        List<string> GetLoadedGslIds();
     }
 }

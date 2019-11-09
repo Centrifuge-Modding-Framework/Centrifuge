@@ -14,55 +14,53 @@ namespace Reactor.Extensibility
     {
         private Log Log { get; }
 
-        public string GameSupportID { get; private set; }
-
         public GameSupport()
         {
             Log = new Log(Defaults.GameSupportInitializerLogFileName);
-            GameSupportID = string.Empty;
+
+            if (!Directory.Exists(Defaults.ManagerGameSupportDirectory))
+            {
+                Log.Info("GSL directory not found. Creating.");
+                Directory.CreateDirectory(Defaults.ManagerGameSupportDirectory);
+            }
         }
 
         public void Initialize()
         {
-            Log.Info("Trying to find a GSL...");
+            Log.Info("Looking for GSLs...");
 
-            var gameSupportLibs = Directory.GetFiles(Defaults.CentrifugeRoot, Defaults.GameSupportLibraryFilePattern);
+            var gameSupportLibs = Directory.GetFiles(Defaults.ManagerGameSupportDirectory);
 
             if (!gameSupportLibs.Any())
             {
-                Log.Warning("Game support library not found, skipping this phase.");
+                Log.Warning("No GSLs found. Skipping this phase.");
                 return;
             }
 
-            if (gameSupportLibs.Length > 1)
-            {
-                Log.Warning("More than one game support library detected, skipping this phase.");
-                Log.Warning("Remove redundant game support libraries and restart the game.");
+            Log.Info("GSLs found. Trying to initialize...");
 
-                return;
-            }
-
-            Log.Info("GSL found. Trying to initialize...");
-
-            try
+            foreach (var libPath in gameSupportLibs)
             {
-                var asm = Assembly.LoadFrom(gameSupportLibs[0]);
-                InitializeGameSupport(asm);
-
-                Log.Info("Game support library initialized.");
-            }
-            catch (ReflectionTypeLoadException rtle)
-            {
-                Log.TypeResolverFailure(rtle);
-            }
-            catch (Exception e)
-            {
-                Log.Error("Failed to initialize game support.");
-                Log.Exception(e);
+                try
+                {
+                    var asm = Assembly.LoadFrom(libPath);
+                    
+                    if (InitializeGameSupport(asm))
+                        Log.Info($"GSL '{libPath}' initialized.");
+                }
+                catch (ReflectionTypeLoadException rtle)
+                {
+                    Log.TypeResolverFailure(rtle);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Failed to initialize game support.");
+                    Log.Exception(e);
+                }
             }
         }
 
-        private void InitializeGameSupport(Assembly assy)
+        private bool InitializeGameSupport(Assembly assy)
         {
             var types = assy.GetTypes();
             var decoratedType = types.FirstOrDefault(
@@ -75,19 +73,19 @@ namespace Reactor.Extensibility
             if (decoratedType == null)
             {
                 Log.Error("The game support library is present, but doesn't contain a marked entry point.");
-                return;
+                return false;
             }
 
             if (decoratedType.IsAssignableFrom(MonoBehaviourBridge.MonoBehaviourType))
             {
                 Log.Error("The game support library has a decorated entry point but it doesn't inherit from MonoBehaviour.");
-                return;
+                return false;
             }
 
             if (!decoratedType.Attributes.HasFlag(TypeAttributes.Sealed))
             {
                 Log.Error("The game support library has an entry point but its class is not sealed.");
-                return;
+                return false;
             }
 
             var attribute = decoratedType.GetCustomAttributes(
@@ -95,17 +93,18 @@ namespace Reactor.Extensibility
                 false
             ).First() as GameSupportLibraryEntryPointAttribute;
 
-            Global.GameApiObject = GameObjectBridge.CreateGameObject(attribute.LibraryID);
-            var component = GameObjectBridge.AttachComponentTo(Global.GameApiObject, decoratedType);
+
+            var gameObject = GameObjectBridge.CreateGameObject(attribute.LibraryID);
+            var component = GameObjectBridge.AttachComponentTo(gameObject, decoratedType);
 
             if (component != null)
             {
-                GameSupportID = attribute.LibraryID;
+                Global.GameApiObjects.Add(attribute.LibraryID, gameObject);
+                return true;
             }
-            else
-            {
-                Log.Error("Game support library failed to initialize, for some reason your component was rejected by Unity Engine.\nLook in the output log of the game for more details.");
-            }
+             
+            Log.Error("Game support library failed to initialize, for some reason your component was rejected by Unity Engine.\nLook in the output log of the game for more details.");
+            return false;
         }
     }
 }
