@@ -33,7 +33,7 @@ namespace Reactor.Extensibility
 
             if (!gameSupportLibs.Any())
             {
-                Log.Warning("No GSLs found. Skipping this phase.");
+                Log.Info("No GSLs found. Skipping this phase.");
                 return;
             }
 
