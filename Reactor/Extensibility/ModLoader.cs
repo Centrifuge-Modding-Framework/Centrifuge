@@ -55,7 +55,8 @@ namespace Reactor.Extensibility
             // this warms up registry query cache as well
             var loadedMods = Registry.GetLoadedMods();
 
-            Log.Info($"-- MOD LOADER INIT COMPLETE --\n  >> {loadData.Count} manifest(s) parsed, {loadedMods.Count} mod(s) loaded.");
+            Log.Info($"-- MOD LOADER INIT COMPLETE --");
+            Log.Info($" >> {loadData.Count} manifest(s) parsed, {loadedMods.Count} mod(s) loaded.");
         }
 
         private List<LoadData> PrepareLoadData()
