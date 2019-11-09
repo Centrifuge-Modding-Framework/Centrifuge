@@ -49,7 +49,7 @@ namespace Reactor.Extensibility
                 var asm = Assembly.LoadFrom(gameSupportLibs[0]);
                 InitializeGameSupport(asm);
 
-                Log.Success("Game support initialized.");
+                Log.Info("Game support library initialized.");
             }
             catch (ReflectionTypeLoadException rtle)
             {

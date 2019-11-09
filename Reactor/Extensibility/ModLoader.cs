@@ -141,6 +141,18 @@ namespace Reactor.Extensibility
                     {
                         LoadMod(dataObject);
                     }
+                    catch (TooManyEntryPointsException)
+                    {
+                        Log.Error("Mod assembly has more than one entry point defined.");
+                    }
+                    catch (MissingEntryPointException)
+                    {
+                        Log.Error("Mod assembly has no entry points defined.");
+                    }
+                    catch (InvalidModIdException e)
+                    {
+                        Log.Error($"Mod ID is invalid: {e.Message}");
+                    }
                     catch (Exception e)
                     {
                         Log.Error($"Failed to load mod '{dataObject.Manifest.FriendlyName}'.");
@@ -168,16 +180,9 @@ namespace Reactor.Extensibility
 
             if (manifest.Dependencies != null && manifest.Dependencies.Length > 0)
             {
-                try
-                {
-                    LoadDependenciesForMod(rootPath, manifest.Dependencies);
-                }
-
-                catch (Exception e)
+                if (!LoadDependenciesForMod(rootPath, manifest.Dependencies))
                 {
                     Log.Error("Failed to load dependencies.");
-                    Log.Exception(e);
-
                     return;
                 }
             }
@@ -200,20 +205,7 @@ namespace Reactor.Extensibility
                 return;
             }
 
-            try
-            {
-                EnsureSingleEntryPoint(modAssembly);
-            }
-            catch (TooManyEntryPointsException)
-            {
-                Log.Error("Mod assembly has more than one entry point defined.");
-                return;
-            }
-            catch (MissingEntryPointException)
-            {
-                Log.Error("Mod assembly has no entry points defined.");
-                return;
-            }
+            EnsureSingleEntryPoint(modAssembly);
 
             Type[] types;
             try
@@ -229,20 +221,7 @@ namespace Reactor.Extensibility
             var entryPointType = FindEntryPointType(types);
             var entryPointInfo = GetEntryPointAttribute(entryPointType);
 
-            try
-            {
-                EnsureModIdValid(entryPointInfo.ModID);
-            }
-            catch (InvalidModIdException e)
-            {
-                Log.Error($"Mod ID is not well-formed: {e.Message}");
-                return;
-            }
-            catch (Exception e)
-            {
-                Log.Error($"Mod ID invalid: {e.Message}");
-                return;
-            }
+            EnsureModIdValid(entryPointInfo.ModID);
 
             var initMethodInfo = entryPointType.GetMethod(entryPointInfo.InitializerName, new Type[] { typeof(IManager) });
             if (initMethodInfo == null)
@@ -255,7 +234,7 @@ namespace Reactor.Extensibility
             foreach (var messageHandler in messageHandlers)
             {
                 Messenger.RegisterHandlerFor(messageHandler.ModID, messageHandler.MessageName, messageHandler.Method);
-                Log.Success($"Registered message handler <{messageHandler.Method.Name}> for '{messageHandler.ModID}:{messageHandler.MessageName}'");
+                Log.Info($"Registered message handler <{messageHandler.Method.Name}> for '{messageHandler.ModID}:{messageHandler.MessageName}'");
             }
 
             var modHost = new ModHost
@@ -287,7 +266,7 @@ namespace Reactor.Extensibility
             }
 
             Registry.RegisterMod(modHost);
-            Log.Success("Loaded and registered successfully. Initializing and activating.");
+            Log.Info("Loaded and registered successfully. Initializing.");
 
             var initializer = entryPointType.GetMethod(
                 entryPointInfo.InitializerName,
@@ -312,7 +291,7 @@ namespace Reactor.Extensibility
             Manager.OnModInitialized(modHost.ToExchangeableApiObject());
         }
 
-        private void LoadDependenciesForMod(string rootPath, string[] deps)
+        private bool LoadDependenciesForMod(string rootPath, string[] deps)
         {
             var baseDependencyDirPath = Path.Combine(rootPath, Defaults.PrivateDependencyDirectory);
 
@@ -328,14 +307,16 @@ namespace Reactor.Extensibility
                 catch (ReflectionTypeLoadException rtle)
                 {
                     Log.TypeResolverFailure(rtle);
-                    throw;
+                    return false;
                 }
                 catch (Exception e)
                 {
                     Log.Exception(e);
-                    throw;
+                    return false;
                 }
             }
+
+            return true;
         }
 
         private Type FindEntryPointType(Type[] types)
@@ -418,10 +399,10 @@ namespace Reactor.Extensibility
         private void EnsureModIdValid(string modId)
         {
             if (string.IsNullOrEmpty(modId))
-                throw new InvalidModIdException("Mod ID cannot be empty or null.");
+                throw new InvalidModIdException("Cannot be empty or null.");
 
             if (modId == "*")
-                throw new InvalidModIdException("The Mod ID '*' is a reserved broadcast name - you have the whole UTF-8 ffs, use it.");
+                throw new InvalidModIdException("'*' is a reserved broadcast name - you have the entire UTF-8 for fuck's sake, use it.");
         }
     }
 }

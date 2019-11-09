@@ -62,7 +62,6 @@
     <Compile Include="Input\Hotkey.cs" />
     <Compile Include="Input\Keyboard.cs" />
     <Compile Include="Interfaces\Systems\IHotkeyManager.cs" />
-    <Compile Include="Interfaces\Systems\ILog.cs" />
     <Compile Include="Interfaces\Systems\IManager.cs" />
     <Compile Include="DataModel\ModMessage.cs" />
     <Compile Include="DataModel\ModInfo.cs" />
@@ -70,6 +69,7 @@
     <Compile Include="Logging\ConsolidatedLog.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\LogOptions.cs" />
+    <Compile Include="Logging\LogToggles.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\Assets.cs" />
     <Compile Include="Storage\FileSystem.cs" />
