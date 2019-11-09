@@ -8,6 +8,8 @@ Documentation is under construction. You can visit it [over here](https://github
   
 Don't be afraid to join the Centrifuge ModLoader Discord server. I'll be happy to answer any questions you might have regarding the project. Just click the rightmost badge and it'll bring you there. Come on, I don't bite!
 
+> ### [Latest release here](https://github.com/Ciastex/Centrifuge/releases/latest)
+
 ### Feature highlights
 ▐ It's stable!  
 ▐ It's minimal!  
