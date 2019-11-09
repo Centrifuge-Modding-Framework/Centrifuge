@@ -1,4 +1,5 @@
 ﻿using LitJson;
+using Reactor.API.Events;
 using Reactor.API.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -22,18 +23,31 @@ namespace Reactor.API.Configuration
             set
             {
                 if (!ContainsKey(key))
+                {
                     Add(key, value);
+                    ValueChanged?.Invoke(this, new SettingsChangedEventArgs(key, null, base[key]));
+                }
                 else
+                {
+                    var oldValue = base[key];
+
                     base[key] = value;
+                    ValueChanged?.Invoke(this, new SettingsChangedEventArgs(key, oldValue, base[key]));
+                }
 
                 Dirty = true;
             }
         }
 
+        public event EventHandler<SettingsChangedEventArgs> ValueChanged;
+
         public T GetOrCreate<T>(string key) where T : new()
         {
             if (!ContainsKey(key))
+            {
                 this[key] = new T();
+                ValueChanged?.Invoke(this, new SettingsChangedEventArgs(key, null, this[key]));
+            }
 
             return GetItem<T>(key);
         }
@@ -41,7 +55,10 @@ namespace Reactor.API.Configuration
         public T GetOrCreate<T>(string key, T defaultValue)
         {
             if (!ContainsKey(key))
+            {
                 this[key] = defaultValue;
+                ValueChanged?.Invoke(this, new SettingsChangedEventArgs(key, null, this[key]));
+            }
 
             return GetItem<T>(key);
         }
@@ -53,15 +70,6 @@ namespace Reactor.API.Configuration
 
             try
             {
-                /*if (this[key] is JObject jObject)
-                    return jObject.ToObject<T>();
-
-                if (this[key] is JArray jArray)
-                    return jArray.ToObject<T>();
-
-                if (this[key] is JToken jToken)
-                    return jToken.ToObject<T>();*/
-
                 return (T)Convert.ChangeType(this[key], typeof(T));
             }
             catch (JsonException je)
