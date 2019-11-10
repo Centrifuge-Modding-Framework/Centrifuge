@@ -21,9 +21,16 @@ namespace Spindle.IO
 
         private static void WriteColoredText(string message, ConsoleColor consoleColor)
         {
-            Console.ForegroundColor = consoleColor;
-            Console.WriteLine(message);
-            Console.ResetColor();
+            if (Platform.IsMono() || Platform.IsUnix())
+            {
+                Console.WriteLine(message);
+            }
+            else
+            {
+                Console.ForegroundColor = consoleColor;
+                Console.WriteLine(message);
+                Console.ResetColor();
+            }
         }
     }
 }
