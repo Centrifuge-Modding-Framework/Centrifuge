@@ -26,7 +26,7 @@ namespace Spindle.Patches
                 ilProcessor.Append(initInstruction);
                 ilProcessor.Append(ilProcessor.Create(OpCodes.Ret));
 
-                var moduleClass = targetModule.Types.FirstOrDefault(t => t.Name == "<Module>");
+                var moduleClass = FindModuleInitializer(targetModule);
 
                 if (moduleClass == null)
                 {
@@ -42,6 +42,17 @@ namespace Spindle.Patches
                 var eventArgs = new PatchFailedEventArgs(Name, ex);
                 OnPatchFailed(this, eventArgs);
             }
+        }
+
+        private static TypeDefinition FindModuleInitializer(ModuleDefinition targetModule)
+        {
+            foreach (var type in targetModule.Types)
+            {
+                if (type.Name == "<Module>")
+                    return type;
+            }
+
+            return null;
         }
     }
 }

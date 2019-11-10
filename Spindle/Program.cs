@@ -87,11 +87,10 @@ namespace Spindle
 
         private static void WriteStartupHeader()
         {
-            Console.ForegroundColor = ConsoleColor.Magenta;
             var version = Assembly.GetExecutingAssembly().GetName().Version;
-            Console.WriteLine($"Centrifuge Spindle for Unity Engine. Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}");
-            Console.WriteLine("------------------------------------------");
-            Console.ResetColor();
+
+            ColoredOutput.WriteInformation($"Centrifuge Spindle for Unity Engine. Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}");
+            ColoredOutput.WriteInformation("------------------------------------------");
         }
 
         private static bool IsValidSyntax(ICollection<string> args)
