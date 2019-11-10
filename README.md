@@ -14,6 +14,7 @@ Don't be afraid to join the Centrifuge ModLoader Discord server. I'll be happy t
 ▐ It's stable!  
 ▐ It's minimal!  
 ▐ It's game-agnostic!  
+▐ It works on GNU\Linux!  
 ▐ It's Open Source, licensed with MIT/X11!  
 ▐ It can be specialized for any game using Game Support Libraries!  
 ▐ It provides a streamlined toolset to get you up and running in seconds!  
