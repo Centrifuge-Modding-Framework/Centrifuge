@@ -21,14 +21,14 @@ matrix:
 build:
   parallel: true
   project: Centrifuge.sln
-  verbosity: detailed
+  verbosity: minimal
 
 branches:
   only:
     - develop
 
 before_build: 
-  -cmd: "nuget restore"
+  - cmd: "nuget restore"
 
 before_package:
   - ps: >-
