@@ -34,16 +34,16 @@ after_build:
   - ps: >-
       mkdir C:\CentrifugeDevelop\Centrifuge
       mkdir C:\CentrifugeDevelop\Managed
-      cp C:\Centrifuge\Centrifuge\bin\$(configuration)\net35\Centrifuge.dll C:\CentrifugeDevelop\Managed\
-      cp C:\Centrifuge\Centrifuge.UnityInterop\bin\$(configuration)\net35\Centrifuge.UnityInterop.dll C:\CentrifugeDevelop\Managed\
-      cp C:\Centrifuge\Spindle\bin\$(configuration)\net35\Spindle.exe C:\CentrifugeDevelop\Managed\
-      cp C:\Centrifuge\Spindle\bin\$(configuration)\net35\Mono.Cecil.dll C:\CentrifugeDevelop\Managed\
-      cp C:\Centrifuge\Spindle\bin\$(configuration)\net35\install_windows.bat C:\CentrifugeDevelop\Managed\
-      cp C:\Centrifuge\Spindle\bin\$(configuration)\net35\install_linux.sh C:\CentrifugeDevelop\Managed\
-      cp C:\Centrifuge\Reactor\bin\$(configuration)\net35\LitJSON.dll C:\CentrifugeDevelop\Managed\
-      cp C:\Centrifuge\Reactor\bin\$(configuration)\net35\0Harmony.dll C:\CentrifugeDevelop\Managed\
-      cp C:\Centrifuge\Reactor\bin\$(configuration)\net35\Reactor.dll C:\CentrifugeDevelop\Centrifuge\
-      cp C:\Centrifuge\Reactor.API\bin\$(configuration)\net35\Reactor.API.dll C:\CentrifugeDevelop\Centrifuge\
+      cp C:\Centrifuge\Centrifuge\bin\$env:CONFIGURATION\net35\Centrifuge.dll C:\CentrifugeDevelop\Managed\
+      cp C:\Centrifuge\Centrifuge.UnityInterop\bin\$env:CONFIGURATION\net35\Centrifuge.UnityInterop.dll C:\CentrifugeDevelop\Managed\
+      cp C:\Centrifuge\Spindle\bin\$env:CONFIGURATION\net35\Spindle.exe C:\CentrifugeDevelop\Managed\
+      cp C:\Centrifuge\Spindle\bin\$env:CONFIGURATION\net35\Mono.Cecil.dll C:\CentrifugeDevelop\Managed\
+      cp C:\Centrifuge\Spindle\bin\$env:CONFIGURATION\net35\install_windows.bat C:\CentrifugeDevelop\Managed\
+      cp C:\Centrifuge\Spindle\bin\$env:CONFIGURATION\net35\install_linux.sh C:\CentrifugeDevelop\Managed\
+      cp C:\Centrifuge\Reactor\bin\$env:CONFIGURATION\net35\LitJSON.dll C:\CentrifugeDevelop\Managed\
+      cp C:\Centrifuge\Reactor\bin\$env:CONFIGURATION\net35\0Harmony.dll C:\CentrifugeDevelop\Managed\
+      cp C:\Centrifuge\Reactor\bin\$env:CONFIGURATION\net35\Reactor.dll C:\CentrifugeDevelop\Centrifuge\
+      cp C:\Centrifuge\Reactor.API\bin\$env:CONFIGURATION\net35\Reactor.API.dll C:\CentrifugeDevelop\Centrifuge\
 
 artifacts:
   - path: CentrifugeDevelop.zip
