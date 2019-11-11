@@ -1,84 +1,33 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5C3A1CC3-CC60-47AB-892D-2E01A5B25D30}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Reactor</RootNamespace>
-    <AssemblyName>Reactor</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <TargetFramework>net35</TargetFramework>
+    <AssemblyTitle>Reactor</AssemblyTitle>
+    <Company>Centrifuge Project</Company>
+    <Product>Reactor</Product>
+    <Description>Centrifuge Reactor Mod Loader Module</Description>
+    <Copyright>Copyright 2019 © Centrifuge Project</Copyright>
+    <FileVersion>1.2.1</FileVersion>
     <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <LangVersion>8.0</LangVersion>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+  </PropertyGroup>
+  
   <ItemGroup>
-    <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lib.Harmony.1.2.0.1\lib\net35\0Harmony.dll</HintPath>
-    </Reference>
-    <Reference Include="LitJSON, Version=0.15.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LitJson.0.15.0\lib\net35\LitJSON.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="Lib.Harmony" Version="1.2.0.1" />
+    <PackageReference Include="LitJson" Version="0.15.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Communication\Messenger.cs" />
-    <Compile Include="DataModel\ModLoader\LoadData.cs" />
-    <Compile Include="DataModel\Metadata\ManifestValidationFlags.cs" />
-    <Compile Include="DataModel\Communication\MessageHandlerInvocationParameters.cs" />
-    <Compile Include="DataModel\Metadata\ModManifest.cs" />
-    <Compile Include="Exceptions\DuplicateModIdException.cs" />
-    <Compile Include="Exceptions\InvalidModIdException.cs" />
-    <Compile Include="Exceptions\MissingEntryPointException.cs" />
-    <Compile Include="Exceptions\TooManyEntryPointsException.cs" />
-    <Compile Include="Extensibility\GameSupport.cs" />
-    <Compile Include="Extensibility\ModLoader.cs" />
-    <Compile Include="Extensibility\ModRegistry.cs" />
-    <Compile Include="Extensibility\ModHost.cs" />
-    <Compile Include="Global.cs" />
-    <Compile Include="Input\HotkeyManager.cs" />
-    <Compile Include="Manager.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+  
+    <ItemGroup>
+    <ProjectReference Include="..\Centrifuge.UnityInterop\Centrifuge.UnityInterop.csproj" />
+    <ProjectReference Include="..\Reactor.API\Reactor.API.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Centrifuge.UnityInterop\Centrifuge.UnityInterop.csproj">
-      <Project>{8dcc793a-bc56-4f07-a600-c0c109230c07}</Project>
-      <Name>Centrifuge.UnityInterop</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Reactor.API\Reactor.API.csproj">
-      <Project>{E00CDA95-C063-4BBE-BF73-FB2733BE4F34}</Project>
-      <Name>Reactor.API</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
