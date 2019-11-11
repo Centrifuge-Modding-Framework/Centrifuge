@@ -46,5 +46,5 @@ after_build:
     cp C:\Centrifuge\Reactor.API\bin\$env:CONFIGURATION\net35\Reactor.API.dll C:\CentrifugeDevelop\Centrifuge\;
 
 artifacts:
-- path: CentrifugeDevelop.zip
+- path: C:\CentrifugeDevelop
   name: Centrifuge Bleeding Edge
