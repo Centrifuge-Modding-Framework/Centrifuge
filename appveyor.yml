@@ -30,7 +30,7 @@ branches:
 before_build: 
   - cmd: "nuget restore"
 
-before_package:
+after_build:
   - ps: >-
       mkdir C:\CentrifugeDevelop\Centrifuge
       mkdir C:\CentrifugeDevelop\Managed
