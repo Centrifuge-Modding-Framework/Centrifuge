@@ -1,0 +1,50 @@
+version: 1.2.2.{build}
+skip_tags: true
+skip_branch_with_pr: false
+
+clone_folder: C:\Centrifuge
+image: Visual Studio 2019
+platform: Any CPU
+
+configuration: Debug
+
+assembly_info:
+  patch: true
+  file: AssemblyInfo.*
+  assembly_version: "1.0.0.0"
+  assembly_file_version: "{version}"
+  assembly_informational_version: "{version}"
+
+matrix:
+  fast_finish: true
+
+build:
+  parallel: true
+  project: Centrifuge.sln
+  verbosity: detailed
+
+branches:
+  only:
+    - develop
+
+before_build: 
+  -cmd: "nuget restore"
+
+before_package:
+  - ps: >
+    mkdir C:\CentrifugeDevelop\Centrifuge
+    mkdir C:\CentrifugeDevelop\Managed
+    cp C:\Centrifuge\Centrifuge\bin\$(configuration)\net35\Centrifuge.dll C:\CentrifugeDevelop\Managed\
+    cp C:\Centrifuge\Centrifuge.UnityInterop\bin\$(configuration)\net35\Centrifuge.UnityInterop.dll C:\CentrifugeDevelop\Managed\
+    cp C:\Centrifuge\Spindle\bin\$(configuration)\net35\Spindle.exe C:\CentrifugeDevelop\Managed\
+    cp C:\Centrifuge\Spindle\bin\$(configuration)\net35\Mono.Cecil.dll C:\CentrifugeDevelop\Managed\
+    cp C:\Centrifuge\Spindle\bin\$(configuration)\net35\install_windows.bat C:\CentrifugeDevelop\Managed\
+    cp C:\Centrifuge\Spindle\bin\$(configuration)\net35\install_linux.sh C:\CentrifugeDevelop\Managed\
+    cp C:\Centrifuge\Reactor\bin\$(configuration)\net35\LitJSON.dll C:\CentrifugeDevelop\Managed\
+    cp C:\Centrifuge\Reactor\bin\$(configuration)\net35\0Harmony.dll C:\CentrifugeDevelop\Managed\
+    cp C:\Centrifuge\Reactor\bin\$(configuration)\net35\Reactor.dll C:\CentrifugeDevelop\Centrifuge\
+    cp C:\Centrifuge\Reactor.API\bin\$(configuration)\net35\Reactor.API.dll C:\CentrifugeDevelop\Centrifuge\
+
+artifacts:
+  - path: CentrifugeDevelop.zip
+    name: Centrifuge Bleeding Edge
