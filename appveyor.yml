@@ -31,7 +31,7 @@ before_build:
   - cmd: "nuget restore"
 
 after_build:
-  - ps: >-
+  - ps: >
       mkdir C:\CentrifugeDevelop\Centrifuge
       mkdir C:\CentrifugeDevelop\Managed
       cp C:\Centrifuge\Centrifuge\bin\$env:CONFIGURATION\net35\Centrifuge.dll C:\CentrifugeDevelop\Managed\
