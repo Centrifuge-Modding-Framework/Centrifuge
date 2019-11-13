@@ -34,7 +34,8 @@ namespace Reactor
             Hotkeys = new HotkeyManager();
             Messenger = new Messenger();
 
-            GameSupport = new GameSupport();
+            GameSupport = new GameSupport(this);
+
             ModRegistry = new ModRegistry();
             ModLoader = new ModLoader(this, Defaults.ManagerModDirectory, ModRegistry);
 

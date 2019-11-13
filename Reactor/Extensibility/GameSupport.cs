@@ -2,6 +2,7 @@
 using Reactor.API;
 using Reactor.API.Attributes;
 using Reactor.API.Extensions;
+using Reactor.API.Interfaces.Systems;
 using Reactor.API.Logging;
 using System;
 using System.IO;
@@ -13,9 +14,12 @@ namespace Reactor.Extensibility
     internal class GameSupport
     {
         private Log Log => LogManager.GetForInternalAssembly();
+        private IManager Manager { get; }
 
-        public GameSupport()
+        public GameSupport(IManager manager)
         {
+            Manager = manager;
+
             if (!Directory.Exists(Defaults.ManagerGameSupportDirectory))
             {
                 Log.Info("GSL directory not found. Creating.");
@@ -86,17 +90,34 @@ namespace Reactor.Extensibility
                 return false;
             }
 
+
             var attribute = decoratedType.GetCustomAttributes(
                 typeof(GameSupportLibraryEntryPointAttribute),
                 false
             ).First() as GameSupportLibraryEntryPointAttribute;
 
-
             var gameObject = GameObjectBridge.CreateGameObject(attribute.LibraryID);
+
+            if (attribute.AwakeAfterInitialize)
+                GameObjectBridge.SetActive(gameObject, false);
+
             var component = GameObjectBridge.AttachComponentTo(gameObject, decoratedType);
 
             if (component != null)
             {
+                var initializerMethod = decoratedType.GetMethod(
+                    attribute.InitializerName, 
+                    new Type[] { typeof(IManager) }
+                );
+
+                if (initializerMethod != null)
+                {
+                    Log.Info($"Found initializer method '{attribute.InitializerName}' for {attribute.LibraryID}, calling.");
+                    initializerMethod.Invoke(component, new object[] { Manager });
+                }
+
+                GameObjectBridge.SetActive(gameObject, true);
+
                 Global.GameApiObjects.Add(attribute.LibraryID, gameObject);
                 return true;
             }
