@@ -7,9 +7,8 @@ namespace Reactor.API.GameSupport.Patching
 {
     public static class RuntimePatcher
     {
-        public static HarmonyInstance HarmonyInstance { get; }
-        
         private static Log Log { get; }
+        public static HarmonyInstance HarmonyInstance { get; }
 
         static RuntimePatcher()
         {
@@ -17,21 +16,26 @@ namespace Reactor.API.GameSupport.Patching
             Log = new Log("RuntimePatcher");
         }
 
-        public static void InitializeTranspilers()
+        public static void RunTranspilers()
         {
             var asm = Assembly.GetCallingAssembly();
             var types = asm.GetTypes();
 
             foreach (var type in types)
             {
-                if (typeof(GameCodeTranspiler).IsAssignableFrom(type) && type != typeof(GameCodeTranspiler))
+                if (typeof(CodeTranspiler).IsAssignableFrom(type) && type != typeof(CodeTranspiler))
                 {
-                    var transpiler = Activator.CreateInstance(type) as GameCodeTranspiler;
+                    var transpiler = Activator.CreateInstance(type) as CodeTranspiler;
 
                     Log.Info($"Transpiler: {type.FullName}");
                     transpiler.Apply(HarmonyInstance);
                 }
             }
+        }
+
+        public static void AutoPatch()
+        {
+            HarmonyInstance.PatchAll(Assembly.GetCallingAssembly());
         }
     }
 }
