@@ -41,12 +41,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="FodyWeavers.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="readme.txt" pack="true" PackagePath="." />
   </ItemGroup>
   
   <ItemGroup>
+    <PackageReference Include="Fody" Version="6.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Lib.Harmony" Version="1.2.0.1" />
     <PackageReference Include="LitJson" Version="0.15.0" />
+    <PackageReference Include="ModuleInit.Fody" Version="2.1.0" />
   </ItemGroup>
   
   <ItemGroup>
