@@ -3,7 +3,7 @@ using Reactor.API.Configuration;
 
 namespace Reactor.API
 {
-    public static class ModuleInitializer
+    internal static class ModuleInitializer
     {
         public static void Initialize()
         {

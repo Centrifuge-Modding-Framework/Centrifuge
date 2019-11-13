@@ -28,7 +28,7 @@ namespace Reactor.Extensibility
         private ModRegistry Registry { get; }
         private string SourceDirectory { get; }
 
-        private Log Log { get; }
+        private Log Log => LogManager.GetForInternalAssembly();
 
         public ModLoader(Manager manager, string sourceDirectory, ModRegistry registry)
         {
@@ -37,8 +37,6 @@ namespace Reactor.Extensibility
 
             SourceDirectory = sourceDirectory;
             Registry = registry;
-
-            Log = new Log(Defaults.ModLoaderLogFileName);
 
             if (!Directory.Exists(SourceDirectory))
             {
@@ -118,7 +116,6 @@ namespace Reactor.Extensibility
                 catch (ManifestReadException mre)
                 {
                     Log.Error($"Manifest is invalid: {mre.Message}");
-                    Log.Exception(mre, true);
                     continue;
                 }
             }
@@ -195,14 +192,12 @@ namespace Reactor.Extensibility
             }
             catch (ReflectionTypeLoadException rtle)
             {
-                Log.TypeResolverFailure(rtle);
+                Log.ReflectionTypeLoadException(rtle);
                 return;
             }
             catch (Exception e)
             {
-                Log.Error($"Assembly loading failed: {e.Message}.");
-                Log.Exception(e, true);
-
+                Log.Exception(e);
                 return;
             }
 
@@ -215,7 +210,7 @@ namespace Reactor.Extensibility
             }
             catch (ReflectionTypeLoadException rtle)
             {
-                Log.TypeResolverFailure(rtle);
+                Log.ReflectionTypeLoadException(rtle);
                 return;
             }
 
@@ -307,7 +302,7 @@ namespace Reactor.Extensibility
                 }
                 catch (ReflectionTypeLoadException rtle)
                 {
-                    Log.TypeResolverFailure(rtle);
+                    Log.ReflectionTypeLoadException(rtle);
                     return false;
                 }
                 catch (Exception e)

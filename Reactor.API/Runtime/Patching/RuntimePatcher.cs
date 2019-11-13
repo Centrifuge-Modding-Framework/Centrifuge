@@ -7,13 +7,13 @@ namespace Reactor.API.Runtime.Patching
 {
     public static class RuntimePatcher
     {
-        private static Log Log { get; }
+        private static Log Log => LogManager.GetForInternalAssembly();
+
         public static HarmonyInstance HarmonyInstance { get; }
 
         static RuntimePatcher()
         {
             HarmonyInstance = HarmonyInstance.Create(Defaults.ReactorModLoaderNamespace);
-            Log = new Log("RuntimePatcher");
         }
 
         public static void RunTranspilers()
@@ -28,14 +28,28 @@ namespace Reactor.API.Runtime.Patching
                     var transpiler = Activator.CreateInstance(type) as CodeTranspiler;
 
                     Log.Info($"Transpiler: {type.FullName}");
-                    transpiler.Apply(HarmonyInstance);
+                    try
+                    {
+                        transpiler.Apply(HarmonyInstance);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Exception(e);
+                    }
                 }
             }
         }
 
         public static void AutoPatch()
         {
-            HarmonyInstance.PatchAll(Assembly.GetCallingAssembly());
+            try
+            {
+                HarmonyInstance.PatchAll(Assembly.GetCallingAssembly());
+            }
+            catch
+            {
+
+            }
         }
     }
 }
