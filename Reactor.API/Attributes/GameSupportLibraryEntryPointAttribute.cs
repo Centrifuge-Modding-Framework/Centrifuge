@@ -6,6 +6,8 @@ namespace Reactor.API.Attributes
     public class GameSupportLibraryEntryPointAttribute : Attribute
     {
         public string LibraryID { get; }
+        public string InitializerName { get; } = "Initialize";
+        public bool AwakeAfterInitialize { get; } = true;
 
         public GameSupportLibraryEntryPointAttribute(string libraryId)
         {
