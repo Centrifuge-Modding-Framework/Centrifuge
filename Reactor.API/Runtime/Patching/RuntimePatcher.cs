@@ -3,7 +3,7 @@ using Reactor.API.Logging;
 using System;
 using System.Reflection;
 
-namespace Reactor.API.GameSupport.Patching
+namespace Reactor.API.Runtime.Patching
 {
     public static class RuntimePatcher
     {

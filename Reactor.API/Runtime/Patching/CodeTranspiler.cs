@@ -1,6 +1,6 @@
 ﻿using Harmony;
 
-namespace Reactor.API.GameSupport.Patching
+namespace Reactor.API.Runtime.Patching
 {
     public abstract class CodeTranspiler
     {
