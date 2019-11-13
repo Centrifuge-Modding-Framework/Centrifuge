@@ -12,12 +12,10 @@ namespace Reactor.Extensibility
 {
     internal class GameSupport
     {
-        private Log Log { get; }
+        private Log Log => LogManager.GetForInternalAssembly();
 
         public GameSupport()
         {
-            Log = new Log(Defaults.GameSupportInitializerLogFileName);
-
             if (!Directory.Exists(Defaults.ManagerGameSupportDirectory))
             {
                 Log.Info("GSL directory not found. Creating.");
@@ -50,7 +48,7 @@ namespace Reactor.Extensibility
                 }
                 catch (ReflectionTypeLoadException rtle)
                 {
-                    Log.TypeResolverFailure(rtle);
+                    Log.ReflectionTypeLoadException(rtle);
                 }
                 catch (Exception e)
                 {

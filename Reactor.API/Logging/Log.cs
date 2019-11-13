@@ -1,159 +1,192 @@
-using Centrifuge.UnityInterop.Bridges;
-using Reactor.API.Extensions;
+﻿using Reactor.API.Logging.Base;
+using Reactor.API.Logging.Exceptions;
 using System;
-using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Reactor.API.Logging
 {
     public class Log
     {
-        private string RootDirectory { get; }
-        private string FileName { get; }
+        private bool HasBeenClosed { get; set; }
 
-        private string FilePath => Path.Combine(
-            Path.Combine(RootDirectory, Defaults.PrivateLogDirectory), 
-            FileName
-        );
+        public LogLevel LogLevel { get; set; }
+        public string Template { get; private set; }
 
-        public LogOptions Options { get; }
+        internal List<Sink> Sinks { get; }
+        internal Dictionary<string, Decorator> Decorators { get; }
 
-        public Log(string fileName)
+        internal Log()
         {
-            Options = new LogOptions();
+            Sinks = new List<Sink>();
+            Decorators = new Dictionary<string, Decorator>();
 
-            RootDirectory = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
-            FileName = $"{fileName}.txt";
-
-            Directory.CreateDirectory(Path.GetDirectoryName(FilePath));
-
-            if (File.Exists(FilePath))
-                File.Delete(FilePath);
-        }
-
-        public Log(string fileName, LogOptions options)
-            : this(fileName)
-        {
-            Options = options;
-        }
-
-        public void Error(string message)
-        {
-            if (!Options.Toggles.HasFlag(LogToggles.Error))
-                return;
-
-            var msg = $"[!][{DateTime.Now}] {message}";
-
-            ColorizeIfPossible(
-                () => WriteLine(message),
-                ConsoleColor.Red
-            );
-        }
-
-        public void Warning(string message)
-        {
-            if (!Options.Toggles.HasFlag(LogToggles.Warning))
-                return;
-
-            var msg = $"[*][{DateTime.Now}] {message}";
-
-            ColorizeIfPossible(
-                () => WriteLine(message),
-                ConsoleColor.Yellow
-            );
-        }
-
-        public void Success(string message)
-        {
-            if (!Options.Toggles.HasFlag(LogToggles.Error))
-                return;
-
-            var msg = $"[+][{DateTime.Now}] {message}";
-
-            ColorizeIfPossible(
-                () => WriteLine(message),
-                ConsoleColor.Green
-            );
+            LogLevel = LogLevel.Everything;
+            Template = "{{{Message}}}";
         }
 
         public void Info(string message)
         {
-            if (!Options.Toggles.HasFlag(LogToggles.Info))
-                return;
+            EnsureNotClosed();
 
-            var msg = $"[i][{DateTime.Now}] {message}";
-
-            ColorizeIfPossible(
-                () => WriteLine(msg),
-                ConsoleColor.White
-            );
+            EnsureMinimalLogLevel(LogLevel.Info, (level) =>
+            {
+                DecorateAndPushToAllActiveSinks(level, message);
+            });
         }
 
-        public void Exception(Exception e, bool silent = false)
+        public void Warning(string message)
         {
-            if (!Options.Toggles.HasFlag(LogToggles.Exception))
-                return;
+            EnsureNotClosed();
 
-            WriteLine($"[e][{DateTime.Now}] {e.Message}", silent);
-
-            if (e.TargetSite != null)
+            EnsureMinimalLogLevel(LogLevel.Warning, (level) =>
             {
-                WriteLine($"   What threw: {e.TargetSite.Name} in {e.TargetSite.DeclaringType.Name}", silent);
-            }
-
-            if (!string.IsNullOrEmpty(e.StackTrace))
-            {
-                WriteLine("   Stack trace:", silent);
-                foreach (var s in e.StackTrace.Split(Environment.NewLine.ToCharArray()))
-                    WriteLine($"      {s}", silent);
-            }
-
-            if (e.InnerException != null)
-            {
-                WriteLine("--- Inner exception below ---", silent);
-                Exception(e.InnerException, silent);
-            }
+                DecorateAndPushToAllActiveSinks(level, message);
+            });
         }
 
-        public void TypeResolverFailure(ReflectionTypeLoadException rtle)
+        public void Error(string message)
         {
-            if (!Options.Toggles.HasFlag(LogToggles.Exception))
-                return;
+            EnsureNotClosed();
 
-            Exception(rtle);
-
-            foreach (var le in rtle.LoaderExceptions)
+            EnsureMinimalLogLevel(LogLevel.Error, (level) =>
             {
-                ColorizeIfPossible(
-                    () => WriteLine(le.ToString()),
-                    ConsoleColor.Cyan
+                DecorateAndPushToAllActiveSinks(level, message);
+            });
+        }
+
+        public void Debug(string message)
+        {
+            EnsureNotClosed();
+
+            EnsureMinimalLogLevel(LogLevel.Debug, (level) =>
+            {
+                DecorateAndPushToAllActiveSinks(level, message);
+            });
+        }
+
+        public void Exception(Exception e)
+        {
+            EnsureNotClosed();
+
+            EnsureMinimalLogLevel(LogLevel.Exception, (level) =>
+            {
+                DecorateAndPushToAllActiveSinks(level, e.Message, e);
+            });
+        }
+
+        public void ReflectionTypeLoadException(ReflectionTypeLoadException rtle)
+        {
+            EnsureNotClosed();
+
+            EnsureMinimalLogLevel(LogLevel.ReflectionTypeLoadException, (level) =>
+            {
+                DecorateAndPushToAllActiveSinks(level, rtle.Message, rtle);
+            });
+        }
+
+        public Log WithOutputTemplate(string template)
+        {
+            EnsureNotClosed();
+
+            Template = template;
+            return this;
+        }
+
+        public Log SinkTo<T>() where T : Sink, new()
+        {
+            EnsureNotClosed();
+
+            if (SinkExists<T>())
+                throw new DuplicateSinkException(typeof(T));
+
+            Sinks.Add(new T());
+            return this;
+        }
+
+        public Log SinkTo(Sink sink)
+        {
+            EnsureNotClosed();
+
+            var sinkType = sink.GetType();
+
+            if (SinkExists(sinkType))
+                throw new DuplicateSinkException(sinkType);
+
+            Sinks.Add(sink);
+
+            return this;
+        }
+
+        public Log DecorateWith<T>(string template) where T : Decorator, new()
+        {
+            EnsureNotClosed();
+
+            Decorators.Add($"{{{template}}}", new T());
+            return this;
+        }
+
+        public Log DecorateWith(Decorator decorator, string template)
+        {
+            EnsureNotClosed();
+
+            Decorators.Add($"{{{template}}}", decorator);
+            return this;
+        }
+
+        public void Close()
+        {
+            EnsureNotClosed();
+
+            foreach (var sink in Sinks)
+            {
+                if (sink is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+
+                sink.Active = false;
+            }
+
+            Sinks.Clear();
+            Decorators.Clear();
+
+            HasBeenClosed = true;
+        }
+
+        private void DecorateAndPushToAllActiveSinks(LogLevel logLevel, string message, params object[] sinkArgs)
+        {
+            var decoratedMessage = Template.Replace($"{{Message}}", message);
+
+            foreach (var kvp in Decorators)
+            {
+                decoratedMessage = decoratedMessage.Replace(
+                    kvp.Key,
+                    kvp.Value.Decorate(logLevel, decoratedMessage)
                 );
             }
+
+            foreach (var sink in Sinks.Where(x => x.Active))
+                sink.Write(logLevel, decoratedMessage, sinkArgs);
         }
 
-        public void WriteLine(string text, bool suppressConsole = false)
+        private void EnsureMinimalLogLevel(LogLevel logLevel, Action<LogLevel> logAction)
         {
-            if (Options.UseConsolidatedLogFile)
-                ConsolidatedLog.WriteLine(text);
-
-            using (var sw = new StreamWriter(FilePath, true))
-                sw.WriteLine(text);
-
-            if (Options.WriteToConsole && !suppressConsole)
-                Console.WriteLine(text);
+            if (((int)logLevel & (int)LogLevel) != 0)
+                logAction(logLevel);
         }
 
-        private void ColorizeIfPossible(Action action, ConsoleColor color)
+        private void EnsureNotClosed()
         {
-            var consoleSupportsColor = ConsoleBridge.IsConsoleForegroundPropertyPresent();
-
-            if (consoleSupportsColor && Options.ColorizeLines)
-                Console.ForegroundColor = color;
-
-            action.Invoke();
-
-            if (consoleSupportsColor && Options.ColorizeLines)
-                Console.ResetColor();
+            if (HasBeenClosed)
+                throw new InvalidOperationException("This log has already been closed!");
         }
+
+        private bool SinkExists(Type type)
+            => Sinks.Exists(x => x.GetType() == type);
+
+        private bool SinkExists<T>()
+            => SinkExists(typeof(T));
     }
 }

@@ -14,14 +14,9 @@ namespace Reactor.API.Storage
         private string FileName { get; set; }
         private string FilePath => _filePath ?? Path.Combine(Path.Combine(RootDirectory, Defaults.PrivateAssetsDirectory), FileName);
 
-        private static Log Log { get; }
+        private static Log Log => LogManager.GetForInternalAssembly();
 
         public object Bundle { get; private set; }
-
-        static Assets()
-        {
-            Log = new Log(Defaults.RuntimeAssetLoaderLogFileName);
-        }
 
         private Assets() { }
 

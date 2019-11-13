@@ -15,7 +15,7 @@ namespace Reactor
 {
     public class Manager : IManager
     {
-        private static Log Log { get; set; }
+        private static Log Log => LogManager.GetForInternalAssembly();
 
         private GameSupport GameSupport { get; set; }
         private ModLoader ModLoader { get; set; }
@@ -30,7 +30,6 @@ namespace Reactor
         public Manager()
         {
             InitializeSettings();
-            InitializeLogger();
 
             Hotkeys = new HotkeyManager();
             Messenger = new Messenger();
@@ -63,18 +62,6 @@ namespace Reactor
             if (Global.Settings.Dirty)
             {
                 Global.Settings.Save();
-            }
-        }
-
-        private void InitializeLogger()
-        {
-            Log = new Log(Defaults.ManagerLogFileName);
-            Log.Info("Spooling up!");
-
-            if (Global.UseConsolidatedLog)
-            {
-                ConsolidatedLog.Start();
-                Log.Info($"Using consolidated log file at '{Defaults.ConsolidatedLogFilePath}'");
             }
         }
 

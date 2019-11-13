@@ -6,22 +6,22 @@ namespace Centrifuge
     {
         public static void Info(string message)
         {
-            WriteMessage('i', message);
+            WriteMessage("INF", message);
         }
 
         public static void Warning(string message)
         {
-            WriteMessage('*', message);
+            WriteMessage("WRN", message);
         }
 
         public static void Error(string message)
         {
-            WriteMessage('!', message);
+            WriteMessage("ERR", message);
         }
 
         public static void Exception(Exception e)
         {
-            WriteMessage('e', e.Message);
+            WriteMessage("EXC", e.Message);
 
             if (!string.IsNullOrEmpty(e.StackTrace))
                 Console.WriteLine(e.StackTrace);
@@ -35,12 +35,12 @@ namespace Centrifuge
 
         public static void Separator(string message)
         {
-            Console.WriteLine($"-------------- {message} --------------");
+            Console.WriteLine($"--------------{message}--------------");
         }
 
-        private static void WriteMessage(char symbol, string message)
+        private static void WriteMessage(string descriptor, string message)
         {
-            Console.WriteLine($"[{symbol}][{DateTime.Now}] {message}");
+            Console.WriteLine($"{descriptor} | {DateTime.Now.ToString()} :: {message}");
         }
     }
 }

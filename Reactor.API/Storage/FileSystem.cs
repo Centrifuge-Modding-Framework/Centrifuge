@@ -13,12 +13,7 @@ namespace Reactor.API.Storage
         public string RootDirectory { get; }
         public string VirtualFileSystemRoot => Path.Combine(RootDirectory, Defaults.PrivateDataDirectory);
 
-        private static Log Log { get; set; }
-
-        static FileSystem()
-        {
-            Log = new Log(Defaults.FileSystemLogFileName);
-        }
+        private static Log Log => LogManager.GetForInternalAssembly();
 
         /// <summary>
         /// Creates a pseudo-VFS object for file management inside the mod's private data directory.
@@ -137,7 +132,7 @@ namespace Reactor.API.Storage
                 catch (Exception e)
                 {
                     Log.Error($"Action for the element at path '{path}' failed. See file system exception log for details.");
-                    Log.Exception(e, true);
+                    Log.Exception(e);
 
                     return;
                 }

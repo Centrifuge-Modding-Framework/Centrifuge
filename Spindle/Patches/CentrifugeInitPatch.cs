@@ -3,7 +3,6 @@ using Mono.Cecil.Cil;
 using Spindle.Runtime;
 using Spindle.Runtime.EventArgs;
 using System;
-using System.Linq;
 
 namespace Spindle.Patches
 {

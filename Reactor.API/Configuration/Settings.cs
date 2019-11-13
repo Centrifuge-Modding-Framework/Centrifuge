@@ -8,8 +8,7 @@ namespace Reactor.API.Configuration
 {
     public class Settings : Section
     {
-        private static Log _logger;
-        private static Log Logger => _logger ?? (_logger = new Log(Defaults.SettingsSystemLogFileName));
+        private static Log Log => LogManager.GetForInternalAssembly();
 
         private string FileName { get; }
         private string RootDirectory { get; }
@@ -22,7 +21,7 @@ namespace Reactor.API.Configuration
 
             FileName = $"{fileName}.json";
 
-            Logger.Info($"Settings instance for '{FilePath}' initializing...");
+            Log.Info($"Settings instance for '{FilePath}' initializing...");
 
             if (File.Exists(FilePath))
             {
@@ -37,13 +36,11 @@ namespace Reactor.API.Configuration
                     }
                     catch (JsonException je)
                     {
-                        Logger.Error($"Could not deserialize JSON in '{FilePath}': {je.Message}.");
-                        Logger.Exception(je, true);
+                        Log.Exception(je);
                     }
                     catch (Exception e)
                     {
-                        Logger.Error($"Unexpected exception occured while loading '{FilePath}': {e.Message}.");
-                        Logger.Exception(e, true);
+                        Log.Exception(e);
                     }
 
                     if (sec != null)
@@ -78,13 +75,11 @@ namespace Reactor.API.Configuration
             }
             catch (JsonException je)
             {
-                Logger.Error($"Could not serialize the settings object back to JSON for '{FilePath}': {je.Message}");
-                Logger.Exception(je, true);
+                Log.Exception(je);
             }
             catch (Exception e)
             {
-                Logger.Error($"An unexpected exception occured while saving '{FilePath}': {e.Message}");
-                Logger.Exception(e, true);
+                Log.Exception(e);
             }
         }
     }
