@@ -111,7 +111,6 @@ namespace Reactor.Extensibility
                 return false;
             }
 
-
             var attribute = decoratedType.GetCustomAttributes(
                 typeof(GameSupportLibraryEntryPointAttribute),
                 false
@@ -143,6 +142,7 @@ namespace Reactor.Extensibility
                     initializerMethod.Invoke(component, new object[] { Manager });
                 }
 
+                GameObjectBridge.DontDestroyOnLoad(gameObject);
                 GameObjectBridge.SetActive(gameObject, true);
 
                 var host = new GameSupportHost
