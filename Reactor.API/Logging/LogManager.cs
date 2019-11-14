@@ -19,19 +19,12 @@ namespace Reactor.API.Logging
 
         public static Log GetForCurrentAssembly(bool initializeDefaults = true)
         {
-            return GetForAssembly(
-                Assembly.GetCallingAssembly(),
-                initializeDefaults
-            );
-        }
-
-        public static Log GetForCurrentAssembly(string eventLogFileName, bool initializeDefaults = true)
-        {
             var asm = Assembly.GetCallingAssembly();
+
             return GetForAssembly(asm, initializeDefaults, (log) =>
             {
                 var asmDirectory = Path.GetDirectoryName(asm.Location);
-                var logPath = Path.Combine(asmDirectory, $"{eventLogFileName}.log");
+                var logPath = Path.Combine(asmDirectory, $"{asm.GetName().Name}.log");
 
                 log.SinkTo(new FileSink(logPath));
             });
