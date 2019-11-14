@@ -33,8 +33,7 @@ namespace Centrifuge
 
             EarlyLog.Info($"Centrifuge bootstrap for Reactor Mod Loader and API. Version {version}. Unity v{ApplicationBridge.UnityVersion}.");
             EarlyLog.Info($"Diagnostics mode enabled. Remove '{StartupArguments.AllocateConsole}' command line argument to disable.");
-            EarlyLog.Separator(string.Empty);
-
+            
             if (ApplicationBridge.GetRunningUnityGeneration() == UnityGeneration.Unity4OrOlder)
             {
                 EarlyLog.Error("Centrifuge requires Unity 5 or newer. Terminating.");

@@ -21,7 +21,7 @@ namespace Reactor.API.Configuration
 
             FileName = $"{fileName}.json";
 
-            Log.Info($"Settings instance for '{FilePath}' initializing...");
+            Log.Debug($"Settings instance for '{FilePath}' initializing...");
 
             if (File.Exists(FilePath))
             {
