@@ -24,6 +24,11 @@ namespace Reactor.API.Logging
             );
         }
 
+        public static Log CreateBareLog()
+        {
+            return new Log();
+        }
+
         public static Log GetForCurrentAssembly(bool initializeDefaults = true)
         {
             var asm = Assembly.GetCallingAssembly();
@@ -61,9 +66,9 @@ namespace Reactor.API.Logging
                        .DecorateWith<ClassNameDecorator>("ClassName")
                        .DecorateWith<MessageOutputDecorator>("Message")
                        .SinkTo<ConsoleSink>();
-                }
 
-                postInit?.Invoke(log);
+                    postInit?.Invoke(log);
+                }
 
                 logInfo = new LogInfo
                 {
