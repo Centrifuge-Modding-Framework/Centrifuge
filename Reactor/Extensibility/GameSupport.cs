@@ -17,6 +17,7 @@ namespace Reactor.Extensibility
         internal static List<GameSupportHost> GSLs { get; private set; }
 
         private static Log Log => LogManager.GetForInternalAssembly();
+
         private IManager Manager { get; }
 
         static GameSupport()
@@ -138,7 +139,7 @@ namespace Reactor.Extensibility
 
                 if (initializerMethod != null)
                 {
-                    Log.Info($"Found initializer method '{attribute.InitializerName}' for {attribute.LibraryID}, calling.");
+                    Log.Debug($"Found initializer method '{attribute.InitializerName}' for {attribute.LibraryID}, calling.");
                     initializerMethod.Invoke(component, new object[] { Manager });
                 }
 
