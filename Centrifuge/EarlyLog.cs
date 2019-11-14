@@ -40,7 +40,7 @@ namespace Centrifuge
 
         private static void WriteMessage(string descriptor, string message)
         {
-            Console.WriteLine($"{descriptor} | {DateTime.Now.ToString()} :: {message}");
+            Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")} {descriptor}] [{nameof(Bootstrap)}] {message}");
         }
     }
 }
