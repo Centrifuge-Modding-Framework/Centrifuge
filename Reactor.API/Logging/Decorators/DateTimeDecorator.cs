@@ -1,20 +1,37 @@
 ﻿using Reactor.API.Logging.Base;
-using Reactor.API.Extensions;
 using System;
-using Reactor.API.Logging.Sinks;
 
 namespace Reactor.API.Logging.Decorators
 {
     public class DateTimeDecorator : Decorator
     {
-        public override string Decorate(LogLevel logLevel, string input, Sink sink)
+        private DisplayMode Mode { get; }
+
+        public DateTimeDecorator()
+            : this(DisplayMode.TimeString24h) { }
+
+        public DateTimeDecorator(DisplayMode mode)
         {
-            var dateTimeString = DateTime.Now.ToString();
+            Mode = mode;
+        }
 
-            if (sink is ConsoleSink)
-                return dateTimeString.AnsiColorEncodeRGB(63, 63, 63);
+        public override string Decorate(LogLevel logLevel, string input, string originalMessage, Sink sink)
+        {
+            return Mode switch
+            {
+                DisplayMode.TimeString24h => DateTime.Now.ToString("HH:mm:ss"),
+                DisplayMode.TimeString12h => DateTime.Now.ToString("hh:mm:ss tt"),
+                DisplayMode.DefaultDateTimeString => DateTime.Now.ToString(),
 
-            return dateTimeString;
+                _ => "??:??:??"
+            };
+        }
+
+        public enum DisplayMode
+        {
+            TimeString24h,
+            TimeString12h,
+            DefaultDateTimeString
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Reactor.API.Logging
             Decorators = new Dictionary<string, Decorator>();
 
             LogLevel = LogLevel.Everything;
-            Template = "{{{Message}}}";
+            Template = "{Message}";
         }
 
         public void Info(string message)
@@ -159,17 +159,17 @@ namespace Reactor.API.Logging
         {
             foreach (var sink in Sinks.Where(x => x.Active))
             {
-                var decoratedMessage = Template.Replace($"{{Message}}", message);
+                var actualOutput = Template;
 
                 foreach (var kvp in Decorators)
                 {
-                    decoratedMessage = decoratedMessage.Replace(
+                    actualOutput = actualOutput.Replace(
                         kvp.Key,
-                        kvp.Value.Decorate(logLevel, decoratedMessage, sink)
+                        kvp.Value.Decorate(logLevel, actualOutput, message, sink)
                     );
                 }
 
-                sink.Write(logLevel, decoratedMessage, sinkArgs);
+                sink.Write(logLevel, actualOutput, sinkArgs);
             }
         }
 

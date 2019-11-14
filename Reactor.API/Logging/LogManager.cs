@@ -58,9 +58,11 @@ namespace Reactor.API.Logging
 
                 if (initializeDefaults)
                 {
-                    log.WithOutputTemplate("{LogLevel} | {DateTime} :: {Message}")
+                    log.WithOutputTemplate("[{DateTime} {LogLevel}] [{ClassName}] {Message}")
                        .DecorateWith<LogLevelDecorator>("LogLevel")
                        .DecorateWith<DateTimeDecorator>("DateTime")
+                       .DecorateWith<ClassNameDecorator>("ClassName")
+                       .DecorateWith<MessageOutputDecorator>("Message")
                        .SinkTo<ConsoleSink>();
                 }
 

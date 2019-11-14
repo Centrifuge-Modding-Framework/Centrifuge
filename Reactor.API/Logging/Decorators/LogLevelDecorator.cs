@@ -6,7 +6,7 @@ namespace Reactor.API.Logging.Decorators
 {
     public class LogLevelDecorator : Decorator
     {
-        public override string Decorate(LogLevel logLevel, string input, Sink sink)
+        public override string Decorate(LogLevel logLevel, string input, string originalMessage, Sink sink)
         {
             return logLevel switch
             {
