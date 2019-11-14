@@ -17,16 +17,20 @@ namespace Reactor.API.Logging
             Logs = new List<LogInfo>();
         }
 
+        public static string GetCurrentAssemblyLogPath()
+        {
+            return GetAssemblyLogPath(
+                Assembly.GetCallingAssembly()
+            );
+        }
+
         public static Log GetForCurrentAssembly(bool initializeDefaults = true)
         {
             var asm = Assembly.GetCallingAssembly();
 
             return GetForAssembly(asm, initializeDefaults, (log) =>
             {
-                var asmDirectory = Path.GetDirectoryName(asm.Location);
-                var logPath = Path.Combine(asmDirectory, $"{asm.GetName().Name}.log");
-
-                log.SinkTo(new FileSink(logPath));
+                log.SinkTo(new FileSink(GetAssemblyLogPath(asm)));
             });
         }
 
@@ -71,6 +75,12 @@ namespace Reactor.API.Logging
             }
 
             return logInfo.Log;
+        }
+
+        private static string GetAssemblyLogPath(Assembly assembly)
+        {
+            var asmDirectory = Path.GetDirectoryName(assembly.Location);
+            return Path.Combine(asmDirectory, $"{assembly.GetName().Name}.log");
         }
     }
 }
