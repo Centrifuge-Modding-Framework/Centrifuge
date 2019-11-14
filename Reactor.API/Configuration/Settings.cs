@@ -53,6 +53,12 @@ namespace Reactor.API.Configuration
             Dirty = false;
         }
 
+        public void SaveIfDirty(bool formatJson = true)
+        {
+            if (Dirty)
+                Save(formatJson);
+        }
+
         public void Save(bool formatJson = true)
         {
             if (!Directory.Exists(SettingsDirectory))
