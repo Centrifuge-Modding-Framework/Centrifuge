@@ -18,6 +18,8 @@ namespace Reactor
         private ModRegistry ModRegistry { get; set; }
         private ModLoader ModLoader { get; set; }
 
+        internal static Settings Settings { get; private set; }
+
         public UnityLog UnityLog { get; }
 
         public IHotkeyManager Hotkeys { get; private set; }
@@ -50,16 +52,15 @@ namespace Reactor
 
         public List<string> GetLoadedGslIds()
         {
-            return Global.GameApiObjects.Keys.ToList();
+            return GameSupport.GSLs.Select(x => x.ID).ToList();
         }
 
         private void InitializeSettings()
         {
-            Global.Settings = new Settings("reactor");
+            Settings = new Settings("reactor");
+            Settings.GetOrCreate(Resources.InterceptUnityLogsSettingsKey, true);
 
-            Global.InterceptUnityLogs = Global.Settings.GetOrCreate(Global.InterceptUnityLogsSettingsKey, true);
-
-            Global.Settings.SaveIfDirty();
+            Settings.SaveIfDirty();
         }
 
         internal void OnModInitialized(ModInfo modInfo)
