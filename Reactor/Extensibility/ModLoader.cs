@@ -64,6 +64,8 @@ namespace Reactor.Extensibility
 
             foreach (var rootPath in modDirectories)
             {
+                Log.Debug(rootPath);
+
                 var directoryName = Path.GetFileName(rootPath);
 
                 Log.Info($"Found directory '{directoryName}'");
@@ -178,7 +180,7 @@ namespace Reactor.Extensibility
 
             foreach (var id in manifest.RequiredGSLs)
             {
-                if (GameSupport.IsGameSupportLibraryPresent(id))
+                if (!GameSupport.IsGameSupportLibraryPresent(id))
                 {
                     Log.Error($"The mod requires a GSL with ID that is not present: {id}");
                     Log.Error("This mod will not be loaded. You need to install that GSL before loading that mod.");
