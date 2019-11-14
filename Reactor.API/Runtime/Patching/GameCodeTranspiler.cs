@@ -2,7 +2,7 @@
 
 namespace Reactor.API.Runtime.Patching
 {
-    public abstract class CodeTranspiler
+    public abstract class GameCodeTranspiler
     {
         public abstract void Apply(HarmonyInstance harmonyInstance);
     }

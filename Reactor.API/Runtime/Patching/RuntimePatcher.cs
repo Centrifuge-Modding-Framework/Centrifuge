@@ -23,9 +23,9 @@ namespace Reactor.API.Runtime.Patching
 
             foreach (var type in types)
             {
-                if (typeof(CodeTranspiler).IsAssignableFrom(type) && type != typeof(CodeTranspiler))
+                if (typeof(GameCodeTranspiler).IsAssignableFrom(type) && type != typeof(GameCodeTranspiler))
                 {
-                    var transpiler = Activator.CreateInstance(type) as CodeTranspiler;
+                    var transpiler = Activator.CreateInstance(type) as GameCodeTranspiler;
 
                     Log.Info($"Transpiler: {type.FullName}");
                     try

@@ -25,13 +25,13 @@
     <Product>Reactor.API</Product>
 
     <AssemblyVersion>1.0.0</AssemblyVersion>
-    <FileVersion>1.3.0</FileVersion>
+    <FileVersion>2.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageId>Centrifuge.Mod.SDK</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.3.0</Version>
+    <Version>2.0.0</Version>
     <PackageProjectUrl>https://github.com/Ciastex/Centrifuge</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Ciastex/Centrifuge</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
