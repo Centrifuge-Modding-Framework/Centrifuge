@@ -5,6 +5,7 @@ using Reactor.API.Extensions;
 using Reactor.API.Interfaces.Systems;
 using Reactor.API.Logging;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -13,8 +14,15 @@ namespace Reactor.Extensibility
 {
     internal class GameSupport
     {
+        internal static List<GameSupportHost> GSLs { get; private set; }
+
         private Log Log => LogManager.GetForInternalAssembly();
         private IManager Manager { get; }
+
+        static GameSupport()
+        {
+            GSLs = new List<GameSupportHost>();
+        }
 
         public GameSupport(IManager manager)
         {
@@ -46,7 +54,7 @@ namespace Reactor.Extensibility
                 try
                 {
                     var asm = Assembly.LoadFrom(libPath);
-                    
+
                     if (InitializeGameSupport(asm))
                         Log.Info($"GSL '{libPath}' initialized.");
                 }
@@ -62,9 +70,12 @@ namespace Reactor.Extensibility
             }
         }
 
-        private bool InitializeGameSupport(Assembly assy)
+        public static bool IsGameSupportLibraryPresent(string id)
+            => GSLs.Exists(h => h.ID == id);
+
+        private bool InitializeGameSupport(Assembly assembly)
         {
-            var types = assy.GetTypes();
+            var types = assembly.GetTypes();
             var decoratedType = types.FirstOrDefault(
                                     t => t.GetCustomAttributes(
                                         typeof(GameSupportLibraryEntryPointAttribute),
@@ -96,6 +107,12 @@ namespace Reactor.Extensibility
                 false
             ).First() as GameSupportLibraryEntryPointAttribute;
 
+            if (IsGameSupportLibraryPresent(attribute.LibraryID))
+            {
+                Log.Error("The game support library has a duplicate ID. Contact the GSL developer for assistance.");
+                return false;
+            }
+
             var gameObject = GameObjectBridge.CreateGameObject(attribute.LibraryID);
 
             if (attribute.AwakeAfterInitialize)
@@ -106,7 +123,7 @@ namespace Reactor.Extensibility
             if (component != null)
             {
                 var initializerMethod = decoratedType.GetMethod(
-                    attribute.InitializerName, 
+                    attribute.InitializerName,
                     new Type[] { typeof(IManager) }
                 );
 
@@ -118,10 +135,18 @@ namespace Reactor.Extensibility
 
                 GameObjectBridge.SetActive(gameObject, true);
 
-                Global.GameApiObjects.Add(attribute.LibraryID, gameObject);
+                var host = new GameSupportHost
+                {
+                    ID = attribute.LibraryID,
+                    Assembly = assembly,
+                    ComponentInstance = component,
+                    UnityGameObject = gameObject
+                };
+
+                GSLs.Add(host);
                 return true;
             }
-             
+
             Log.Error("Game support library failed to initialize, for some reason your component was rejected by Unity Engine.\nLook in the output log of the game for more details.");
             return false;
         }

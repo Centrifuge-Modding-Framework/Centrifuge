@@ -128,7 +128,7 @@ namespace Reactor.Extensibility
         {
             if (!Directory.Exists(SourceDirectory))
             {
-                Log.Warning($"Mod repository '{SourceDirectory}' doesn't exist. Creating and skipping mod loading step.");
+                Log.Warning($"Mod directory '{SourceDirectory}' doesn't exist. Creating and skipping mod loading step.");
                 Directory.CreateDirectory(SourceDirectory);
             }
             else
@@ -174,6 +174,17 @@ namespace Reactor.Extensibility
             {
                 Log.Error($"That was quick... Target DLL file does not exist.");
                 return;
+            }
+
+            foreach (var id in manifest.RequiredGSLs)
+            {
+                if (GameSupport.IsGameSupportLibraryPresent(id))
+                {
+                    Log.Error($"The mod requires a GSL with ID that is not present: {id}");
+                    Log.Error("This mod will not be loaded. You need to install that GSL before loading that mod.");
+
+                    return;
+                }
             }
 
             if (manifest.Dependencies != null && manifest.Dependencies.Length > 0)

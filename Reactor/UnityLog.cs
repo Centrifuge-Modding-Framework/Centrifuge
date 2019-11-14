@@ -5,10 +5,11 @@ namespace Reactor
     public class UnityLog
     {
         private Log Log => LogManager.GetForInternalAssembly();
+        private bool Enabled { get; } = Manager.Settings.GetItem<bool>(Resources.InterceptUnityLogsSettingsKey);
 
         public void LogUnityEngineMessage(string condition, string stackTrace, int logType)
         {
-            if (!Global.InterceptUnityLogs)
+            if (!Enabled)
                 return;
 
             var msg = $"{condition}";

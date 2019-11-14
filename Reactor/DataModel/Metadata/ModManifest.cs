@@ -13,6 +13,7 @@ namespace Reactor.DataModel.Metadata
         public string Contact { get; protected set; }
         public string ModuleFileName { get; protected set; }
         public string[] Dependencies { get; protected set; }
+        public string[] RequiredGSLs { get; protected set; }
         public int? Priority { get; protected set; }
         public bool SkipLoad { get; protected set; }
 
@@ -97,6 +98,7 @@ namespace Reactor.DataModel.Metadata
             if (Dependencies != null && Dependencies.Length > 0)
             {
                 sb.AppendLine($"Declared dependencies: ");
+
                 foreach (var str in Dependencies)
                 {
                     sb.AppendLine($"  {str}");
