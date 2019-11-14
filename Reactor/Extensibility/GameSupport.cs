@@ -16,7 +16,7 @@ namespace Reactor.Extensibility
     {
         internal static List<GameSupportHost> GSLs { get; private set; }
 
-        private Log Log => LogManager.GetForInternalAssembly();
+        private static Log Log => LogManager.GetForInternalAssembly();
         private IManager Manager { get; }
 
         static GameSupport()
@@ -39,7 +39,7 @@ namespace Reactor.Extensibility
         {
             Log.Info("Looking for GSLs...");
 
-            var gameSupportLibs = Directory.GetFiles(Defaults.ManagerGameSupportDirectory);
+            var gameSupportLibs = Directory.GetFiles(Defaults.ManagerGameSupportDirectory, "*.dll");
 
             if (!gameSupportLibs.Any())
             {
@@ -51,6 +51,8 @@ namespace Reactor.Extensibility
 
             foreach (var libPath in gameSupportLibs)
             {
+                Log.Debug(libPath);
+
                 try
                 {
                     var asm = Assembly.LoadFrom(libPath);
@@ -64,14 +66,22 @@ namespace Reactor.Extensibility
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Failed to initialize game support.");
+                    Log.Error($"Failed to initialize game support: {e.Message}");
                     Log.Exception(e);
                 }
             }
         }
 
         public static bool IsGameSupportLibraryPresent(string id)
-            => GSLs.Exists(h => h.ID == id);
+        {
+            foreach (var lib in GSLs)
+            {
+                if (lib.ID == id)
+                    return true;
+            }
+
+            return false;
+        }
 
         private bool InitializeGameSupport(Assembly assembly)
         {
