@@ -17,6 +17,9 @@ namespace Reactor.API.Logging
             Logs = new List<LogInfo>();
         }
 
+        /// <summary>
+        /// Constructs a valid log path for the calling assembly.
+        /// </summary>
         public static string GetCurrentAssemblyLogPath()
         {
             return GetAssemblyLogPath(
@@ -24,11 +27,18 @@ namespace Reactor.API.Logging
             );
         }
 
+        /// <summary>
+        /// Constructs a new, assembly-detached, untracked log with no sinks, decorators or template.
+        /// </summary>
         public static Log CreateBareLog()
         {
             return new Log();
         }
 
+        /// <summary>
+        /// Retrieves an existing log for the calling assembly - if it doesn't exist it will be created.
+        /// </summary>
+        /// <param name="initializeDefaults">Whether or not to initialize the log with the default sinks and decorators.</param>
         public static Log GetForCurrentAssembly(bool initializeDefaults = true)
         {
             var asm = Assembly.GetCallingAssembly();
