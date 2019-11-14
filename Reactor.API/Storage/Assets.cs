@@ -39,6 +39,11 @@ namespace Reactor.API.Storage
             Bundle = Load();
         }
 
+        /// <summary>
+        /// Attempts to construct a Unity AssetBundle via a Centrifuge Type Bridge.
+        /// You will have to cast the Bundle property to Unity's AssetBundle type for usage.
+        /// </summary>
+        /// <param name="filePath">An absolute path to the AssetBundle</param>
         public static Assets FromUnsafePath(string filePath)
         {
             if (!File.Exists(filePath))
