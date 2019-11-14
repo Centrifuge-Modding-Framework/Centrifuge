@@ -3,7 +3,6 @@ using Reactor.API.Configuration;
 using Reactor.API.DataModel;
 using Reactor.API.Events;
 using Reactor.API.Interfaces.Systems;
-using Reactor.API.Logging;
 using Reactor.Communication;
 using Reactor.Extensibility;
 using Reactor.Input;
@@ -15,11 +14,11 @@ namespace Reactor
 {
     public class Manager : IManager
     {
-        private static Log Log => LogManager.GetForInternalAssembly();
-
         private GameSupport GameSupport { get; set; }
-        private ModLoader ModLoader { get; set; }
         private ModRegistry ModRegistry { get; set; }
+        private ModLoader ModLoader { get; set; }
+
+        public UnityLog UnityLog { get; }
 
         public IHotkeyManager Hotkeys { get; private set; }
         public IMessenger Messenger { get; private set; }
@@ -31,11 +30,12 @@ namespace Reactor
         {
             InitializeSettings();
 
+            UnityLog = new UnityLog();
+
             Hotkeys = new HotkeyManager();
             Messenger = new Messenger();
 
             GameSupport = new GameSupport(this);
-
             ModRegistry = new ModRegistry();
             ModLoader = new ModLoader(this, Defaults.ManagerModDirectory, ModRegistry);
 
@@ -58,12 +58,8 @@ namespace Reactor
             Global.Settings = new Settings("reactor");
 
             Global.InterceptUnityLogs = Global.Settings.GetOrCreate(Global.InterceptUnityLogsSettingsKey, true);
-            Global.UseConsolidatedLog = Global.Settings.GetOrCreate(Global.UseConsolidatedLogSettingsKey, true);
 
-            if (Global.Settings.Dirty)
-            {
-                Global.Settings.Save();
-            }
+            Global.Settings.SaveIfDirty();
         }
 
         internal void OnModInitialized(ModInfo modInfo)
@@ -79,36 +75,6 @@ namespace Reactor
         public void Update()
         {
             ((HotkeyManager)Hotkeys).Update();
-        }
-
-        public void LogUnityEngineMessage(string condition, string stackTrace, int logType)
-        {
-            if (!Global.InterceptUnityLogs)
-                return;
-
-            var msg = $"[::UNITY::] {condition}";
-
-            if (!string.IsNullOrEmpty(stackTrace))
-            {
-                msg += $"\n{stackTrace}";
-            }
-
-            switch (logType)
-            {
-                case 0: // LogType.Error
-                case 1: // LogType.Assert
-                case 4: // LogType.Exception
-                    Log.Error(msg);
-                    break;
-
-                case 2:
-                    Log.Warning(msg);
-                    break;
-
-                case 3:
-                    Log.Info(msg);
-                    break;
-            }
         }
     }
 }
