@@ -6,7 +6,7 @@
     <Product>Reactor</Product>
     <Description>Centrifuge Reactor Mod Loader Module</Description>
     <Copyright>Copyright 2019 © Centrifuge Project</Copyright>
-    <FileVersion>1.2.1</FileVersion>
+    <FileVersion>2.0.0</FileVersion>
     <LangVersion>8.0</LangVersion>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
