@@ -157,18 +157,20 @@ namespace Reactor.API.Logging
 
         private void DecorateAndPushToAllActiveSinks(LogLevel logLevel, string message, params object[] sinkArgs)
         {
-            var decoratedMessage = Template.Replace($"{{Message}}", message);
-
-            foreach (var kvp in Decorators)
-            {
-                decoratedMessage = decoratedMessage.Replace(
-                    kvp.Key,
-                    kvp.Value.Decorate(logLevel, decoratedMessage)
-                );
-            }
-
             foreach (var sink in Sinks.Where(x => x.Active))
+            {
+                var decoratedMessage = Template.Replace($"{{Message}}", message);
+
+                foreach (var kvp in Decorators)
+                {
+                    decoratedMessage = decoratedMessage.Replace(
+                        kvp.Key,
+                        kvp.Value.Decorate(logLevel, decoratedMessage, sink)
+                    );
+                }
+
                 sink.Write(logLevel, decoratedMessage, sinkArgs);
+            }
         }
 
         private void EnsureMinimalLogLevel(LogLevel logLevel, Action<LogLevel> logAction)
