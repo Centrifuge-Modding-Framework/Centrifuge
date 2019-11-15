@@ -22,7 +22,7 @@ namespace Reactor.API.Logging
             {
                 sb.AppendLine("   Stack trace:");
 
-                foreach (var s in e.StackTrace.Split(Environment.NewLine.ToCharArray()))
+                foreach (var s in e.StackTrace.Split('\n'))
                     sb.AppendLine($"      {s}");
             }
 
