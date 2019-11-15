@@ -1,5 +1,4 @@
-﻿using Reactor.API;
-using Reactor.API.DataModel;
+﻿using Reactor.API.DataModel;
 using Reactor.API.Interfaces.Systems;
 using Reactor.API.Logging;
 using System;
@@ -10,12 +9,11 @@ namespace Reactor.Communication
 {
     internal class Messenger : IMessenger
     {
-        private Log Log { get; }
+        private Log Log => LogManager.GetForInternalAssembly();
         private Dictionary<string, Dictionary<string, List<MethodInfo>>> MessageHandlers { get; }
 
         public Messenger()
         {
-            Log = new Log(Defaults.MessengerLogFileName);
             MessageHandlers = new Dictionary<string, Dictionary<string, List<MethodInfo>>>();
         }
 
@@ -92,6 +90,7 @@ namespace Reactor.Communication
                 }
                 catch (Exception e)
                 {
+                    Log.Error($"An exception occured in the targeted handler '{handler.Name}' from mod '{message.TargetModID}'");
                     Log.Exception(e);
                 }
             }
@@ -107,6 +106,7 @@ namespace Reactor.Communication
                 }
                 catch (Exception e)
                 {
+                    Log.Error($"An exception occured in the broadcast handler '{handler.Name}'.");
                     Log.Exception(e);
                 }
             }

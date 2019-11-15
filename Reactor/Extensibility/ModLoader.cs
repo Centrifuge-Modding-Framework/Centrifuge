@@ -28,7 +28,7 @@ namespace Reactor.Extensibility
         private ModRegistry Registry { get; }
         private string SourceDirectory { get; }
 
-        private Log Log { get; }
+        private Log Log => LogManager.GetForInternalAssembly();
 
         public ModLoader(Manager manager, string sourceDirectory, ModRegistry registry)
         {
@@ -37,8 +37,6 @@ namespace Reactor.Extensibility
 
             SourceDirectory = sourceDirectory;
             Registry = registry;
-
-            Log = new Log(Defaults.ModLoaderLogFileName);
 
             if (!Directory.Exists(SourceDirectory))
             {
@@ -66,6 +64,8 @@ namespace Reactor.Extensibility
 
             foreach (var rootPath in modDirectories)
             {
+                Log.Debug(rootPath);
+
                 var directoryName = Path.GetFileName(rootPath);
 
                 Log.Info($"Found directory '{directoryName}'");
@@ -118,7 +118,6 @@ namespace Reactor.Extensibility
                 catch (ManifestReadException mre)
                 {
                     Log.Error($"Manifest is invalid: {mre.Message}");
-                    Log.Exception(mre, true);
                     continue;
                 }
             }
@@ -131,7 +130,7 @@ namespace Reactor.Extensibility
         {
             if (!Directory.Exists(SourceDirectory))
             {
-                Log.Warning($"Mod repository '{SourceDirectory}' doesn't exist. Creating and skipping mod loading step.");
+                Log.Warning($"Mod directory '{SourceDirectory}' doesn't exist. Creating and skipping mod loading step.");
                 Directory.CreateDirectory(SourceDirectory);
             }
             else
@@ -179,6 +178,17 @@ namespace Reactor.Extensibility
                 return;
             }
 
+            foreach (var id in manifest.RequiredGSLs)
+            {
+                if (!GameSupport.IsGameSupportLibraryPresent(id))
+                {
+                    Log.Error($"The mod requires a GSL with ID that is not present: {id}");
+                    Log.Error("This mod will not be loaded. You need to install that GSL before loading that mod.");
+
+                    return;
+                }
+            }
+
             if (manifest.Dependencies != null && manifest.Dependencies.Length > 0)
             {
                 if (!LoadDependenciesForMod(rootPath, manifest.Dependencies))
@@ -195,14 +205,12 @@ namespace Reactor.Extensibility
             }
             catch (ReflectionTypeLoadException rtle)
             {
-                Log.TypeResolverFailure(rtle);
+                Log.ReflectionTypeLoadException(rtle);
                 return;
             }
             catch (Exception e)
             {
-                Log.Error($"Assembly loading failed: {e.Message}.");
-                Log.Exception(e, true);
-
+                Log.Exception(e);
                 return;
             }
 
@@ -215,7 +223,7 @@ namespace Reactor.Extensibility
             }
             catch (ReflectionTypeLoadException rtle)
             {
-                Log.TypeResolverFailure(rtle);
+                Log.ReflectionTypeLoadException(rtle);
                 return;
             }
 
@@ -307,7 +315,7 @@ namespace Reactor.Extensibility
                 }
                 catch (ReflectionTypeLoadException rtle)
                 {
-                    Log.TypeResolverFailure(rtle);
+                    Log.ReflectionTypeLoadException(rtle);
                     return false;
                 }
                 catch (Exception e)

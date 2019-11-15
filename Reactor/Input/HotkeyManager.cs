@@ -1,5 +1,4 @@
-﻿using Reactor.API;
-using Reactor.API.Input;
+﻿using Reactor.API.Input;
 using Reactor.API.Interfaces.Systems;
 using Reactor.API.Logging;
 using System;
@@ -11,12 +10,11 @@ namespace Reactor.Input
     {
         private Dictionary<Hotkey, Action> ActionHotkeys { get; }
 
-        private Log Log { get; }
+        private Log Log => LogManager.GetForInternalAssembly();
 
         public HotkeyManager()
         {
             ActionHotkeys = new Dictionary<Hotkey, Action>();
-            Log = new Log(Defaults.HotkeyManagerLogFileName);
         }
 
         public void Bind(Hotkey hotkey, Action action)

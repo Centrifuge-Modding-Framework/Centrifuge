@@ -46,8 +46,10 @@
         internal static class ReactorManager
         {
             public const string TypeName = "Reactor.Manager";
+            public const string UnityLogTypeName = "Reactor.UnityLog";
 
-            public const string LogMethodName = "LogUnityEngineMessage";
+            public const string UnityLogPropertyName = "UnityLog";
+            public const string UnityLogMethodName = "LogUnityEngineMessage";
             public const string UpdateMethodName = "Update";
         }
     }

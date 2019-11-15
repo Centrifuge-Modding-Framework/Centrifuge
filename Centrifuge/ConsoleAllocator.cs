@@ -33,6 +33,7 @@ namespace Centrifuge
 
             _allocated = true;
         }
+
         public static void DestroyWin32()
         {
             if (!_allocated)
