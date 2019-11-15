@@ -25,13 +25,13 @@
     <Product>Reactor.API</Product>
 
     <AssemblyVersion>1.0.0</AssemblyVersion>
-    <FileVersion>2.0.0</FileVersion>
+    <FileVersion>2.0.1</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageId>Centrifuge.Mod.SDK</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>2.0.0</Version>
+    <Version>2.0.1</Version>
     <PackageProjectUrl>https://github.com/Ciastex/Centrifuge</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Ciastex/Centrifuge</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
@@ -59,6 +59,8 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\Centrifuge.UnityInterop\Centrifuge.UnityInterop.csproj" />
+    <ProjectReference Include="..\Centrifuge.UnityInterop\Centrifuge.UnityInterop.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
   </ItemGroup>
 </Project>
