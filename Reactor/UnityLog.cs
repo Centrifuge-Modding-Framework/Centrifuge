@@ -1,10 +1,13 @@
 ﻿using Reactor.API.Logging;
+using System.Linq;
+using System.Text;
 
 namespace Reactor
 {
     public class UnityLog
     {
         private Log Log => LogManager.GetForInternalAssembly();
+
         private bool Enabled { get; } = Manager.Settings.GetItem<bool>(Resources.InterceptUnityLogsSettingsKey);
 
         public void LogUnityEngineMessage(string condition, string stackTrace, int logType)
@@ -12,12 +15,21 @@ namespace Reactor
             if (!Enabled)
                 return;
 
-            var msg = $"{condition}";
+            var sb = new StringBuilder().Append(condition);
 
             if (!string.IsNullOrEmpty(stackTrace))
             {
-                msg += $"\n{stackTrace}";
+                var lines = stackTrace.Split('\n')
+                                      .Select(s => s.Trim())
+                                      .Where(s => !string.IsNullOrEmpty(s));
+
+                foreach (var line in lines)
+                {
+                    sb.AppendLine($"  {line}");
+                }
             }
+
+            var msg = sb.ToString();
 
             switch (logType)
             {
