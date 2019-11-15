@@ -28,7 +28,7 @@ namespace Reactor.API.Logging
         }
 
         /// <summary>
-        /// Constructs a new, assembly-detached, untracked log with no sinks, decorators or template.
+        /// Constructs a new, assembly-detached, untracked log with no sinks, or decorators, with message-only template.
         /// </summary>
         public static Log CreateBareLog()
         {
