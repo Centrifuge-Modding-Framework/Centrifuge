@@ -1,89 +1,64 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E00CDA95-C063-4BBE-BF73-FB2733BE4F34}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Reactor.API</RootNamespace>
-    <AssemblyName>Reactor.API</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
+    <TargetFramework>net35</TargetFramework>
+    
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>8.0</LangVersion>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
+
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
+
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <LangVersion>8.0</LangVersion>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  
+  <PropertyGroup>
+    <AssemblyName>Reactor.API</AssemblyName>
+    <AssemblyTitle>Reactor.API</AssemblyTitle>
+    <Company>Centrifuge Project</Company>
+    <Description>Centrifuge Reactor API component. Doing the heavy lifting so you don't have to.</Description>
+    <Copyright>Copyright 2019 © Centrifuge Project</Copyright>
+    <Product>Reactor.API</Product>
+
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>2.0.0</FileVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Centrifuge.Mod.SDK</PackageId>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Version>2.0.0</Version>
+    <PackageProjectUrl>https://github.com/Ciastex/Centrifuge</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Ciastex/Centrifuge</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <Authors>Ciastex</Authors>
+    <PackageTags>Game Modding, Unity Engine, Unity3D, SDK, CIL, Mono, Modding Toolkit</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lib.Harmony.1.2.0.1\lib\net35\0Harmony.dll</HintPath>
-    </Reference>
-    <Reference Include="LitJSON, Version=0.15.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LitJson.0.15.0\lib\net35\LitJSON.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <None Remove="FodyWeavers.xml" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Attributes\GameSupportLibraryEntryPointAttribute.cs" />
-    <Compile Include="Attributes\MessageHandlerAttribute.cs" />
-    <Compile Include="Attributes\ModEntryPointAttribute.cs" />
-    <Compile Include="Configuration\Section.cs" />
-    <Compile Include="Configuration\Settings.cs" />
-    <Compile Include="Defaults.cs" />
-    <Compile Include="Events\ModInitializationEventArgs.cs" />
-    <Compile Include="Events\SettingsChangedEventArgs.cs" />
-    <Compile Include="Exceptions\ManifestReadException.cs" />
-    <Compile Include="Exceptions\SettingsException.cs" />
-    <Compile Include="Extensions\AssemblyEx.cs" />
-    <Compile Include="Extensions\EnumExtensions.cs" />
-    <Compile Include="Input\Hotkey.cs" />
-    <Compile Include="Input\Keyboard.cs" />
-    <Compile Include="Interfaces\Systems\IHotkeyManager.cs" />
-    <Compile Include="Interfaces\Systems\IManager.cs" />
-    <Compile Include="DataModel\ModMessage.cs" />
-    <Compile Include="DataModel\ModInfo.cs" />
-    <Compile Include="Interfaces\Systems\IMessenger.cs" />
-    <Compile Include="Logging\ConsolidatedLog.cs" />
-    <Compile Include="Logging\Log.cs" />
-    <Compile Include="Logging\LogOptions.cs" />
-    <Compile Include="Logging\LogToggles.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Storage\Assets.cs" />
-    <Compile Include="Storage\FileSystem.cs" />
+    <None Include="readme.txt" pack="true" PackagePath="." />
   </ItemGroup>
+  
   <ItemGroup>
-    <None Include="packages.config" />
+    <PackageReference Include="Fody" Version="6.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Lib.Harmony" Version="1.2.0.1" />
+    <PackageReference Include="LitJson" Version="0.15.0" />
+    <PackageReference Include="ModuleInit.Fody" Version="2.1.0" />
   </ItemGroup>
+  
   <ItemGroup>
-    <ProjectReference Include="..\Centrifuge.UnityInterop\Centrifuge.UnityInterop.csproj">
-      <Project>{8DCC793A-BC56-4F07-A600-C0C109230C07}</Project>
-      <Name>Centrifuge.UnityInterop</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Centrifuge.UnityInterop\Centrifuge.UnityInterop.csproj" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

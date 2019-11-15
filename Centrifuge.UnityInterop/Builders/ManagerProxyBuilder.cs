@@ -57,15 +57,21 @@ namespace Centrifuge.UnityInterop.Builders
                 new[] { typeof(string), typeof(string), ApplicationBridge.LogTypeType }
             );
 
-            var loggerMethod = ReactorBridge.ReactorManagerType.GetMethod(
-                Resources.ReactorManager.LogMethodName,
+            var loggerMethod = ReactorBridge.ReactorUnityLogType.GetMethod(
+                Resources.ReactorManager.UnityLogMethodName,
                 new[] { typeof(string), typeof(string), typeof(int) }
             );
+
+            var propertyGetMethod = ReactorBridge.ReactorManagerType.GetProperty(
+                Resources.ReactorManager.UnityLogPropertyName,
+                BindingFlags.Instance | BindingFlags.Public
+            ).GetGetMethod();
 
             var ilGen = proxyMethod.GetILGenerator();
 
             ilGen.Emit(OpCodes.Ldarg_0);
             ilGen.Emit(OpCodes.Ldfld, ProxyTypeBuilder.GetField(Resources.Proxy.ManagerFieldName));
+            ilGen.Emit(OpCodes.Callvirt, propertyGetMethod);
             ilGen.Emit(OpCodes.Ldarg_1);
             ilGen.Emit(OpCodes.Ldarg_2);
             ilGen.Emit(OpCodes.Ldarg_3);
