@@ -14,6 +14,9 @@ namespace Reactor.API.Logging
 
         static LogManager()
         {
+            if (!Directory.Exists(Defaults.ManagerLogDirectory))
+                Directory.CreateDirectory(Defaults.ManagerLogDirectory);
+
             Logs = new List<LogInfo>();
         }
 
