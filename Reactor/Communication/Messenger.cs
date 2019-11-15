@@ -90,6 +90,7 @@ namespace Reactor.Communication
                 }
                 catch (Exception e)
                 {
+                    Log.Error($"An exception occured in the targeted handler '{handler.Name}' from mod '{message.TargetModID}'");
                     Log.Exception(e);
                 }
             }
@@ -105,6 +106,7 @@ namespace Reactor.Communication
                 }
                 catch (Exception e)
                 {
+                    Log.Error($"An exception occured in the broadcast handler '{handler.Name}'.");
                     Log.Exception(e);
                 }
             }
