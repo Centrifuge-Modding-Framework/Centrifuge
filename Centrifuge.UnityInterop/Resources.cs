@@ -4,6 +4,8 @@
     {
         internal static class UnityEngine
         {
+            internal const string AssemblyNameFilter = "UnityEngine";
+
             internal const string ApplicationTypeName = "UnityEngine.Application";
             internal const string AssetBundleTypeName = "UnityEngine.AssetBundle";
             internal const string GameObjectTypeName = "UnityEngine.GameObject";
@@ -45,6 +47,8 @@
 
         internal static class ReactorManager
         {
+            internal const string AssemblyNameFilter = "Reactor";
+
             public const string TypeName = "Reactor.Manager";
             public const string UnityLogTypeName = "Reactor.UnityLog";
 

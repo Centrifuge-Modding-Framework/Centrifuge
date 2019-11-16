@@ -10,9 +10,17 @@ namespace Centrifuge
     public static class Bootstrap
     {
         private static object ReactorManagerObject;
+        private static bool ConsoleEnabled { get; set; }
+
+        static Bootstrap()
+        {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+        }
 
         public static void Initialize()
         {
+            var version = Assembly.GetAssembly(typeof(Bootstrap)).GetName().Version;
+
             foreach (var arg in Environment.GetCommandLineArgs())
             {
                 if (arg == StartupArguments.AllocateConsole)
@@ -26,14 +34,16 @@ namespace Centrifuge
                     {
                         ConsoleAllocator.CreateWin32();
                     }
+
+                    ConsoleEnabled = true;
                 }
             }
 
-            var version = Assembly.GetAssembly(typeof(Bootstrap)).GetName().Version;
+            EarlyLog.Info($"Centrifuge bootstrap for Reactor Mod Loader and API. Version {version}. Unity {ApplicationBridge.UnityVersion}");
 
-            EarlyLog.Info($"Centrifuge bootstrap for Reactor Mod Loader and API. Version {version}. Unity v{ApplicationBridge.UnityVersion}.");
-            EarlyLog.Info($"Diagnostics mode enabled. Remove '{StartupArguments.AllocateConsole}' command line argument to disable.");
-            
+            if (ConsoleEnabled)
+                EarlyLog.Info($"Diagnostics mode enabled. Remove '{StartupArguments.AllocateConsole}' command line argument to disable.");
+
             if (ApplicationBridge.GetRunningUnityGeneration() == UnityGeneration.Unity4OrOlder)
             {
                 EarlyLog.Error("Centrifuge requires Unity 5 or newer. Terminating.");
@@ -41,7 +51,6 @@ namespace Centrifuge
             }
 
             EarlyLog.Info("Trying to find Centrifuge Reactor DLL...");
-
             var reactorPath = GetCrossPlatformCompatibleReactorPath();
             if (!File.Exists(reactorPath))
             {
@@ -119,6 +128,12 @@ namespace Centrifuge
             }
 
             EarlyLog.Info(" --- BOOTSTRAPPER FINISHED --- ");
+        }
+
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            EarlyLog.Error("FATAL: Unhandled exception!");
+            EarlyLog.Exception(e.ExceptionObject as Exception);
         }
 
         private static string GetCrossPlatformCompatibleReactorPath()

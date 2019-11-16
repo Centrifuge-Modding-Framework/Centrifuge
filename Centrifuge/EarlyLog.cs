@@ -59,11 +59,6 @@ namespace Centrifuge
             WriteMessage("EXC", sb.ToString());
         }
 
-        internal static void CleanUp()
-        {
-            LogFileWriter.Dispose();
-        }
-
         private static void WriteMessage(string descriptor, string message)
         {
             var msgFormat = $"[{DateTime.Now.ToString("HH:mm:ss")} {descriptor}] [{nameof(Bootstrap)}] {message}";
