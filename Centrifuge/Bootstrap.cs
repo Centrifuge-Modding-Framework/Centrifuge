@@ -2,6 +2,7 @@
 using Centrifuge.UnityInterop.Builders;
 using Centrifuge.UnityInterop.DataModel;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
@@ -19,7 +20,6 @@ namespace Centrifuge
 
         public static void Initialize()
         {
-            var version = Assembly.GetAssembly(typeof(Bootstrap)).GetName().Version;
 
             foreach (var arg in Environment.GetCommandLineArgs())
             {
@@ -38,6 +38,8 @@ namespace Centrifuge
                     ConsoleEnabled = true;
                 }
             }
+
+            var version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
 
             EarlyLog.Info($"Centrifuge bootstrap for Reactor Mod Loader and API. Version {version}. Unity {ApplicationBridge.UnityVersion}");
 
