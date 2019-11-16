@@ -178,14 +178,17 @@ namespace Reactor.Extensibility
                 return;
             }
 
-            foreach (var id in manifest.RequiredGSLs)
+            if (manifest.RequiredGSLs != null && manifest.RequiredGSLs.Length > 0)
             {
-                if (!GameSupport.IsGameSupportLibraryPresent(id))
+                foreach (var id in manifest.RequiredGSLs)
                 {
-                    Log.Error($"The mod requires a GSL with ID that is not present: {id}");
-                    Log.Error("This mod will not be loaded. You need to install that GSL before loading that mod.");
+                    if (!GameSupport.IsGameSupportLibraryPresent(id))
+                    {
+                        Log.Error($"The mod requires a GSL with ID that is not present: {id}");
+                        Log.Error("This mod will not be loaded. You need to install that GSL before loading that mod.");
 
-                    return;
+                        return;
+                    }
                 }
             }
 
@@ -274,9 +277,6 @@ namespace Reactor.Extensibility
                 modHost.Instance = instance;
             }
 
-            Registry.RegisterMod(modHost);
-            Log.Info("Loaded and registered successfully. Initializing.");
-
             var initializer = entryPointType.GetMethod(
                 entryPointInfo.InitializerName,
                 new Type[] { typeof(IManager) }
@@ -284,10 +284,31 @@ namespace Reactor.Extensibility
 
             if (initializer != null)
             {
-                initializer.Invoke(
-                    modHost.Instance,
-                    new object[] { Manager }
-                );
+                Log.Info($"Now calling initializer method '{initializer.Name}' in '{modHost.Assembly.GetName().Name}'");
+
+                try
+                {
+                    var args = new object[] { Manager };
+
+                    if (initializer.IsStatic)
+                    {
+                        initializer.Invoke(null, args);
+                    }
+                    else
+                    {
+                        initializer.Invoke(modHost.Instance, args);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Error("The initializer method has exploded spectacularly. Centrifuge and other mods will still work, though.");
+                    Log.Exception(e);
+
+                    if (dealingWithGameObject)
+                        GameObjectBridge.Destroy(modHost.GameObject);
+
+                    return;
+                }
             }
             else
             {
@@ -296,6 +317,9 @@ namespace Reactor.Extensibility
 
             if (dealingWithGameObject && entryPointInfo.AwakeAfterInitialize)
                 GameObjectBridge.SetActive(modHost.GameObject, true);
+
+            Registry.RegisterMod(modHost);
+            Log.Info("Mod has been initialized and registered sucessfully.");
 
             Manager.OnModInitialized(modHost.ToExchangeableApiObject());
         }
