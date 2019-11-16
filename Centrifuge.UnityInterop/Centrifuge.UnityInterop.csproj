@@ -4,12 +4,12 @@
     <AssemblyTitle>Centrifuge.UnityInterop</AssemblyTitle>
     <Company>Centrifuge Project</Company>
     <Product>Centrifuge.UnityInterop</Product>
-    <Description>Unity glue code for Centrifuge Mod Loader. Do not install directly.</Description>
+    <Description>Unity glue code for Centrifuge Mod Loader.</Description>
     <Copyright>Copyright 2019 © Centrifuge Project</Copyright>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <AssemblyVersion>1.0.0</AssemblyVersion>
-    <Version>2.0.0</Version>
-    <FileVersion>2.0.0</FileVersion>
+    <Version>2.0.3</Version>
+    <FileVersion>2.0.3</FileVersion>
     <LangVersion>8.0</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
