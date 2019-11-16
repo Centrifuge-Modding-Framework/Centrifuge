@@ -5,9 +5,10 @@ namespace Centrifuge.UnityInterop
 {
     internal static class Kernel
     {
-        internal static Type FindTypeByFullName(string fullName)
+        internal static Type FindTypeByFullName(string fullName, string assemblyFilter)
         {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+                                                    .Where(a => a.GetName().Name.Contains(assemblyFilter));
 
             foreach (var asm in assemblies)
             {

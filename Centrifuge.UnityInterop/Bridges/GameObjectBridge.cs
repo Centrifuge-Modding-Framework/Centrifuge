@@ -5,8 +5,15 @@ namespace Centrifuge.UnityInterop.Bridges
 {
     public static class GameObjectBridge
     {
-        public static Type GameObjectType => Kernel.FindTypeByFullName(Resources.UnityEngine.GameObjectTypeName);
-        public static Type ObjectType => Kernel.FindTypeByFullName(Resources.UnityEngine.ObjectTypeName);
+        public static Type GameObjectType => Kernel.FindTypeByFullName(
+            Resources.UnityEngine.GameObjectTypeName,
+            Resources.UnityEngine.AssemblyNameFilter
+        );
+
+        public static Type ObjectType => Kernel.FindTypeByFullName(
+            Resources.UnityEngine.ObjectTypeName,
+            Resources.UnityEngine.AssemblyNameFilter
+        );
 
         public static object CreateGameObject(string name)
             => Activator.CreateInstance(GameObjectType, new object[] { name });

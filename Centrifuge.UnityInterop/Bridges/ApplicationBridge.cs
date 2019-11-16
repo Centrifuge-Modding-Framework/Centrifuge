@@ -6,9 +6,20 @@ namespace Centrifuge.UnityInterop.Bridges
 {
     public static class ApplicationBridge
     {
-        public static Type ApplicationType => Kernel.FindTypeByFullName(Resources.UnityEngine.ApplicationTypeName);
-        public static Type LogCallbackType => Kernel.FindTypeByFullName(Resources.UnityEngine.LogCallbackTypeName);
-        public static Type LogTypeType => Kernel.FindTypeByFullName(Resources.UnityEngine.LogTypeTypeName);
+        public static Type ApplicationType => Kernel.FindTypeByFullName(
+            Resources.UnityEngine.ApplicationTypeName,
+            Resources.UnityEngine.AssemblyNameFilter
+        );
+
+        public static Type LogCallbackType => Kernel.FindTypeByFullName(
+            Resources.UnityEngine.LogCallbackTypeName,
+            Resources.UnityEngine.AssemblyNameFilter
+        );
+
+        public static Type LogTypeType => Kernel.FindTypeByFullName(
+            Resources.UnityEngine.LogTypeTypeName,
+            Resources.UnityEngine.AssemblyNameFilter
+        );
 
         public static string UnityVersion => ApplicationType.GetProperty(
             Resources.UnityEngine.ApplicationVersionPropertyName,

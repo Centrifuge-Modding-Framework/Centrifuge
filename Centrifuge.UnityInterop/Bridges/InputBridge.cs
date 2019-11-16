@@ -5,8 +5,15 @@ namespace Centrifuge.UnityInterop.Bridges
 {
     public static class InputBridge
     {
-        public static Type InputType => Kernel.FindTypeByFullName(Resources.UnityEngine.InputTypeName);
-        public static Type KeyCodeType => Kernel.FindTypeByFullName(Resources.UnityEngine.KeyCodeTypeName);
+        public static Type InputType => Kernel.FindTypeByFullName(
+            Resources.UnityEngine.InputTypeName,
+            Resources.UnityEngine.AssemblyNameFilter
+        );
+
+        public static Type KeyCodeType => Kernel.FindTypeByFullName(
+            Resources.UnityEngine.KeyCodeTypeName,
+            Resources.UnityEngine.AssemblyNameFilter
+        );
 
         private static MethodInfo GetKey => InputType.GetMethod(
             Resources.UnityEngine.InputGetKeyMethodName,
