@@ -24,6 +24,19 @@ namespace Centrifuge.UnityInterop.Bridges
             dontDestroy.Invoke(null, new[] { gameObject });
         }
 
+        public static void Destroy(object gameObject)
+        {
+            Integrity.EnsureNotNull(gameObject);
+            Integrity.EnsureGameObject(gameObject);
+
+            var destroy = ObjectType.GetMethod(
+                "Destroy",
+                new Type[] { ObjectType, typeof(float) }
+            );
+
+            destroy.Invoke(null, new[] { gameObject, 0f });
+        }
+
         public static void SetActive(object gameObject, bool active)
         {
             Integrity.EnsureNotNull(gameObject);
