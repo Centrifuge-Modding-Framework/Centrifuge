@@ -62,7 +62,7 @@ namespace Centrifuge
             {
                 EarlyLog.Exception(rtle);
 
-                EarlyLog.Separator("LOADER EXCEPTIONS FOLLOW");
+                EarlyLog.Info(" --- LOADER EXCEPTIONS FOLLOW --- ");
                 foreach (var lex in rtle.LoaderExceptions)
                 {
                     EarlyLog.Exception(lex);
@@ -118,7 +118,7 @@ namespace Centrifuge
                 }
             }
 
-            EarlyLog.Separator("BOOTSTRAPPER FINISHED");
+            EarlyLog.Info(" --- BOOTSTRAPPER FINISHED --- ");
         }
 
         private static string GetCrossPlatformCompatibleReactorPath()
