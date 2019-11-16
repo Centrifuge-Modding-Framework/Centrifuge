@@ -1,10 +1,22 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
+using System.Text;
 
 namespace Centrifuge
 {
-    public static class EarlyLog
+    internal static class EarlyLog
     {
+        private static StreamWriter LogFileWriter { get; }
+
+        static EarlyLog()
+        {
+            var dirPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var logPath = Path.Combine(dirPath, "Centrifuge.log");
+
+            LogFileWriter = new StreamWriter(logPath) { AutoFlush = true };
+        }
+
         public static void Info(string message)
         {
             WriteMessage("INF", message);
@@ -22,36 +34,42 @@ namespace Centrifuge
 
         public static void Exception(Exception e)
         {
-            WriteMessage("EXC", e.Message);
+            var sb = new StringBuilder();
+
+            sb.AppendLine(e.Message);
 
             if (!string.IsNullOrEmpty(e.StackTrace))
-                Console.WriteLine(e.StackTrace);
+                sb.AppendLine(e.StackTrace);
 
             if (e.InnerException != null)
             {
-                Separator("INNER EXCEPTION FOLLOWS");
-                Exception(e.InnerException);
+                sb.AppendLine(" --- INNER EXCEPTION FOLLOWS --- ");
+                sb.AppendLine(e.InnerException.ToString());
 
                 if (e.InnerException is ReflectionTypeLoadException rtle)
                 {
-                    Console.WriteLine();
-
+                    sb.AppendLine();
                     foreach (var le in rtle.LoaderExceptions)
                     {
-                        Console.WriteLine($"  {le.Message}");
+                        sb.AppendLine($"  {le.Message}");
                     }
                 }
             }
+
+            WriteMessage("EXC", sb.ToString());
         }
 
-        public static void Separator(string message)
+        internal static void CleanUp()
         {
-            Console.WriteLine($"--------------{message}--------------");
+            LogFileWriter.Dispose();
         }
 
         private static void WriteMessage(string descriptor, string message)
         {
-            Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")} {descriptor}] [{nameof(Bootstrap)}] {message}");
+            var msgFormat = $"[{DateTime.Now.ToString("HH:mm:ss")} {descriptor}] [{nameof(Bootstrap)}] {message}";
+
+            LogFileWriter.WriteLine(msgFormat);
+            Console.WriteLine(msgFormat);
         }
     }
 }
