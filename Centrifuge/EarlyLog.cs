@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace Centrifuge
 {
@@ -30,6 +31,16 @@ namespace Centrifuge
             {
                 Separator("INNER EXCEPTION FOLLOWS");
                 Exception(e.InnerException);
+
+                if (e.InnerException is ReflectionTypeLoadException rtle)
+                {
+                    Console.WriteLine();
+
+                    foreach (var le in rtle.LoaderExceptions)
+                    {
+                        Console.WriteLine($"  {le.Message}");
+                    }
+                }
             }
         }
 
