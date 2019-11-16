@@ -7,8 +7,8 @@
     <Description>Centrifuge Reactor Mod Loader Module</Description>
     <Copyright>Copyright 2019 © Centrifuge Project</Copyright>
     <AssemblyVersion>1.0.0</AssemblyVersion>
-    <Version>2.0.0</Version>
-    <FileVersion>2.0.0</FileVersion>
+    <Version>2.0.3</Version>
+    <FileVersion>2.0.3</FileVersion>
     <LangVersion>8.0</LangVersion>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -28,7 +28,7 @@
     <PackageReference Include="LitJson" Version="0.15.0" />
   </ItemGroup>
   
-    <ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Centrifuge.UnityInterop\Centrifuge.UnityInterop.csproj" />
     <ProjectReference Include="..\Reactor.API\Reactor.API.csproj" />
   </ItemGroup>

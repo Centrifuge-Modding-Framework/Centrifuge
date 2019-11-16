@@ -1,4 +1,4 @@
-version: 2.0.3.{build}
+version: 2.0.4.{build}
 skip_tags: true
 skip_branch_with_pr: false
 
