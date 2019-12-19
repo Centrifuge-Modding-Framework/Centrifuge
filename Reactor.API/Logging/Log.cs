@@ -66,6 +66,18 @@ namespace Reactor.API.Logging
             });
         }
 
+        public void Info(object obj)
+            => Info(obj.ToString());
+
+        public void Warning(object obj)
+            => Warning(obj.ToString());
+
+        public void Error(object obj)
+            => Error(obj.ToString());
+
+        public void Debug(object obj)
+            => Debug(obj.ToString());
+
         public void Exception(Exception e)
         {
             EnsureNotClosed();
