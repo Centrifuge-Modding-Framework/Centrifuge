@@ -7,6 +7,7 @@ namespace Reactor.API.Attributes
     {
         public string ModID { get; }
         public string InitializerName { get; set; } = "Initialize";
+        public string LoaderMethodName { get; set; } = "Load";
 
         public bool AwakeAfterInitialize = false;
 
