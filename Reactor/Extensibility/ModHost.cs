@@ -14,6 +14,8 @@ namespace Reactor.Extensibility
         public object GameObject { get; internal set; }
         public object Instance { get; internal set; }
 
+        public MethodInfo AssetLoaderMethod { get; internal set; }
+
         public ModInfo ToExchangeableApiObject()
         {
             return new ModInfo(
