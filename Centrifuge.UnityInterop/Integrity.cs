@@ -18,5 +18,11 @@ namespace Centrifuge.UnityInterop
             if (obj == null)
                 throw new ArgumentNullException("The object you provided is null.");
         }
+
+        internal static void EnsureNull(object obj)
+        {
+            if (obj != null)
+                throw new ArgumentNullException("The object was expected to be null.");
+        }
     }
 }

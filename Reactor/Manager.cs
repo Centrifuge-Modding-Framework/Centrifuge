@@ -55,6 +55,11 @@ namespace Reactor
             return GameSupport.GSLs.Select(x => x.ID).ToList();
         }
 
+        public void CallAssetLoadHooks()
+        {
+            Console.WriteLine("Asset load hooks should be called here, you dingus.");
+        }
+
         private void InitializeSettings()
         {
             Settings = new Settings("reactor");

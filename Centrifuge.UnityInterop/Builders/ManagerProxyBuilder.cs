@@ -28,6 +28,7 @@ namespace Centrifuge.UnityInterop.Builders
 
             BuildManagerField();
             BuildLoggerProxy();
+            BuildSceneLoadProxy();
             BuildAwakeMethod();
             BuildUpdateMethod();
         }
@@ -76,6 +77,30 @@ namespace Centrifuge.UnityInterop.Builders
             ilGen.Emit(OpCodes.Ldarg_2);
             ilGen.Emit(OpCodes.Ldarg_3);
             ilGen.Emit(OpCodes.Callvirt, loggerMethod);
+            ilGen.Emit(OpCodes.Ret);
+        }
+
+        private void BuildSceneLoadProxy()
+        {
+            var proxyMethod = ProxyTypeBuilder.DefineMethod(
+                Resources.Proxy.SceneLoadProxyMethodName,
+                    MethodAttributes.Public |
+                    MethodAttributes.HideBySig,
+                CallingConventions.HasThis,
+                typeof(void),
+                new[] { SceneManagerBridge.SceneType, SceneManagerBridge.LoadSceneModeType }
+            );
+
+            var assetLoadHookMethod = ReactorBridge.ReactorManagerType.GetMethod(
+                Resources.ReactorManager.CallAssetLoadHooksMethodName,
+                BindingFlags.Instance | BindingFlags.Public
+            );
+
+            var ilGen = proxyMethod.GetILGenerator();
+
+            ilGen.Emit(OpCodes.Ldarg_0);
+            ilGen.Emit(OpCodes.Ldfld, ProxyTypeBuilder.GetField(Resources.Proxy.ManagerFieldName));
+            ilGen.Emit(OpCodes.Callvirt, assetLoadHookMethod);
             ilGen.Emit(OpCodes.Ret);
         }
 
