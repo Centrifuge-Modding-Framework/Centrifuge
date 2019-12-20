@@ -18,6 +18,7 @@
             internal const string ObjectTypeName = "UnityEngine.Object";
             internal const string SceneManagerTypeName = "UnityEngine.SceneManagement.SceneManager";
             internal const string SceneTypeName = "UnityEngine.SceneManagement.Scene";
+            internal const string UnityActionGenericTwoTypeName = "UnityEngine.Events.UnityAction`2";
 
             internal const string AssetBundleLoadFromFileMethodName = "LoadFromFile";
             internal const string GameObjectAddComponentMethodName = "AddComponent";
@@ -27,9 +28,11 @@
             internal const string InputGetKeyUpMethodName = "GetKeyUp";
             internal const string ObjectDontDestroyOnLoadMethodName = "DontDestroyOnLoad";
 
+
             internal const string MonoBehaviourGameObjectFieldName = "gameObject";
             internal const string ApplicationVersionPropertyName = "unityVersion";
             internal const string LogMessageReceivedEventName = "logMessageReceived";
+            internal const string SceneLoadedEventName = "sceneLoaded";
         }
 
         internal static class Proxy
@@ -40,6 +43,7 @@
             internal const string ManagerTypeName = "ProxyManager";
             internal const string ModuleName = "UnityProxyModule";
 
+            internal const string SceneLoadProxyMethodName = "SceneLoadProxy";
             internal const string AwakeMethodName = "Awake";
             internal const string LogProxyMethodName = "LogProxy";
             internal const string UpdateMethodName = "Update";
@@ -51,6 +55,8 @@
 
             public const string TypeName = "Reactor.Manager";
             public const string UnityLogTypeName = "Reactor.UnityLog";
+
+            public const string CallAssetLoadHooksMethodName = "CallAssetLoadHooks";
 
             public const string UnityLogPropertyName = "UnityLog";
             public const string UnityLogMethodName = "LogUnityEngineMessage";
