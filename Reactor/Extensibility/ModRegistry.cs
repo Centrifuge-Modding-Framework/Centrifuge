@@ -1,11 +1,15 @@
 ﻿using Reactor.API.DataModel;
+using Reactor.API.Logging;
 using Reactor.Exceptions;
+using System;
 using System.Collections.Generic;
 
 namespace Reactor.Extensibility
 {
     internal class ModRegistry
     {
+        private Log Log => LogManager.GetForCurrentAssembly();
+
         private List<ModHost> Mods { get; }
         private List<ModInfo> ModInfoCache { get; set; }
 
@@ -23,6 +27,26 @@ namespace Reactor.Extensibility
             }
 
             Mods.Add(modHost);
+        }
+
+        public void InvokeAssetLoaderCallbacks()
+        {
+            foreach (var mod in Mods)
+            {
+                if (mod.AssetLoaderMethod != null)
+                {
+                    Log.Info($"Invoking asset load hook '{mod.AssetLoaderMethod.Name}' for {mod.ModID}...");
+
+                    try
+                    {
+                        mod.AssetLoaderMethod.Invoke(mod.Instance, new object[] { });
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Exception(e);
+                    }
+                }
+            }
         }
 
         public bool ModIdExists(string modId)

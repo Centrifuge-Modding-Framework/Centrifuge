@@ -282,6 +282,11 @@ namespace Reactor.Extensibility
                 new Type[] { typeof(IManager) }
             );
 
+            modHost.AssetLoaderMethod = entryPointType.GetMethod(
+                entryPointInfo.LoaderMethodName,
+                new Type[] { }
+            );
+
             if (initializer != null)
             {
                 Log.Info($"Now calling initializer method '{initializer.Name}' in '{modHost.Assembly.GetName().Name}'");
@@ -312,7 +317,7 @@ namespace Reactor.Extensibility
             }
             else
             {
-                Log.Error($"Failed to call initializer method '{entryPointInfo.InitializerName}' for Mod ID '{modHost.ModID}'. Seems like it doesn't exist.");
+                Log.Warning($"Did not find the initializer method '{entryPointInfo.InitializerName}' for Mod ID '{modHost.ModID}'. Seems like it doesn't exist. Loaded the mod anyway.");
             }
 
             if (dealingWithGameObject && entryPointInfo.AwakeAfterInitialize)

@@ -142,6 +142,16 @@ namespace Centrifuge.UnityInterop.Builders
                     BindingFlags.Public | BindingFlags.Static
                 )
             );
+
+            // SceneManagerBridge.AttachSceneLoadedEventHandler(this);
+            ilGen.Emit(OpCodes.Ldarg_0);
+            ilGen.Emit(
+                OpCodes.Call,
+                typeof(SceneManagerBridge).GetMethod(
+                    nameof(SceneManagerBridge.AttachSceneLoadedEventHandler),
+                    BindingFlags.Public | BindingFlags.Static
+                )
+            );
             // -------------------------------------------
 
             // Manager = new Manager();
