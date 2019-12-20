@@ -25,13 +25,13 @@
     <Product>Reactor.API</Product>
 
     <AssemblyVersion>1.0.0</AssemblyVersion>
-    <FileVersion>2.0.2</FileVersion>
+    <FileVersion>2.1.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageId>Centrifuge.Mod.SDK</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>2.0.2</Version>
+    <Version>2.1.0</Version>
     <PackageProjectUrl>https://github.com/Ciastex/Centrifuge</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Ciastex/Centrifuge</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
@@ -53,9 +53,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+
+    <PackageReference Include="ModuleInit.Fody" Version="2.1.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    
     <PackageReference Include="Lib.Harmony" Version="1.2.0.1" />
     <PackageReference Include="LitJson" Version="0.15.0" />
-    <PackageReference Include="ModuleInit.Fody" Version="2.1.0" />
   </ItemGroup>
   
   <ItemGroup>
