@@ -1,4 +1,5 @@
-﻿using Reactor.API;
+﻿using Centrifuge.UnityInterop.Bridges;
+using Reactor.API;
 using Reactor.API.Configuration;
 using Reactor.API.DataModel;
 using Reactor.API.Events;
@@ -55,6 +56,11 @@ namespace Reactor
             return GameSupport.GSLs.Select(x => x.ID).ToList();
         }
 
+        public void Update()
+        {
+            ((HotkeyManager)Hotkeys).Update();
+        }
+
         private void InitializeSettings()
         {
             Settings = new Settings("reactor");
@@ -73,9 +79,10 @@ namespace Reactor
             InitFinished?.Invoke(this, EventArgs.Empty);
         }
 
-        public void Update()
+        public void CallAssetLoadHooks()
         {
-            ((HotkeyManager)Hotkeys).Update();
+            SceneManagerBridge.DetachSceneLoadedEventHandler();
+            ModRegistry.InvokeAssetLoaderCallbacks();
         }
     }
 }

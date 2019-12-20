@@ -20,7 +20,6 @@ namespace Centrifuge
 
         public static void Initialize()
         {
-
             foreach (var arg in Environment.GetCommandLineArgs())
             {
                 if (arg == StartupArguments.AllocateConsole)

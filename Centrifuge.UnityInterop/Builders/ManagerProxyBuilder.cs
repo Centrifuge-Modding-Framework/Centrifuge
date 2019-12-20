@@ -28,6 +28,7 @@ namespace Centrifuge.UnityInterop.Builders
 
             BuildManagerField();
             BuildLoggerProxy();
+            BuildSceneLoadProxy();
             BuildAwakeMethod();
             BuildUpdateMethod();
         }
@@ -79,6 +80,30 @@ namespace Centrifuge.UnityInterop.Builders
             ilGen.Emit(OpCodes.Ret);
         }
 
+        private void BuildSceneLoadProxy()
+        {
+            var proxyMethod = ProxyTypeBuilder.DefineMethod(
+                Resources.Proxy.SceneLoadProxyMethodName,
+                    MethodAttributes.Public |
+                    MethodAttributes.HideBySig,
+                CallingConventions.HasThis,
+                typeof(void),
+                new[] { SceneManagerBridge.SceneType, SceneManagerBridge.LoadSceneModeType }
+            );
+
+            var assetLoadHookMethod = ReactorBridge.ReactorManagerType.GetMethod(
+                Resources.ReactorManager.CallAssetLoadHooksMethodName,
+                BindingFlags.Instance | BindingFlags.Public
+            );
+
+            var ilGen = proxyMethod.GetILGenerator();
+
+            ilGen.Emit(OpCodes.Ldarg_0);
+            ilGen.Emit(OpCodes.Ldfld, ProxyTypeBuilder.GetField(Resources.Proxy.ManagerFieldName));
+            ilGen.Emit(OpCodes.Callvirt, assetLoadHookMethod);
+            ilGen.Emit(OpCodes.Ret);
+        }
+
         private void BuildAwakeMethod()
         {
             var methodBuilder = ProxyTypeBuilder.DefineMethod(
@@ -114,6 +139,16 @@ namespace Centrifuge.UnityInterop.Builders
                 OpCodes.Call,
                 typeof(ApplicationBridge).GetMethod(
                     nameof(ApplicationBridge.AttachLoggingEventHandler),
+                    BindingFlags.Public | BindingFlags.Static
+                )
+            );
+
+            // SceneManagerBridge.AttachSceneLoadedEventHandler(this);
+            ilGen.Emit(OpCodes.Ldarg_0);
+            ilGen.Emit(
+                OpCodes.Call,
+                typeof(SceneManagerBridge).GetMethod(
+                    nameof(SceneManagerBridge.AttachSceneLoadedEventHandler),
                     BindingFlags.Public | BindingFlags.Static
                 )
             );
