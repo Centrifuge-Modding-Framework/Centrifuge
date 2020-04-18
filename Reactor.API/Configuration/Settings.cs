@@ -32,7 +32,7 @@ namespace Reactor.API.Configuration
 
                     try
                     {
-                        var data = JsonMapper.ToObject<Section>(json);
+                        sec = JsonMapper.ToObject<Section>(json);
                     }
                     catch (JsonException je)
                     {
