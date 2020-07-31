@@ -24,8 +24,8 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <PackageReference Include="Json.Net.Unity3D" Version="9.0.1" />
     <PackageReference Include="Lib.Harmony" Version="1.2.0.1" />
-    <PackageReference Include="LitJson" Version="0.15.0" />
   </ItemGroup>
   
   <ItemGroup>

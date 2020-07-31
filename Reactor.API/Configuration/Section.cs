@@ -1,8 +1,8 @@
-﻿using LitJson;
-using Reactor.API.Events;
+﻿using Reactor.API.Events;
 using Reactor.API.Exceptions;
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Reactor.API.Configuration
 {

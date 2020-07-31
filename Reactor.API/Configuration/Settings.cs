@@ -1,8 +1,9 @@
-using LitJson;
 using Reactor.API.Logging;
 using System;
 using System.IO;
 using System.Reflection;
+using Newtonsoft.Json;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace Reactor.API.Configuration
 {
@@ -32,7 +33,7 @@ namespace Reactor.API.Configuration
 
                     try
                     {
-                        sec = JsonMapper.ToObject<Section>(json);
+                        sec = JsonConvert.DeserializeObject<Section>(json);
                     }
                     catch (JsonException je)
                     {
@@ -45,11 +46,12 @@ namespace Reactor.API.Configuration
 
                     if (sec != null)
                     {
-                        foreach (string k in sec.Keys)
+                        foreach (var k in sec.Keys)
                             Add(k, sec[k]);
                     }
                 }
             }
+
             Dirty = false;
         }
 
@@ -68,13 +70,7 @@ namespace Reactor.API.Configuration
             {
                 using (var sw = new StreamWriter(FilePath, false))
                 {
-                    var jw = new JsonWriter(sw)
-                    {
-                        PrettyPrint = formatJson,
-                        IndentValue = 2
-                    };
-
-                    JsonMapper.ToJson(this, jw);
+                    sw.WriteLine(JsonConvert.SerializeObject(this, Formatting.Indented));
                 }
 
                 Dirty = false;
