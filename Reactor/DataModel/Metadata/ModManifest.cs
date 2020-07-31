@@ -1,23 +1,21 @@
-﻿using LitJson;
-using Reactor.API.Exceptions;
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
+using Newtonsoft.Json;
+using Reactor.API.Exceptions;
 
 namespace Reactor.DataModel.Metadata
 {
     internal class ModManifest
     {
-        public string FriendlyName { get; protected set; }
-        public string Author { get; protected set; }
-        public string Contact { get; protected set; }
-        public string ModuleFileName { get; protected set; }
-        public string[] Dependencies { get; protected set; }
-        public string[] RequiredGSLs { get; protected set; }
-        public int? Priority { get; protected set; }
-        public bool SkipLoad { get; protected set; }
-
-        public ModManifest() { }
+        public string FriendlyName { get; set; }
+        public string Author { get; set; }
+        public string Contact { get; set; }
+        public string ModuleFileName { get; set; }
+        public string[] Dependencies { get; set; }
+        public string[] RequiredGSLs { get; set; }
+        public int? Priority { get; set; }
+        public bool SkipLoad { get; set; }
 
         public static ModManifest FromFile(string filePath)
         {
@@ -37,7 +35,7 @@ namespace Reactor.DataModel.Metadata
 
             try
             {
-                var manifest = JsonMapper.ToObject<ModManifest>(json);
+                var manifest = JsonConvert.DeserializeObject<ModManifest>(json);
 
                 if (manifest == null)
                 {
