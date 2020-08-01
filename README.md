@@ -26,7 +26,7 @@ Don't be afraid to join the Centrifuge ModLoader Discord server. I'll be happy t
 > [**Cecil**](https://github.com/jbevain/cecil)  
 The motor powering Spindle Assembly Patcher.  
 >
-> **Newtonsoft JSON for Unity**
+> **Newtonsoft JSON for Unity**  
 I don't want to talk about this... 
 >
 > [**Harmony**](https://github.com/pardeike/Harmony)  
