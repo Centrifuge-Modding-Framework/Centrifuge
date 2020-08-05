@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using Reactor.API.Logging;
 using System;
 using System.Reflection;
@@ -9,11 +9,11 @@ namespace Reactor.API.Runtime.Patching
     {
         private static Log Log => LogManager.GetForInternalAssembly();
 
-        public static HarmonyInstance HarmonyInstance { get; }
+        public static Harmony HarmonyInstance { get; }
 
         static RuntimePatcher()
         {
-            HarmonyInstance = HarmonyInstance.Create(Defaults.ReactorModLoaderNamespace);
+            HarmonyInstance = Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), Defaults.ReactorModLoaderNamespace);
         }
 
         public static void RunTranspilers()

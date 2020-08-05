@@ -5,10 +5,10 @@
     <Company>Centrifuge Project</Company>
     <Product>Centrifuge</Product>
     <Description>Centrifuge Bootstrapper module</Description>
-    <Copyright>Copyright 2019 © Centrifuge Project</Copyright>
-    <AssemblyVersion>2.0.0</AssemblyVersion>
-    <Version>2.2.0</Version>
-    <FileVersion>2.1.0</FileVersion>
+    <Copyright>Copyright 2020 © Centrifuge Project</Copyright>
+    <AssemblyVersion>3.0.0</AssemblyVersion>
+    <Version>3.0.0</Version>
+    <FileVersion>3.0.0</FileVersion>
     <LangVersion>8.0</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <OutputPath>bin\$(Configuration)\</OutputPath>
