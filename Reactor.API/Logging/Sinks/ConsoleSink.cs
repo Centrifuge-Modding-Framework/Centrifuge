@@ -6,7 +6,7 @@ namespace Reactor.API.Logging.Sinks
 {
     public class ConsoleSink : Sink
     {
-        public override void Write(LogLevel logLevel, string message, params object[] args)
+        public override void Write(string message, params object[] args)
         {
             Console.WriteLine(message);
 
@@ -18,7 +18,7 @@ namespace Reactor.API.Logging.Sinks
                         Formatting.ReflectionTypeLoadExceptionForLogging(rtle)
                     );
                 }
-                else if(args[0] is Exception e)
+                else if (args[0] is Exception e)
                 {
                     Console.WriteLine(
                         Formatting.ExceptionForLogging(e, true)
@@ -26,5 +26,8 @@ namespace Reactor.API.Logging.Sinks
                 }
             }
         }
+
+        public override void Write(LogLevel logLevel, string message, params object[] args)
+            => Write(message);
     }
 }

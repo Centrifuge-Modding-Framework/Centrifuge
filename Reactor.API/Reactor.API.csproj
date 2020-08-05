@@ -21,17 +21,17 @@
     <AssemblyTitle>Reactor.API</AssemblyTitle>
     <Company>Centrifuge Project</Company>
     <Description>Centrifuge Reactor API component. Doing the heavy lifting so you don't have to.</Description>
-    <Copyright>Copyright 2019 © Centrifuge Project</Copyright>
+    <Copyright>Copyright 2020 © Centrifuge Project</Copyright>
     <Product>Reactor.API</Product>
 
     <AssemblyVersion>1.0.0</AssemblyVersion>
-    <FileVersion>2.2.0</FileVersion>
+    <FileVersion>3.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageId>Centrifuge.Mod.SDK</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>2.3.0</Version>
+    <Version>3.0.0-alpha</Version>
     <PackageProjectUrl>https://github.com/Ciastex/Centrifuge</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Ciastex/Centrifuge</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
@@ -49,9 +49,8 @@
   </ItemGroup>
   
   <ItemGroup>
+    <PackageReference Include="HarmonyX" Version="2.0.6" />
     <PackageReference Include="Json.Net.Unity3D" Version="9.0.1" />
-    
-    <PackageReference Include="Lib.Harmony" Version="1.2.0.1" />
   </ItemGroup>
   
   <ItemGroup>
