@@ -3,6 +3,7 @@ using Reactor.API.Exceptions;
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Reactor.API.Configuration
 {
@@ -70,6 +71,9 @@ namespace Reactor.API.Configuration
 
             try
             {
+                if (this[key] is JToken jToken)
+                    return jToken.ToObject<T>();
+
                 return (T)Convert.ChangeType(this[key], typeof(T));
             }
             catch (JsonException je)
