@@ -32,20 +32,20 @@ namespace Centrifuge.UnityInterop.Bridges
         {
             Integrity.EnsureNotNull(target);
             Integrity.EnsureNull(SceneLoadedEventHandlerDelegate);
-
+        
             var actualDelegateType = GenericDelegateType.MakeGenericType(new[] { SceneType, LoadSceneModeType });
-
+        
             SceneLoadedEventHandlerDelegate = Delegate.CreateDelegate(
                 actualDelegateType, target, Resources.Proxy.SceneLoadProxyMethodName, false, true
             );
-
+        
             PreviousSceneLoadedAttachTarget = target;
-
+        
             var ev = SceneManagerType.GetEvent(
                 Resources.UnityEngine.SceneLoadedEventName,
                 BindingFlags.Public | BindingFlags.Static
             );
-
+        
             ev.AddEventHandler(null, SceneLoadedEventHandlerDelegate);
         }
 

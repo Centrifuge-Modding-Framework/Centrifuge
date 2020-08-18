@@ -1,156 +1,206 @@
-﻿using Centrifuge.UnityInterop.Bridges;
-using System;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
+using Centrifuge.UnityInterop.Bridges;
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+using FieldAttributes = Mono.Cecil.FieldAttributes;
+using MethodAttributes = Mono.Cecil.MethodAttributes;
+using ParameterAttributes = Mono.Cecil.ParameterAttributes;
+using TypeAttributes = Mono.Cecil.TypeAttributes;
 
 namespace Centrifuge.UnityInterop.Builders
 {
     public class ManagerProxyBuilder
     {
-        private AssemblyName ProxyAssemblyName { get; }
-        private AssemblyBuilder ProxyAssemblyBuilder { get; }
-        private ModuleBuilder ProxyModuleBuilder { get; }
-        private TypeBuilder ProxyTypeBuilder { get; }
+        private FieldDefinition ManagerFieldDefinition { get; }
+
+        private AssemblyNameDefinition ProxyAssemblyNameDefinition { get; }
+        private AssemblyDefinition ProxyAssemblyDefinition { get; }
+        private ModuleDefinition ProxyMainModule { get; }
+        private TypeDefinition ProxyTypeDefinition { get; }
 
         public ManagerProxyBuilder()
         {
-            ProxyAssemblyName = new AssemblyName(Resources.Proxy.AssemblyName);
-            ProxyAssemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(ProxyAssemblyName, AssemblyBuilderAccess.Run);
-            ProxyModuleBuilder = ProxyAssemblyBuilder.DefineDynamicModule(Resources.Proxy.ModuleName);
-            ProxyTypeBuilder = ProxyModuleBuilder.DefineType(
+            ProxyAssemblyNameDefinition = new AssemblyNameDefinition(Resources.Proxy.AssemblyName, new Version(1, 0));
+
+            ProxyAssemblyDefinition =
+                AssemblyDefinition.CreateAssembly(ProxyAssemblyNameDefinition, Resources.Proxy.AssemblyName,
+                    ModuleKind.Dll);
+            ProxyMainModule = ProxyAssemblyDefinition.MainModule;
+            ProxyMainModule.RuntimeVersion = ".NETStandard,Version=v2.0";
+
+            ProxyTypeDefinition = new TypeDefinition(
+                Resources.Proxy.AssemblyName,
                 Resources.Proxy.ManagerTypeName,
-                  TypeAttributes.Class |
-                  TypeAttributes.Public |
-                  TypeAttributes.AnsiClass |
-                  TypeAttributes.BeforeFieldInit,
-                MonoBehaviourBridge.MonoBehaviourType
+                TypeAttributes.Class |
+                TypeAttributes.Public |
+                TypeAttributes.AnsiClass |
+                TypeAttributes.BeforeFieldInit,
+                ProxyMainModule.ImportReference(MonoBehaviourBridge.MonoBehaviourType)
             );
 
-            BuildManagerField();
+            ManagerFieldDefinition = BuildManagerField();
             BuildLoggerProxy();
             BuildSceneLoadProxy();
             BuildAwakeMethod();
             BuildUpdateMethod();
+
+            ProxyMainModule.Types.Add(ProxyTypeDefinition);
         }
 
-        public Type Build()
+        public Type WriteDynamicAssemblyAndLoadProxyType()
         {
-            return ProxyTypeBuilder.CreateType();
+            var asmLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var targetAsmPath = Path.Combine(asmLocation!, Resources.Proxy.AssemblyFileName);
+
+            if (File.Exists(targetAsmPath))
+            {
+                File.Delete(targetAsmPath);
+            }
+
+            ProxyAssemblyDefinition.Write(targetAsmPath);
+
+            var asm = Assembly.LoadFrom(targetAsmPath);
+            return asm.GetTypes().First();
         }
 
-        private void BuildManagerField()
+        private FieldDefinition BuildManagerField()
         {
-            ProxyTypeBuilder.DefineField(
+            var def = new FieldDefinition(
                 Resources.Proxy.ManagerFieldName,
-                ReactorBridge.ReactorManagerType,
-                FieldAttributes.Public
-            );
+                FieldAttributes.Public,
+                ProxyMainModule.ImportReference(ReactorBridge.ReactorManagerType));
+
+            ProxyTypeDefinition.Fields.Add(def);
+
+            return def;
         }
 
         private void BuildLoggerProxy()
         {
-            var proxyMethod = ProxyTypeBuilder.DefineMethod(
+            var methodDef = new MethodDefinition(
                 Resources.Proxy.LogProxyMethodName,
-                    MethodAttributes.Public |
-                    MethodAttributes.HideBySig,
-                CallingConventions.HasThis,
-                typeof(void),
-                new[] { typeof(string), typeof(string), ApplicationBridge.LogTypeType }
-            );
+                MethodAttributes.Public |
+                MethodAttributes.HideBySig,
+                ProxyMainModule.ImportReference(typeof(void)));
 
-            var loggerMethod = ReactorBridge.ReactorUnityLogType.GetMethod(
+            methodDef.CallingConvention = MethodCallingConvention.Default;
+            methodDef.Parameters.Add(
+                new ParameterDefinition("msg", ParameterAttributes.None,
+                    ProxyMainModule.ImportReference(typeof(string))));
+
+            methodDef.Parameters.Add(
+                new ParameterDefinition("state", ParameterAttributes.None,
+                    ProxyMainModule.ImportReference(typeof(string))));
+
+            methodDef.Parameters.Add(
+                new ParameterDefinition("logType", ParameterAttributes.None,
+                    ProxyMainModule.ImportReference(ApplicationBridge.LogTypeType)));
+
+
+            var loggerMethod = ProxyMainModule.ImportReference(ReactorBridge.ReactorUnityLogType.GetMethod(
                 Resources.ReactorManager.UnityLogMethodName,
-                new[] { typeof(string), typeof(string), typeof(int) }
-            );
+                new[] {typeof(string), typeof(string), typeof(int)}
+            ));
 
-            var propertyGetMethod = ReactorBridge.ReactorManagerType.GetProperty(
+            var propertyGetMethod = ProxyMainModule.ImportReference(ReactorBridge.ReactorManagerType.GetProperty(
                 Resources.ReactorManager.UnityLogPropertyName,
                 BindingFlags.Instance | BindingFlags.Public
-            ).GetGetMethod();
+            ).GetGetMethod());
 
-            var ilGen = proxyMethod.GetILGenerator();
+            var ilGen = methodDef.Body.GetILProcessor();
 
             ilGen.Emit(OpCodes.Ldarg_0);
-            ilGen.Emit(OpCodes.Ldfld, ProxyTypeBuilder.GetField(Resources.Proxy.ManagerFieldName));
+            ilGen.Emit(OpCodes.Ldfld, ManagerFieldDefinition);
             ilGen.Emit(OpCodes.Callvirt, propertyGetMethod);
             ilGen.Emit(OpCodes.Ldarg_1);
             ilGen.Emit(OpCodes.Ldarg_2);
             ilGen.Emit(OpCodes.Ldarg_3);
             ilGen.Emit(OpCodes.Callvirt, loggerMethod);
             ilGen.Emit(OpCodes.Ret);
+
+            ProxyTypeDefinition.Methods.Add(methodDef);
         }
 
         private void BuildSceneLoadProxy()
         {
-            var proxyMethod = ProxyTypeBuilder.DefineMethod(
+            var methodDef = new MethodDefinition(
                 Resources.Proxy.SceneLoadProxyMethodName,
-                    MethodAttributes.Public |
-                    MethodAttributes.HideBySig,
-                CallingConventions.HasThis,
-                typeof(void),
-                new[] { SceneManagerBridge.SceneType, SceneManagerBridge.LoadSceneModeType }
+                MethodAttributes.Public |
+                MethodAttributes.HideBySig,
+                ProxyMainModule.ImportReference(typeof(void)));
+        
+            methodDef.Parameters.Add(
+                new ParameterDefinition(ProxyMainModule.ImportReference(SceneManagerBridge.SceneType))
             );
-
-            var assetLoadHookMethod = ReactorBridge.ReactorManagerType.GetMethod(
+            
+            methodDef.Parameters.Add(
+                new ParameterDefinition(ProxyMainModule.ImportReference(SceneManagerBridge.LoadSceneModeType))
+            );
+            
+            var assetLoadHookMethod = ProxyMainModule.ImportReference(ReactorBridge.ReactorManagerType.GetMethod(
                 Resources.ReactorManager.CallAssetLoadHooksMethodName,
                 BindingFlags.Instance | BindingFlags.Public
-            );
-
-            var ilGen = proxyMethod.GetILGenerator();
-
+            ));
+        
+            var ilGen = methodDef.Body.GetILProcessor();
+        
             ilGen.Emit(OpCodes.Ldarg_0);
-            ilGen.Emit(OpCodes.Ldfld, ProxyTypeBuilder.GetField(Resources.Proxy.ManagerFieldName));
+            ilGen.Emit(OpCodes.Ldfld, ManagerFieldDefinition);
             ilGen.Emit(OpCodes.Callvirt, assetLoadHookMethod);
             ilGen.Emit(OpCodes.Ret);
+        
+            ProxyTypeDefinition.Methods.Add(methodDef);
         }
 
         private void BuildAwakeMethod()
         {
-            var methodBuilder = ProxyTypeBuilder.DefineMethod(
+            var methodDef = new MethodDefinition(
                 Resources.Proxy.AwakeMethodName,
-                    MethodAttributes.Public |
-                    MethodAttributes.HideBySig,
-                CallingConventions.HasThis
-            );
+                MethodAttributes.Public |
+                MethodAttributes.HideBySig,
+                ProxyMainModule.ImportReference(typeof(void)));
 
-            var ilGen = methodBuilder.GetILGenerator();
+            var ilGen = methodDef.Body.GetILProcessor();
 
             // UnityEngine.DontDestroyOnLoad
             ilGen.Emit(OpCodes.Ldarg_0);
             ilGen.Emit(
                 OpCodes.Call,
-                MonoBehaviourBridge.MonoBehaviourType.GetProperty(
+                ProxyMainModule.ImportReference(MonoBehaviourBridge.MonoBehaviourType.GetProperty(
                     Resources.UnityEngine.MonoBehaviourGameObjectFieldName,
                     BindingFlags.Public | BindingFlags.Instance
-                ).GetGetMethod()
+                ).GetGetMethod())
             );
 
             ilGen.Emit(
                 OpCodes.Call,
-                GameObjectBridge.ObjectType.GetMethod(
+                ProxyMainModule.ImportReference(GameObjectBridge.ObjectType.GetMethod(
                     Resources.UnityEngine.ObjectDontDestroyOnLoadMethodName,
                     BindingFlags.Public | BindingFlags.Static
-                )
+                ))
             );
 
             // ApplicationBridge.AttachLoggingEventHandler(this);
             ilGen.Emit(OpCodes.Ldarg_0);
             ilGen.Emit(
                 OpCodes.Call,
-                typeof(ApplicationBridge).GetMethod(
+                ProxyMainModule.ImportReference(typeof(ApplicationBridge).GetMethod(
                     nameof(ApplicationBridge.AttachLoggingEventHandler),
                     BindingFlags.Public | BindingFlags.Static
-                )
+                ))
             );
 
             // SceneManagerBridge.AttachSceneLoadedEventHandler(this);
             ilGen.Emit(OpCodes.Ldarg_0);
             ilGen.Emit(
                 OpCodes.Call,
-                typeof(SceneManagerBridge).GetMethod(
+                ProxyMainModule.ImportReference(typeof(SceneManagerBridge).GetMethod(
                     nameof(SceneManagerBridge.AttachSceneLoadedEventHandler),
                     BindingFlags.Public | BindingFlags.Static
-                )
+                ))
             );
             // -------------------------------------------
 
@@ -158,41 +208,45 @@ namespace Centrifuge.UnityInterop.Builders
             ilGen.Emit(OpCodes.Ldarg_0);
             ilGen.Emit(
                 OpCodes.Newobj,
-                ReactorBridge.ReactorManagerType.GetConstructor(new Type[] { })
+                ProxyMainModule.ImportReference(ReactorBridge.ReactorManagerType.GetConstructor(new Type[] { }))
             );
 
             ilGen.Emit(
                 OpCodes.Stfld,
-                ProxyTypeBuilder.GetField(Resources.Proxy.ManagerFieldName)
+                ManagerFieldDefinition
             );
 
             ilGen.Emit(OpCodes.Ret);
+
+            ProxyTypeDefinition.Methods.Add(methodDef);
         }
 
         private void BuildUpdateMethod()
         {
-            var methodBuilder = ProxyTypeBuilder.DefineMethod(
+            var methodDef = new MethodDefinition(
                 Resources.Proxy.UpdateMethodName,
-                    MethodAttributes.Public |
-                    MethodAttributes.HideBySig,
-                CallingConventions.HasThis
+                MethodAttributes.Public |
+                MethodAttributes.HideBySig,
+                ProxyMainModule.ImportReference(typeof(void))
             );
 
-            var ilGen = methodBuilder.GetILGenerator();
+            var ilGen = methodDef.Body.GetILProcessor();
 
             ilGen.Emit(OpCodes.Ldarg_0);
             ilGen.Emit(
                 OpCodes.Ldfld,
-                ProxyTypeBuilder.GetField(Resources.Proxy.ManagerFieldName)
+                ManagerFieldDefinition
             );
             ilGen.Emit(
                 OpCodes.Callvirt,
-                ReactorBridge.ReactorManagerType.GetMethod(
+                ProxyMainModule.ImportReference(ReactorBridge.ReactorManagerType.GetMethod(
                     Resources.ReactorManager.UpdateMethodName,
                     BindingFlags.Instance | BindingFlags.Public
-                )
+                ))
             );
             ilGen.Emit(OpCodes.Ret);
+
+            ProxyTypeDefinition.Methods.Add(methodDef);
         }
     }
 }
