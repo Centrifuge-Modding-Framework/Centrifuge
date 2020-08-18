@@ -72,6 +72,15 @@ namespace Centrifuge.Installer
 
                 using (var zipArchive = ZipFile.OpenRead(targetPath))
                 {
+                    foreach (var entry in zipArchive.Entries)
+                    {
+                        var filePath = Path.Combine(_gameDataDir, entry.FullName);
+                        if (File.Exists(filePath))
+                        {
+                            File.Delete(filePath);
+                        }
+                    }
+
                     zipArchive.ExtractToDirectory(Path.Combine(_pathTextBox.Text, _gameDataDir));
                 }
 
@@ -96,6 +105,10 @@ namespace Centrifuge.Installer
                 if (spindleProcess.ExitCode != 0)
                 {
                     MessageBox.Show(this, $"Spindle terminated with exit code {spindleProcess.ExitCode}: ({(TerminationReason)spindleProcess.ExitCode})", "Failure", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show(this, "Looks like Centrifuge is now installed, and nothing exploded yet!\nLaunch the game now, see if it works.");
                 }
             }
             catch (Exception ex)
@@ -127,10 +140,18 @@ namespace Centrifuge.Installer
 
         private bool ValidateGameDirectory(string path, out string dirOfInterest)
         {
-            var dirs = Directory.GetDirectories(path);
-            dirOfInterest = dirs.FirstOrDefault(x => x.EndsWith("_Data"));
+            try
+            {
+                var dirs = Directory.GetDirectories(path);
+                dirOfInterest = dirs.FirstOrDefault(x => x.EndsWith("_Data"));
 
-            return !string.IsNullOrWhiteSpace(path) && dirOfInterest != null;
+                return !string.IsNullOrWhiteSpace(path) && dirOfInterest != null;
+            }
+            catch
+            {
+                dirOfInterest = string.Empty;
+                return false;
+            }
         }
 
         private void CheckBoxIknowWhatImDoing_CheckedChanged(object sender, EventArgs e)

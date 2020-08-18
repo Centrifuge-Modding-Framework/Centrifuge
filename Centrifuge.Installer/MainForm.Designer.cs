@@ -110,14 +110,14 @@
             this._mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this._mainPanel.Location = new System.Drawing.Point(0, 0);
             this._mainPanel.Name = "_mainPanel";
-            this._mainPanel.Size = new System.Drawing.Size(289, 124);
+            this._mainPanel.Size = new System.Drawing.Size(289, 118);
             this._mainPanel.TabIndex = 6;
             // 
-            // _checkBoxNotAnIdiot
+            // _checkBoxEnableFreeTextInput
             // 
             this._checkBoxEnableFreeTextInput.AutoSize = true;
             this._checkBoxEnableFreeTextInput.Location = new System.Drawing.Point(7, 75);
-            this._checkBoxEnableFreeTextInput.Name = "_checkBoxNotAnIdiot";
+            this._checkBoxEnableFreeTextInput.Name = "_checkBoxEnableFreeTextInput";
             this._checkBoxEnableFreeTextInput.Size = new System.Drawing.Size(129, 17);
             this._checkBoxEnableFreeTextInput.TabIndex = 7;
             this._checkBoxEnableFreeTextInput.Text = "I know what I\'m doing";
@@ -130,7 +130,7 @@
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._toolStripLabel,
             this._toolStripProgressBar});
-            this.statusStrip.Location = new System.Drawing.Point(0, 102);
+            this.statusStrip.Location = new System.Drawing.Point(0, 96);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(289, 22);
             this.statusStrip.SizingGrip = false;
@@ -158,7 +158,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(289, 124);
+            this.ClientSize = new System.Drawing.Size(289, 118);
             this.Controls.Add(this._mainPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -166,6 +166,7 @@
             this.Name = "MainForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Centrifuge Installer";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this._mainPanel.ResumeLayout(false);
