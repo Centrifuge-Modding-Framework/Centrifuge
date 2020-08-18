@@ -42,6 +42,7 @@ namespace Centrifuge.UnityInterop.Builders
             );
 
             ManagerFieldDefinition = BuildManagerField();
+            BuildConstructor();
             BuildLoggerProxy();
             BuildSceneLoadProxy();
             BuildAwakeMethod();
@@ -76,6 +77,34 @@ namespace Centrifuge.UnityInterop.Builders
             ProxyTypeDefinition.Fields.Add(def);
 
             return def;
+        }
+
+        private void BuildConstructor()
+        {
+            var methodDef = new MethodDefinition(
+                ".ctor",
+                MethodAttributes.Public |
+                MethodAttributes.HideBySig |
+                MethodAttributes.SpecialName |
+                MethodAttributes.RTSpecialName,
+                ProxyMainModule.ImportReference(typeof(void))
+            );
+
+            var ilGen = methodDef.Body.GetILProcessor();
+            // Manager = new Manager();
+            ilGen.Emit(OpCodes.Ldarg_0);
+            ilGen.Emit(
+                OpCodes.Newobj,
+                ProxyMainModule.ImportReference(ReactorBridge.ReactorManagerType.GetConstructor(new Type[] { }))
+            );
+
+            ilGen.Emit(
+                OpCodes.Stfld,
+                ManagerFieldDefinition
+            );
+
+            ilGen.Emit(OpCodes.Ret);
+            ProxyTypeDefinition.Methods.Add(methodDef);
         }
 
         private void BuildLoggerProxy()
@@ -131,27 +160,35 @@ namespace Centrifuge.UnityInterop.Builders
                 MethodAttributes.Public |
                 MethodAttributes.HideBySig,
                 ProxyMainModule.ImportReference(typeof(void)));
-        
+
             methodDef.Parameters.Add(
                 new ParameterDefinition(ProxyMainModule.ImportReference(SceneManagerBridge.SceneType))
             );
-            
+
             methodDef.Parameters.Add(
                 new ParameterDefinition(ProxyMainModule.ImportReference(SceneManagerBridge.LoadSceneModeType))
             );
-            
+
             var assetLoadHookMethod = ProxyMainModule.ImportReference(ReactorBridge.ReactorManagerType.GetMethod(
                 Resources.ReactorManager.CallAssetLoadHooksMethodName,
                 BindingFlags.Instance | BindingFlags.Public
             ));
-        
+
+            var detachSceneLoadHandlerMethod = ProxyMainModule.ImportReference(
+                typeof(SceneManagerBridge).GetMethod(
+                    nameof(SceneManagerBridge.DetachSceneLoadedEventHandler),
+                    BindingFlags.Public | BindingFlags.Static
+                )
+            );
+
             var ilGen = methodDef.Body.GetILProcessor();
-        
+
             ilGen.Emit(OpCodes.Ldarg_0);
             ilGen.Emit(OpCodes.Ldfld, ManagerFieldDefinition);
             ilGen.Emit(OpCodes.Callvirt, assetLoadHookMethod);
+            ilGen.Emit(OpCodes.Callvirt, detachSceneLoadHandlerMethod);
             ilGen.Emit(OpCodes.Ret);
-        
+
             ProxyTypeDefinition.Methods.Add(methodDef);
         }
 
@@ -202,20 +239,6 @@ namespace Centrifuge.UnityInterop.Builders
                     BindingFlags.Public | BindingFlags.Static
                 ))
             );
-            // -------------------------------------------
-
-            // Manager = new Manager();
-            ilGen.Emit(OpCodes.Ldarg_0);
-            ilGen.Emit(
-                OpCodes.Newobj,
-                ProxyMainModule.ImportReference(ReactorBridge.ReactorManagerType.GetConstructor(new Type[] { }))
-            );
-
-            ilGen.Emit(
-                OpCodes.Stfld,
-                ManagerFieldDefinition
-            );
-
             ilGen.Emit(OpCodes.Ret);
 
             ProxyTypeDefinition.Methods.Add(methodDef);

@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace Centrifuge
+namespace Centrifuge.UnityInterop
 {
-    internal static class ConsoleAllocator
+    public static class ConsoleAllocator
     {
         private const int StdOutputHandle = -11;
         private const uint EnableVirtualTerminalProcessing = 0x4;
@@ -15,7 +15,21 @@ namespace Centrifuge
 
         private static bool _allocated;
 
-        public static void CreateWin32()
+        public static bool IsRedirecting => Console.Out == _outputWriter;
+        
+        public static void Redirect()
+        {
+            if (!_allocated)
+            {
+                if (Platform.IsUnix() && Platform.IsMonoPlatform())
+                    CreateUnix();
+                else CreateWin32();
+            }
+
+            RedirectConsoleOut();
+        }
+
+        private static void CreateWin32()
         {
             if (_allocated)
                 return;
@@ -25,7 +39,7 @@ namespace Centrifuge
 
             var stdOutHandle = GetStdHandle(StdOutputHandle);
 
-            if (GetConsoleMode(stdOutHandle, out uint mode))
+            if (GetConsoleMode(stdOutHandle, out var mode))
             {
                 mode |= EnableVirtualTerminalProcessing | DisableNewlineAutoReturn;
                 SetConsoleMode(stdOutHandle, mode);
@@ -34,7 +48,7 @@ namespace Centrifuge
             _allocated = true;
         }
 
-        public static void DestroyWin32()
+        private static void DestroyWin32()
         {
             if (!_allocated)
                 return;
@@ -45,7 +59,7 @@ namespace Centrifuge
             _allocated = false;
         }
 
-        public static void CreateUnix()
+        private static void CreateUnix()
         {
             if (_allocated)
                 return;
@@ -54,7 +68,7 @@ namespace Centrifuge
             _allocated = true;
         }
 
-        public static void DestroyUnix()
+        private static void DestroyUnix()
         {
             if (!_allocated)
                 return;
@@ -66,7 +80,13 @@ namespace Centrifuge
         private static void RecreateOutputStream()
         {
             _originalStream = Console.Out;
-            _outputWriter = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true };
+            _outputWriter = new StreamWriter(Console.OpenStandardOutput()) {AutoFlush = true};
+            
+            RedirectConsoleOut();
+        }
+
+        private static void RedirectConsoleOut()
+        {
             Console.SetOut(_outputWriter);
         }
 
