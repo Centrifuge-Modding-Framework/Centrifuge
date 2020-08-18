@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Centrifuge.UnityInterop", "Centrifuge.UnityInterop\Centrifuge.UnityInterop.csproj", "{8DCC793A-BC56-4F07-A600-C0C109230C07}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Centrifuge.Installer", "Centrifuge.Installer\Centrifuge.Installer.csproj", "{B77D0FC1-34E1-4D72-898A-3684DC601F2D}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Centrifuge.Shared\Centrifuge.Shared.projitems*{eef50c70-3582-4557-a6b2-2a5ec541b3d3}*SharedItemsImports = 13
@@ -51,6 +53,10 @@ Global
 		{8DCC793A-BC56-4F07-A600-C0C109230C07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DCC793A-BC56-4F07-A600-C0C109230C07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DCC793A-BC56-4F07-A600-C0C109230C07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B77D0FC1-34E1-4D72-898A-3684DC601F2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B77D0FC1-34E1-4D72-898A-3684DC601F2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B77D0FC1-34E1-4D72-898A-3684DC601F2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B77D0FC1-34E1-4D72-898A-3684DC601F2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
