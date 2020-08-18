@@ -14,7 +14,7 @@ namespace Reactor.API.Logging.Sinks
             StreamWriter = new StreamWriter(stream) { AutoFlush = true };
         }
 
-        public override void Write(LogLevel logLevel, string message, params object[] args)
+        public override void Write(string message, params object[] args)
         {
             StreamWriter.WriteLine(message);
 
@@ -34,6 +34,9 @@ namespace Reactor.API.Logging.Sinks
                 }
             }
         }
+
+        public override void Write(LogLevel logLevel, string message, params object[] args)
+            => Write(message, args);
 
         public void Dispose()
         {

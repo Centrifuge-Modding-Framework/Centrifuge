@@ -22,6 +22,7 @@ namespace Reactor
         internal static Settings Settings { get; private set; }
 
         public UnityLog UnityLog { get; }
+        public HarmonyXLog HarmonyXLog { get; }
 
         public IHotkeyManager Hotkeys { get; private set; }
         public IMessenger Messenger { get; private set; }
@@ -34,6 +35,7 @@ namespace Reactor
             InitializeSettings();
 
             UnityLog = new UnityLog();
+            HarmonyXLog = new HarmonyXLog();
 
             Hotkeys = new HotkeyManager();
             Messenger = new Messenger();
@@ -65,6 +67,7 @@ namespace Reactor
         {
             Settings = new Settings("reactor");
             Settings.GetOrCreate(Resources.InterceptUnityLogsSettingsKey, true);
+            Settings.GetOrCreate(Resources.InterceptHarmonyXLogsSettingsKey, true);
 
             Settings.SaveIfDirty();
         }

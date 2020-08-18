@@ -1,62 +1,63 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net35</TargetFramework>
-    
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>8.0</LangVersion>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net35;netstandard20</TargetFrameworks>
+		<AssemblyName>Reactor.API</AssemblyName>
+		<AssemblyTitle>Reactor.API</AssemblyTitle>
+		<Company>Centrifuge Project</Company>
+		<Description>Centrifuge Reactor API component. Doing the heavy lifting so you don't have to.</Description>
+		<Copyright>Copyright 2020 © Centrifuge Project</Copyright>
+		<Product>Reactor.API</Product>
+		<AssemblyVersion>1.0.0</AssemblyVersion>
+		<FileVersion>3.1.0</FileVersion>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<LangVersion>8.0</LangVersion>
+		<OutputPath>..\__BUILD\$(Configuration)</OutputPath>
+	</PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-  </PropertyGroup>
+	<PropertyGroup>
+		<PackageId>Centrifuge.Mod.SDK</PackageId>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Version>3.1.0</Version>
+		<PackageProjectUrl>https://github.com/Ciastex/Centrifuge</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/Ciastex/Centrifuge</RepositoryUrl>
+		<RepositoryType>Git</RepositoryType>
+		<Authors>Ciastex</Authors>
+		<PackageTags>Game Modding, Unity Engine, Unity3D, SDK, CIL, Mono, Modding Toolkit</PackageTags>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	</PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-  </PropertyGroup>
-  
-  <PropertyGroup>
-    <AssemblyName>Reactor.API</AssemblyName>
-    <AssemblyTitle>Reactor.API</AssemblyTitle>
-    <Company>Centrifuge Project</Company>
-    <Description>Centrifuge Reactor API component. Doing the heavy lifting so you don't have to.</Description>
-    <Copyright>Copyright 2019 © Centrifuge Project</Copyright>
-    <Product>Reactor.API</Product>
+	<PropertyGroup Condition="'$(TargetFramework)' == 'netstandard20'">
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	</PropertyGroup>
 
-    <AssemblyVersion>1.0.0</AssemblyVersion>
-    <FileVersion>2.2.0</FileVersion>
-  </PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<DebugType>full</DebugType>
+		<Optimize>false</Optimize>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <PackageId>Centrifuge.Mod.SDK</PackageId>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>2.3.0</Version>
-    <PackageProjectUrl>https://github.com/Ciastex/Centrifuge</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Ciastex/Centrifuge</RepositoryUrl>
-    <RepositoryType>Git</RepositoryType>
-    <Authors>Ciastex</Authors>
-    <PackageTags>Game Modding, Unity Engine, Unity3D, SDK, CIL, Mono, Modding Toolkit</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-  </PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+		<DebugType>pdbonly</DebugType>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="FodyWeavers.xml" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="readme.txt" pack="true" PackagePath="." />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="readme.txt" pack="true" PackagePath="." />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="Json.Net.Unity3D" Version="9.0.1" />
-    
-    <PackageReference Include="Lib.Harmony" Version="1.2.0.1" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\Centrifuge.UnityInterop\Centrifuge.UnityInterop.csproj">
-      <PrivateAssets>all</PrivateAssets>
-    </ProjectReference>
-  </ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net35'">
+		<PackageReference Include="Json.Net.Unity3D" Version="9.0.1" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard20'">
+		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="HarmonyX" Version="2.0.6" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Centrifuge.UnityInterop\Centrifuge.UnityInterop.csproj">
+			<PrivateAssets>all</PrivateAssets>
+		</ProjectReference>
+	</ItemGroup>
 </Project>
