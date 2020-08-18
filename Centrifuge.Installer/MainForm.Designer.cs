@@ -37,6 +37,7 @@
             this._installButton = new System.Windows.Forms.Button();
             this._folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this._mainPanel = new System.Windows.Forms.Panel();
+            this._checkBoxEnableFreeTextInput = new System.Windows.Forms.CheckBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this._toolStripLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this._toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
@@ -89,7 +90,7 @@
             // _installButton
             // 
             this._installButton.Enabled = false;
-            this._installButton.Location = new System.Drawing.Point(208, 49);
+            this._installButton.Location = new System.Drawing.Point(208, 69);
             this._installButton.Name = "_installButton";
             this._installButton.Size = new System.Drawing.Size(75, 23);
             this._installButton.TabIndex = 5;
@@ -99,6 +100,7 @@
             // 
             // _mainPanel
             // 
+            this._mainPanel.Controls.Add(this._checkBoxEnableFreeTextInput);
             this._mainPanel.Controls.Add(this.statusStrip);
             this._mainPanel.Controls.Add(this._installButton);
             this._mainPanel.Controls.Add(this.label1);
@@ -108,15 +110,27 @@
             this._mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this._mainPanel.Location = new System.Drawing.Point(0, 0);
             this._mainPanel.Name = "_mainPanel";
-            this._mainPanel.Size = new System.Drawing.Size(289, 98);
+            this._mainPanel.Size = new System.Drawing.Size(289, 124);
             this._mainPanel.TabIndex = 6;
+            // 
+            // _checkBoxNotAnIdiot
+            // 
+            this._checkBoxEnableFreeTextInput.AutoSize = true;
+            this._checkBoxEnableFreeTextInput.Location = new System.Drawing.Point(7, 75);
+            this._checkBoxEnableFreeTextInput.Name = "_checkBoxNotAnIdiot";
+            this._checkBoxEnableFreeTextInput.Size = new System.Drawing.Size(129, 17);
+            this._checkBoxEnableFreeTextInput.TabIndex = 7;
+            this._checkBoxEnableFreeTextInput.Text = "I know what I\'m doing";
+            this.checkBoxToolTip.SetToolTip(this._checkBoxEnableFreeTextInput, "Check to enable free input in the path textbox.");
+            this._checkBoxEnableFreeTextInput.UseVisualStyleBackColor = true;
+            this._checkBoxEnableFreeTextInput.CheckedChanged += new System.EventHandler(this.CheckBoxIknowWhatImDoing_CheckedChanged);
             // 
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._toolStripLabel,
             this._toolStripProgressBar});
-            this.statusStrip.Location = new System.Drawing.Point(0, 76);
+            this.statusStrip.Location = new System.Drawing.Point(0, 102);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(289, 22);
             this.statusStrip.SizingGrip = false;
@@ -144,7 +158,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(289, 98);
+            this.ClientSize = new System.Drawing.Size(289, 124);
             this.Controls.Add(this._mainPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -175,5 +189,6 @@
         private System.Windows.Forms.ToolStripStatusLabel _toolStripLabel;
         private System.Windows.Forms.ToolStripProgressBar _toolStripProgressBar;
         private System.Windows.Forms.ToolTip checkBoxToolTip;
+        private System.Windows.Forms.CheckBox _checkBoxEnableFreeTextInput;
     }
 }
