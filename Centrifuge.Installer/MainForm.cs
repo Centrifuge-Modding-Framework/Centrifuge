@@ -124,13 +124,18 @@ namespace Centrifuge.Installer
         {
             _installButton.Enabled = ValidateGameDirectory(_pathTextBox.Text, out _gameDataDir);
         }
-        
+
         private bool ValidateGameDirectory(string path, out string dirOfInterest)
         {
             var dirs = Directory.GetDirectories(path);
             dirOfInterest = dirs.FirstOrDefault(x => x.EndsWith("_Data"));
 
             return !string.IsNullOrWhiteSpace(path) && dirOfInterest != null;
+        }
+
+        private void CheckBoxIknowWhatImDoing_CheckedChanged(object sender, EventArgs e)
+        {
+            _pathTextBox.ReadOnly = !_checkBoxEnableFreeTextInput.Checked;
         }
     }
 }
