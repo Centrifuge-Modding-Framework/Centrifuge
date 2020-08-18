@@ -11,7 +11,7 @@
     <FileVersion>3.0.0</FileVersion>
     <LangVersion>8.0</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <OutputPath>..\__BUILD\$(Configuration)\Managed</OutputPath>
+    <OutputPath>..\__BUILD\$(Configuration)</OutputPath>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard20'">

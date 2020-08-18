@@ -1,44 +1,48 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFrameworks>netstandard20</TargetFrameworks>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <AssemblyTitle>Spindle</AssemblyTitle>
-    <Company>Centrifuge Project</Company>
-    <Product>Spindle</Product>
-    <Description>Centrifuge Patcher for Unity Engine</Description>
-    <Copyright>Copyright 2019 © Centrifuge Project </Copyright>
-    <AssemblyVersion>2.1.0</AssemblyVersion>
-    <FileVersion>2.1.0</FileVersion>
-    <OutputPath>..\__BUILD\$(Configuration)\Managed</OutputPath>
-    <Version>2.2.0</Version>
-    <LangVersion>8.0</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFrameworks>net35;netstandard20</TargetFrameworks>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <AssemblyTitle>Spindle</AssemblyTitle>
+        <Company>Centrifuge Project</Company>
+        <Product>Spindle</Product>
+        <Description>Centrifuge Patcher for Unity Engine</Description>
+        <Copyright>Copyright 2019 © Centrifuge Project</Copyright>
+        <AssemblyVersion>2.1.0</AssemblyVersion>
+        <FileVersion>2.1.0</FileVersion>
+        <OutputPath>..\__BUILD\$(Configuration)</OutputPath>
+        <Version>2.2.0</Version>
+        <LangVersion>8.0</LangVersion>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard20'">
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard20'">
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="Mono.Cecil" Version="0.11.2" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <None Include="install_linux.sh">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    
-    <None Include="install_windows.bat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <DebugType>pdbonly</DebugType>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net35'">
+        <PackageReference Include="Mono.Cecil" Version="0.10.4"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard20'">
+        <PackageReference Include="Mono.Cecil" Version="0.11.2"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="install_linux.sh">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+
+        <None Include="install_windows.bat">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 </Project>

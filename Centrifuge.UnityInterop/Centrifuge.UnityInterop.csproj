@@ -6,7 +6,7 @@
         <Product>Centrifuge.UnityInterop</Product>
         <Description>Unity glue code for Centrifuge Mod Loader.</Description>
         <Copyright>Copyright 2020 © Centrifuge Project</Copyright>
-        <OutputPath>..\__BUILD\$(Configuration)\Managed</OutputPath>
+        <OutputPath>..\__BUILD\$(Configuration)</OutputPath>
         <AssemblyVersion>1.0.0</AssemblyVersion>
         <Version>3.0.0</Version>
         <FileVersion>3.0.0</FileVersion>
