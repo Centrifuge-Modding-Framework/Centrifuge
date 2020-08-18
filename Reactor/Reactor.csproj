@@ -10,7 +10,7 @@
 		<Version>3.1.0</Version>
 		<FileVersion>3.1.0</FileVersion>
 		<LangVersion>8.0</LangVersion>
-		<OutputPath>..\__BUILD\$(Configuration)\Centrifuge</OutputPath>
+		<OutputPath>..\__BUILD\$(Configuration)</OutputPath>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
