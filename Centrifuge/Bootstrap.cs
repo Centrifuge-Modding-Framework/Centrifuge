@@ -66,7 +66,13 @@ namespace Centrifuge
                 Assembly.LoadFrom(reactorPath);
 
                 EarlyLog.Info("Building manager proxy component for Unity Engine...");
-                proxyType = new ManagerProxyBuilder().Build();
+                proxyType = new ManagerProxyBuilder().WriteDynamicAssemblyAndLoadProxyType();
+
+                if (proxyType == null)
+                {
+                    EarlyLog.Info("Failed.");
+                    return;
+                }
             }
             catch (ReflectionTypeLoadException rtle)
             {

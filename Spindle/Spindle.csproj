@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net35</TargetFramework>
+    <TargetFrameworks>netstandard20</TargetFrameworks>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <AssemblyTitle>Spindle</AssemblyTitle>
     <Company>Centrifuge Project</Company>
@@ -10,9 +10,13 @@
     <Copyright>Copyright 2019 © Centrifuge Project </Copyright>
     <AssemblyVersion>2.1.0</AssemblyVersion>
     <FileVersion>2.1.0</FileVersion>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <OutputPath>..\__BUILD\$(Configuration)\Managed</OutputPath>
     <Version>2.2.0</Version>
     <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard20'">
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -25,7 +29,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Mono.Cecil" Version="0.10.4" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.2" />
   </ItemGroup>
   
   <ItemGroup>

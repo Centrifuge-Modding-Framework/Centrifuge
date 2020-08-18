@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net35</TargetFramework>
+    <TargetFrameworks>net35;netstandard20</TargetFrameworks>
     <AssemblyTitle>Centrifuge</AssemblyTitle>
     <Company>Centrifuge Project</Company>
     <Product>Centrifuge</Product>
@@ -11,15 +11,22 @@
     <FileVersion>3.0.0</FileVersion>
     <LangVersion>8.0</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <OutputPath>..\__BUILD\$(Configuration)\Managed</OutputPath>
   </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard20'">
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
   </PropertyGroup>
+  
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\Centrifuge.UnityInterop\Centrifuge.UnityInterop.csproj" />
   </ItemGroup>
