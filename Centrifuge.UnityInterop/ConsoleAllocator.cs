@@ -15,6 +15,7 @@ namespace Centrifuge.UnityInterop
 
         private static bool _allocated;
 
+        public static bool FancyColorsEnabled { get; set; } = true;
         public static bool IsRedirecting => Console.Out == _outputWriter;
         
         public static void Redirect()
@@ -41,8 +42,11 @@ namespace Centrifuge.UnityInterop
 
             if (GetConsoleMode(stdOutHandle, out var mode))
             {
-                mode |= EnableVirtualTerminalProcessing | DisableNewlineAutoReturn;
-                SetConsoleMode(stdOutHandle, mode);
+                mode |= EnableVirtualTerminalProcessing;
+                if (!SetConsoleMode(stdOutHandle, mode))
+                {
+                    FancyColorsEnabled = false;
+                }
             }
 
             _allocated = true;

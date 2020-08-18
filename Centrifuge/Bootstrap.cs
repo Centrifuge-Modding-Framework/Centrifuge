@@ -23,6 +23,11 @@ namespace Centrifuge
         {
             foreach (var arg in Environment.GetCommandLineArgs())
             {
+                if (arg == StartupArguments.DisableFancyColors)
+                {
+                    ConsoleAllocator.FancyColorsEnabled = false;
+                }
+                
                 if (arg == StartupArguments.AllocateConsole)
                 {
                     ConsoleAllocator.Redirect();
