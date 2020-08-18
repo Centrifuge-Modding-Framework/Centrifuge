@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using Centrifuge.UnityInterop;
 
 namespace Centrifuge
 {
@@ -24,16 +25,7 @@ namespace Centrifuge
             {
                 if (arg == StartupArguments.AllocateConsole)
                 {
-                    if (IsMonoPlatform() && IsUnix())
-                    {
-                        ConsoleAllocator.CreateUnix();
-                        EarlyLog.Info("Running on non-Windows platform. Skipping AllocConsole()...");
-                    }
-                    else
-                    {
-                        ConsoleAllocator.CreateWin32();
-                    }
-
+                    ConsoleAllocator.Redirect();
                     ConsoleEnabled = true;
                 }
             }
@@ -123,7 +115,7 @@ namespace Centrifuge
                 EarlyLog.Info("Definitely include this entire log as well.");
                 EarlyLog.Info("Otherwise I'll be very angry and ask you for this stuff in a very rude manner.");
 
-                if (IsUnix())
+                if (Platform.IsUnix())
                 {
                     EarlyLog.Info("Look in ~/.config/unity3d/<CompanyName>/<GameName>/ for any .log and/or .txt files.");
                 }
@@ -145,24 +137,5 @@ namespace Centrifuge
 
         private static string GetCrossPlatformCompatibleReactorPath()
             => (Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "?..?Centrifuge?Reactor.dll".Replace('?', Path.DirectorySeparatorChar));
-
-        private static bool IsMonoPlatform()
-        {
-            var platformID = (int)Environment.OSVersion.Platform;
-            return platformID == 4 || platformID == 6 || platformID == 128;
-        }
-
-        private static bool IsUnix()
-        {
-            var platformID = Environment.OSVersion.Platform;
-            switch (platformID)
-            {
-                case PlatformID.MacOSX:
-                case PlatformID.Unix:
-                    return true;
-                default:
-                    return false;
-            }
-        }
     }
 }
