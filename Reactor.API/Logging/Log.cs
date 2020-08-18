@@ -26,6 +26,11 @@ namespace Reactor.API.Logging
             Template = "{Message}";
         }
 
+        public void Raw(string message)
+        {
+            PushRawToAllActiveSinks(message);
+        }
+
         public void Info(string message)
         {
             EnsureNotClosed();
@@ -165,6 +170,12 @@ namespace Reactor.API.Logging
             Decorators.Clear();
 
             HasBeenClosed = true;
+        }
+
+        private void PushRawToAllActiveSinks(string message, params object[] sinkArgs)
+        {
+            foreach (var sink in Sinks.Where(x => x.Active))
+                sink.Write(message, sinkArgs);
         }
 
         private void DecorateAndPushToAllActiveSinks(LogLevel logLevel, string message, params object[] sinkArgs)

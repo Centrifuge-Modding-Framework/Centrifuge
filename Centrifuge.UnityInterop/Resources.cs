@@ -37,6 +37,7 @@
 
         internal static class Proxy
         {
+            internal const string AssemblyFileName = "Centrifuge.DynProxy.dll";
             internal const string AssemblyName = "Centrifuge.UnityInterop.DynamicProxyAssembly";
 
             internal const string ManagerFieldName = "Manager";

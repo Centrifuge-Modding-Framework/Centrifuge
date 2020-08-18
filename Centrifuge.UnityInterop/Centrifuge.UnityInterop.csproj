@@ -1,25 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net35</TargetFramework>
-    <AssemblyTitle>Centrifuge.UnityInterop</AssemblyTitle>
-    <Company>Centrifuge Project</Company>
-    <Product>Centrifuge.UnityInterop</Product>
-    <Description>Unity glue code for Centrifuge Mod Loader.</Description>
-    <Copyright>Copyright 2019 © Centrifuge Project</Copyright>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
-    <AssemblyVersion>1.0.0</AssemblyVersion>
-    <Version>2.2.0</Version>
-    <FileVersion>2.2.0</FileVersion>
-    <LangVersion>8.0</LangVersion>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net35;netstandard20</TargetFrameworks>
+        <AssemblyTitle>Centrifuge.UnityInterop</AssemblyTitle>
+        <Company>Centrifuge Project</Company>
+        <Product>Centrifuge.UnityInterop</Product>
+        <Description>Unity glue code for Centrifuge Mod Loader.</Description>
+        <Copyright>Copyright 2020 © Centrifuge Project</Copyright>
+        <OutputPath>..\__BUILD\$(Configuration)</OutputPath>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <Version>3.0.0</Version>
+        <FileVersion>3.0.0</FileVersion>
+        <LangVersion>8.0</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard20'">
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard20'">
+		<PackageReference Include="Mono.Cecil" Version="0.11.2" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net35'">
+        <PackageReference Include="Mono.Cecil" Version="0.10.4" />
+    </ItemGroup>
   
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-  </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <DebugType>pdbonly</DebugType>
+    </PropertyGroup>
 </Project>

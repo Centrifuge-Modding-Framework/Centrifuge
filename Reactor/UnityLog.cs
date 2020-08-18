@@ -6,7 +6,7 @@ namespace Reactor
 {
     public class UnityLog
     {
-        private Log Log => LogManager.GetForInternalAssembly();
+        private Log Log { get; } = LogManager.GetForInternalAssembly();
 
         private bool Enabled { get; } = Manager.Settings.GetItem<bool>(Resources.InterceptUnityLogsSettingsKey);
 
