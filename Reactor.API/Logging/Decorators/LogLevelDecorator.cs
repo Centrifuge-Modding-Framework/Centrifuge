@@ -1,4 +1,5 @@
-﻿using Reactor.API.Logging.Base;
+﻿using Centrifuge.UnityInterop;
+using Reactor.API.Logging.Base;
 using Reactor.API.Extensions;
 using Reactor.API.Logging.Sinks;
 
@@ -23,7 +24,7 @@ namespace Reactor.API.Logging.Decorators
 
         private string EncodeAnsiIfConsole(string s, Sink sink, byte r, byte g, byte b)
         {
-            if (sink is ConsoleSink)
+            if (sink is ConsoleSink && ConsoleAllocator.FancyColorsEnabled)
                 return s.AnsiColorEncodeRGB(r, g, b);
 
             return s;
