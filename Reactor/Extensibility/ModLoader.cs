@@ -1,4 +1,10 @@
-﻿using Centrifuge.UnityInterop.Bridges;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using Centrifuge.UnityInterop.Bridges;
 using Reactor.API;
 using Reactor.API.Attributes;
 using Reactor.API.DataModel;
@@ -11,12 +17,6 @@ using Reactor.DataModel.Communication;
 using Reactor.DataModel.Metadata;
 using Reactor.DataModel.ModLoader;
 using Reactor.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 
 namespace Reactor.Extensibility
 {
@@ -182,7 +182,7 @@ namespace Reactor.Extensibility
             {
                 foreach (var id in manifest.RequiredGSLs)
                 {
-                    if (!GameSupport.IsGameSupportLibraryPresent(id))
+                    if (!GameSupportLoader.IsGameSupportLibraryPresent(id))
                     {
                         Log.Error($"The mod requires a GSL with ID that is not present: {id}");
                         Log.Error("This mod will not be loaded. You need to install that GSL before loading that mod.");

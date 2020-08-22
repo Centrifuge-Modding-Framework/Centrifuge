@@ -1,6 +1,7 @@
-﻿using Reactor.API.DataModel;
-using Reactor.DataModel.ModLoader;
+﻿using System.Collections.Generic;
 using System.Reflection;
+using Reactor.API.DataModel;
+using Reactor.DataModel.ModLoader;
 
 namespace Reactor.Extensibility
 {
@@ -20,10 +21,13 @@ namespace Reactor.Extensibility
         {
             return new ModInfo(
                 ModID,
+                Instance,
+                GameObject != null,
                 LoadData.Manifest.FriendlyName,
                 LoadData.Manifest.Author,
                 LoadData.Manifest.Contact,
-                LoadData.Manifest.Priority ?? 10
+                LoadData.Manifest.Priority ?? 10,
+                new List<string>(LoadData.Manifest.Dependencies)
             );
         }
     }
