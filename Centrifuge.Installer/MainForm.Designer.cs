@@ -57,8 +57,7 @@
             // 
             // _pathTextBox
             // 
-            this._pathTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this._pathTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this._pathTextBox.Location = new System.Drawing.Point(7, 24);
             this._pathTextBox.Name = "_pathTextBox";
             this._pathTextBox.ReadOnly = true;
@@ -121,15 +120,13 @@
             this._checkBoxEnableFreeTextInput.Size = new System.Drawing.Size(129, 17);
             this._checkBoxEnableFreeTextInput.TabIndex = 7;
             this._checkBoxEnableFreeTextInput.Text = "I know what I\'m doing";
-            this.checkBoxToolTip.SetToolTip(this._checkBoxEnableFreeTextInput, "Check to enable free input in the path textbox.");
+            this.checkBoxToolTip.SetToolTip(this._checkBoxEnableFreeTextInput, "Check to enable free input in the path textbox");
             this._checkBoxEnableFreeTextInput.UseVisualStyleBackColor = true;
             this._checkBoxEnableFreeTextInput.CheckedChanged += new System.EventHandler(this.CheckBoxIknowWhatImDoing_CheckedChanged);
             // 
             // statusStrip
             // 
-            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this._toolStripLabel,
-            this._toolStripProgressBar});
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {this._toolStripLabel, this._toolStripProgressBar});
             this.statusStrip.Location = new System.Drawing.Point(0, 96);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(289, 22);
@@ -174,7 +171,6 @@
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
             this.ResumeLayout(false);
-
         }
 
         #endregion
