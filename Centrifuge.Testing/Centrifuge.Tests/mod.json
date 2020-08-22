@@ -1,0 +1,9 @@
+﻿{
+  "FriendlyName": "Centrifuge Tests",
+  "Author": "Ciastex",
+  "Contact": "Discord: Ciastex#6170",
+  "ModuleFileName": "Centrifuge.Tests.dll",
+  "Dependencies": [
+    "Centrifuge.TestFramework.dll"
+  ]
+}

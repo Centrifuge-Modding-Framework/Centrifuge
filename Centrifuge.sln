@@ -24,6 +24,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Centrifuge.UnityInterop", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Centrifuge.Installer", "Centrifuge.Installer\Centrifuge.Installer.csproj", "{B77D0FC1-34E1-4D72-898A-3684DC601F2D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Centrifuge.TestFramework", "Centrifuge.Testing\Centrifuge.TestFramework\Centrifuge.TestFramework.csproj", "{2782FB24-0CFE-4869-A21B-4C1BB894B09F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Centrifuge.Testing", "Centrifuge.Testing", "{9DDF581F-2A20-4CD9-B327-BAD5A1CFBE33}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Centrifuge.Tests", "Centrifuge.Testing\Centrifuge.Tests\Centrifuge.Tests.csproj", "{98E111A5-F658-4432-9FC1-8B00CC69C891}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Centrifuge.Shared\Centrifuge.Shared.projitems*{eef50c70-3582-4557-a6b2-2a5ec541b3d3}*SharedItemsImports = 13
@@ -57,11 +63,23 @@ Global
 		{B77D0FC1-34E1-4D72-898A-3684DC601F2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B77D0FC1-34E1-4D72-898A-3684DC601F2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B77D0FC1-34E1-4D72-898A-3684DC601F2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2782FB24-0CFE-4869-A21B-4C1BB894B09F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2782FB24-0CFE-4869-A21B-4C1BB894B09F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2782FB24-0CFE-4869-A21B-4C1BB894B09F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2782FB24-0CFE-4869-A21B-4C1BB894B09F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98E111A5-F658-4432-9FC1-8B00CC69C891}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98E111A5-F658-4432-9FC1-8B00CC69C891}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98E111A5-F658-4432-9FC1-8B00CC69C891}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98E111A5-F658-4432-9FC1-8B00CC69C891}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DCDD5452-0E93-494A-9E9B-21F3A2765493}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2782FB24-0CFE-4869-A21B-4C1BB894B09F} = {9DDF581F-2A20-4CD9-B327-BAD5A1CFBE33}
+		{98E111A5-F658-4432-9FC1-8B00CC69C891} = {9DDF581F-2A20-4CD9-B327-BAD5A1CFBE33}
 	EndGlobalSection
 EndGlobal

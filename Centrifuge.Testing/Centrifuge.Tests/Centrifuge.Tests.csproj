@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ProjectGuid>{98E111A5-F658-4432-9FC1-8B00CC69C891}</ProjectGuid>
+    <TargetFramework>net35</TargetFramework>
+    <AssemblyTitle>Centrifuge.Tests.Net35</AssemblyTitle>
+    <Product>Centrifuge.Tests.Net35</Product>
+    <Copyright>Copyright 2020 © Centrifuge Project</Copyright>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\Reactor.API\Reactor.API.csproj" />
+    <ProjectReference Include="..\Centrifuge.TestFramework\Centrifuge.TestFramework.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="mod.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>
