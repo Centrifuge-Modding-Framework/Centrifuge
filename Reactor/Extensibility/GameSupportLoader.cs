@@ -12,20 +12,20 @@ using System.Reflection;
 
 namespace Reactor.Extensibility
 {
-    internal class GameSupport
+    internal class GameSupportLoader
     {
         internal static List<GameSupportHost> GSLs { get; private set; }
 
         private static Log Log => LogManager.GetForInternalAssembly();
 
-        private IManager Manager { get; }
+        private Manager Manager { get; }
 
-        static GameSupport()
+        static GameSupportLoader()
         {
             GSLs = new List<GameSupportHost>();
         }
 
-        public GameSupport(IManager manager)
+        public GameSupportLoader(Manager manager)
         {
             Manager = manager;
 
@@ -42,13 +42,10 @@ namespace Reactor.Extensibility
 
             var gameSupportLibs = Directory.GetFiles(Defaults.ManagerGameSupportDirectory, "*.dll");
 
-            if (!gameSupportLibs.Any())
+            if (gameSupportLibs.Any())
             {
-                Log.Info("No GSLs found. Skipping this phase.");
-                return;
+                Log.Info("GSLs found. Trying to initialize...");
             }
-
-            Log.Info("GSLs found. Trying to initialize...");
 
             foreach (var libPath in gameSupportLibs)
             {
@@ -59,7 +56,9 @@ namespace Reactor.Extensibility
                     var asm = Assembly.LoadFrom(libPath);
 
                     if (InitializeGameSupport(asm))
+                    {
                         Log.Info($"GSL '{libPath}' initialized.");
+                    }
                 }
                 catch (ReflectionTypeLoadException rtle)
                 {
@@ -71,6 +70,8 @@ namespace Reactor.Extensibility
                     Log.Exception(e);
                 }
             }
+            
+            Manager.OnGslInitFinished();
         }
 
         public static bool IsGameSupportLibraryPresent(string id)
