@@ -27,7 +27,7 @@ namespace Reactor.Extensibility
                 LoadData.Manifest.Author,
                 LoadData.Manifest.Contact,
                 LoadData.Manifest.Priority ?? 10,
-                new List<string>(LoadData.Manifest.Dependencies)
+                new List<string>(LoadData.Manifest.Dependencies ?? new string[] { })
             );
         }
     }
