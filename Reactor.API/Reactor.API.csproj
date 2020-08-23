@@ -8,7 +8,7 @@
 		<Copyright>Copyright 2020 © Centrifuge Project</Copyright>
 		<Product>Reactor.API</Product>
 		<AssemblyVersion>1.0.0</AssemblyVersion>
-		<FileVersion>3.1.0</FileVersion>
+		<FileVersion>3.2.0</FileVersion>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<LangVersion>8.0</LangVersion>
 		<OutputPath>..\__BUILD\$(Configuration)</OutputPath>
