@@ -7,11 +7,13 @@
         <Description>Unity glue code for Centrifuge Mod Loader.</Description>
         <Copyright>Copyright 2020 © Centrifuge Project</Copyright>
         <OutputPath>..\__BUILD\$(Configuration)</OutputPath>
-        <AssemblyVersion>1.0.0</AssemblyVersion>
-        <Version>3.1.0</Version>
-        <FileVersion>3.1.0</FileVersion>
         <LangVersion>8.0</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <Version>3.1.0</Version>
     </PropertyGroup>
     
     <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard20'">
