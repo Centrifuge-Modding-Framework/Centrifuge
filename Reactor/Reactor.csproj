@@ -6,12 +6,15 @@
 		<Product>Reactor</Product>
 		<Description>Centrifuge Reactor Mod Loader Module</Description>
 		<Copyright>Copyright 2020 © Centrifuge Project</Copyright>
-		<AssemblyVersion>1.0.0</AssemblyVersion>
-		<Version>3.2.0</Version>
-		<FileVersion>3.2.0</FileVersion>
+
 		<LangVersion>8.0</LangVersion>
 		<OutputPath>..\__BUILD\$(Configuration)</OutputPath>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		<AssemblyVersion>1.0.0</AssemblyVersion>
+		<Version>3.2.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)' == 'netstandard20'">
