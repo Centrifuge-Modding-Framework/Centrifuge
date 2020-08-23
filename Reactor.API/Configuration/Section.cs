@@ -82,7 +82,14 @@ namespace Reactor.API.Configuration
             }
             catch (Exception e)
             {
-                throw new SettingsException($".NET type conversion exception has been thrown.", key, false, e);
+                try
+                {
+                    return (T)Enum.ToObject(typeof(T), (long)this[key]);
+                }
+                catch
+                {
+                    throw new SettingsException($".NET type conversion exception has been thrown.", key, false, e);
+                }
             }
         }
 
