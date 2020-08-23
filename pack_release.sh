@@ -58,13 +58,13 @@ cp $std20_bin/System.* $std20_art/Managed/
 
 cd $net35_art
 echo "Packaging .NET 3.5 build..."
-zip -rj9 ../Centrifuge.$api_ver.net35.zip Centrifuge Managed
+zip -r9 ../Centrifuge.$api_ver.net35.zip Centrifuge Managed
 cd ../../../
 echo
 
 cd $std20_art
 echo "Packaging .NET Standard 2.0 build..."
-zip -rj9 ../Centrifuge.$api_ver.netstandard.zip Centrifuge Managed
+zip -r9 ../Centrifuge.$api_ver.netstandard.zip Centrifuge Managed
 cd ../../../
 echo
 
