@@ -42,6 +42,12 @@ namespace Reactor
         {
             InitializeSettings();
 
+            if (!Settings.GetItem<bool>(Resources.EnableCentrifugeSettingsKey))
+            {
+                Log.Info("Centrifuge was disabled via reactor.json. No mods will be loaded. Goodbye.");
+                return;
+            }
+
             UnityLog = new UnityLog();
             HarmonyXLog = new HarmonyXLog();
 
@@ -91,6 +97,7 @@ namespace Reactor
             Settings.GetOrCreate(Resources.InterceptHarmonyXLogsSettingsKey, true);
             Settings.GetOrCreate(Resources.OverrideModRepositoryPathSettingsKey, false);
             Settings.GetOrCreate(Resources.ExternalModRepositoryPathSettingsKey, string.Empty);
+            Settings.GetOrCreate(Resources.EnableCentrifugeSettingsKey, true);
 
             Settings.SaveIfDirty();
         }
