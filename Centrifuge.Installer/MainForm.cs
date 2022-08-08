@@ -15,18 +15,22 @@ namespace Centrifuge.Installer
         private readonly GitHubClient _githubClient;
         private Release _latestRelease;
         private string _gameDataDir;
+        private GslFinder _gslFinder;
 
         public MainForm()
         {
             InitializeComponent();
 
             _githubClient = new GitHubClient(new ProductHeaderValue("Centrifuge.Installer", "1.0"));
+            _gslFinder = new GslFinder();
         }
 
         private async void MainForm_Load(object sender, EventArgs e)
         {
-            _toolStripLabel.Text = "Latest release: retrieving...";
+            _toolStripLabel.Text = "Fetching GSL definitions...";
 
+            _toolStripLabel.Text = "Latest release: retrieving...";
+            
             SetBusyState(true);
             _latestRelease = await _githubClient.Repository.Release.GetLatest("Ciastex", "Centrifuge");
             SetBusyState(false);
@@ -83,6 +87,14 @@ namespace Centrifuge.Installer
 
                     zipArchive.ExtractToDirectory(Path.Combine(_pathTextBox.Text, _gameDataDir));
                 }
+
+                await _gslFinder.TryFetchGSL(
+                    Path.Combine(
+                        _gameDataDir,
+                        "Managed",
+                        "Assembly-CSharp.dll"
+                    ), _gameDataDir
+                );
 
                 var spindleProcess = new Process()
                 {
